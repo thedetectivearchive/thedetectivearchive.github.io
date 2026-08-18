@@ -4287,3 +4287,147 @@ body.modal-open {
     }
 
 }
+
+/* =========================================================
+   CHARACTER DATABASE - VERIFIED BETA STATS / SKILLS
+========================================================= */
+
+.character-base-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.character-stat-card {
+    min-height: 92px;
+    padding: 16px 18px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+
+    border: 1px solid rgba(185, 149, 85, 0.22);
+    border-radius: 4px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(31, 24, 30, 0.88),
+            rgba(12, 10, 14, 0.92)
+        );
+}
+
+.character-stat-card span {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.character-stat-card strong {
+    color: var(--gold-light);
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.character-skill-list {
+    display: grid;
+    gap: 12px;
+}
+
+.character-skill-card {
+    position: relative;
+
+    padding: 18px 20px 18px 24px;
+
+    border: 1px solid rgba(185, 149, 85, 0.22);
+    border-radius: 4px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(33, 24, 31, 0.90),
+            rgba(11, 9, 13, 0.94)
+        );
+}
+
+.character-skill-card::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+
+    width: 2px;
+
+    background:
+        linear-gradient(
+            transparent,
+            var(--gold),
+            transparent
+        );
+}
+
+.character-skill-type {
+    margin-bottom: 6px;
+
+    color: var(--gold);
+
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.character-skill-card h3 {
+    margin-bottom: 8px;
+
+    color: var(--ivory);
+
+    font-size: 19px;
+    font-weight: normal;
+}
+
+.character-skill-card p {
+    max-width: 1000px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.character-unverified-message {
+    min-height: 120px;
+    padding: 24px;
+
+    display: flex;
+    align-items: center;
+
+    border: 1px solid rgba(185, 149, 85, 0.18);
+    border-radius: 4px;
+
+    color: var(--muted);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(21, 17, 21, 0.72),
+            rgba(9, 8, 10, 0.74)
+        );
+
+    line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+    .character-base-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .character-base-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

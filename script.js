@@ -650,6 +650,10 @@ function getCharacterAvailability(character) {
         return t("standard");
     }
 
+    if (character.availability === "preview") {
+        return t("previewData");
+    }
+
     return character.limited
         ? t("limited")
         : t("standard");
@@ -1900,6 +1904,27 @@ function renderCharacterFullDetail(
             )
             : "";
 
+    const baseStats =
+        getCharacterVariantField(
+            character,
+            activeVariant,
+            "baseStats"
+        ) || null;
+
+    const skills =
+        getCharacterVariantField(
+            character,
+            activeVariant,
+            "skills"
+        );
+
+    const combatWeapon =
+        getCharacterVariantField(
+            character,
+            activeVariant,
+            "combatWeapon"
+        );
+
     databaseDetailContent.innerHTML = `
 
         <div class="full-detail-toolbar">
@@ -2166,6 +2191,11 @@ function renderCharacterFullDetail(
                         )
                     )}
 
+                    ${createFullDetailCell(
+                        t("combatWeapon"),
+                        combatWeapon
+                    )}
+
                 </div>
 
 
@@ -2196,6 +2226,48 @@ function renderCharacterFullDetail(
         </div>
 
 
+        ${
+            baseStats
+                ? `
+                    <section class="full-detail-section character-stats-section">
+
+                        <div class="full-detail-section-heading">
+                            <p class="tag">${t("betaVerifiedData")}</p>
+                            <h2>${t("baseStats")}</h2>
+                        </div>
+
+                        <div class="character-base-stats-grid">
+                            <div class="character-stat-card">
+                                <span>${t("statLevel")}</span>
+                                <strong>${baseStats.level ?? "--"}</strong>
+                            </div>
+                            <div class="character-stat-card">
+                                <span>${t("hp")}</span>
+                                <strong>${baseStats.hp ?? "--"}</strong>
+                            </div>
+                            <div class="character-stat-card">
+                                <span>${t("atk")}</span>
+                                <strong>${baseStats.atk ?? "--"}</strong>
+                            </div>
+                            <div class="character-stat-card">
+                                <span>${t("def")}</span>
+                                <strong>${baseStats.def ?? "--"}</strong>
+                            </div>
+                            <div class="character-stat-card">
+                                <span>${t("critRate")}</span>
+                                <strong>${baseStats.critRate ?? "--"}</strong>
+                            </div>
+                            <div class="character-stat-card">
+                                <span>${t("critDamage")}</span>
+                                <strong>${baseStats.critDamage ?? "--"}</strong>
+                            </div>
+                        </div>
+
+                    </section>
+                `
+                : ""
+        }
+
         <section class="full-detail-section full-detail-skills-section">
 
             <div class="full-detail-section-heading">
@@ -2210,10 +2282,33 @@ function renderCharacterFullDetail(
 
             </div>
 
-            <div
-                class="full-detail-empty-area"
-                aria-hidden="true"
-            ></div>
+            ${
+                Array.isArray(skills) && skills.length > 0
+                    ? `
+                        <div class="character-skill-list">
+                            ${
+                                skills.map(
+                                    function (skill) {
+                                        return `
+                                            <article class="character-skill-card">
+                                                <div class="character-skill-type">
+                                                    ${t(skill.type || "skill")}
+                                                </div>
+                                                <h3>${getLocalizedText(skill.name)}</h3>
+                                                <p>${getLocalizedText(skill.description)}</p>
+                                            </article>
+                                        `;
+                                    }
+                                ).join("")
+                            }
+                        </div>
+                    `
+                    : `
+                        <div class="character-unverified-message">
+                            ${t("noVerifiedSkills")}
+                        </div>
+                    `
+            }
 
         </section>
 
