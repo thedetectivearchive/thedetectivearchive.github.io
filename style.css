@@ -3985,3 +3985,10 @@ body.modal-open {
         display: none;
     }
 }
+.site-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+}
