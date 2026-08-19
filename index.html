@@ -66,7 +66,20 @@
             </div>
         </a>
 
-        <nav class="navigation">
+        <button
+            type="button"
+            class="mobile-menu-toggle"
+            aria-expanded="false"
+            aria-controls="mobileMainNav"
+            aria-label="Open navigation menu"
+        >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <strong>Menu</strong>
+        </button>
+
+        <nav class="navigation" id="mobileMainNav">
             <a href="#top">Home</a>
             <a href="news.html">News</a>
             <a href="#database">Database</a>
@@ -875,6 +888,7 @@
     </div>
 
 
+    <script src="mobile-nav.js"></script>
     <script src="lang.js"></script>
 <script src="data.js"></script>
 <script src="script.js"></script>

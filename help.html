@@ -30,7 +30,20 @@
             </div>
         </a>
 
-        <nav class="help-page-nav">
+        <button
+            type="button"
+            class="mobile-menu-toggle"
+            aria-expanded="false"
+            aria-controls="mobileHelpNav"
+            aria-label="Open navigation menu"
+        >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <strong>Menu</strong>
+        </button>
+
+        <nav class="help-page-nav" id="mobileHelpNav">
             <a href="index.html">Home</a>
             <a href="news.html">News</a>
             <a href="index.html#database">Database</a>
@@ -384,5 +397,6 @@
         </p>
     </footer>
 
+    <script src="mobile-nav.js"></script>
 </body>
 </html>

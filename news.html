@@ -23,7 +23,20 @@
             </div>
         </a>
 
-        <nav class="news-page-nav">
+        <button
+            type="button"
+            class="mobile-menu-toggle"
+            aria-expanded="false"
+            aria-controls="mobileNewsNav"
+            aria-label="Open navigation menu"
+        >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <strong>Menu</strong>
+        </button>
+
+        <nav class="news-page-nav" id="mobileNewsNav">
             <a href="index.html" data-news-text="home">Home</a>
             <a href="index.html#database" data-news-text="database">Database</a>
             <a href="index.html#rankings" data-news-text="rankings">Rankings</a>
@@ -117,6 +130,7 @@
         </p>
     </footer>
 
+    <script src="mobile-nav.js"></script>
     <script src="data.js"></script>
     <script src="news-page.js"></script>
 </body>

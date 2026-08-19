@@ -10123,3 +10123,865 @@ html {
     border-color: var(--gold-light);
     box-shadow: 0 0 7px rgba(234, 214, 160, 0.14);
 }
+
+/* =========================================================
+   V38 — MOBILE OPTIMIZATION
+   Mobile-only usability pass. Desktop styling is intentionally
+   left unchanged above 760px.
+========================================================= */
+
+.mobile-menu-toggle {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    html {
+        scroll-padding-top: 72px;
+    }
+
+    body,
+    .news-page-body,
+    .help-page-body {
+        overflow-x: hidden;
+        background-attachment: scroll;
+    }
+
+    button,
+    a,
+    select,
+    input,
+    textarea,
+    summary {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ---------- Shared compact mobile navigation ---------- */
+    .header.mobile-nav-ready,
+    .news-page-header.mobile-nav-ready,
+    .help-page-header.mobile-nav-ready {
+        min-height: 0;
+        padding:
+            max(8px, env(safe-area-inset-top))
+            10px
+            8px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "brand toggle"
+            "nav nav"
+            "language language";
+        align-items: center;
+        gap: 8px 10px;
+    }
+
+    .header.mobile-nav-ready .logo,
+    .news-page-header.mobile-nav-ready .news-page-brand,
+    .help-page-header.mobile-nav-ready .help-page-brand {
+        grid-area: brand;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .mobile-nav-ready .mobile-menu-toggle {
+        grid-area: toggle;
+        width: 46px;
+        height: 42px;
+        padding: 8px 10px;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 2px) auto;
+        align-content: center;
+        gap: 4px;
+        border: 1px solid rgba(185, 149, 85, 0.34);
+        border-radius: 3px;
+        color: var(--gold-light);
+        background: rgba(16, 13, 17, 0.94);
+        cursor: pointer;
+    }
+
+    .mobile-menu-toggle > span {
+        width: 100%;
+        height: 1px;
+        display: block;
+        background: currentColor;
+        transform-origin: center;
+        transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .mobile-menu-toggle > strong {
+        margin-top: 1px;
+        color: #a99d8d;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 6px;
+        font-weight: 600;
+        letter-spacing: 0.9px;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .mobile-menu-open .mobile-menu-toggle > span:nth-child(1) {
+        transform: translateY(5px) rotate(45deg);
+    }
+
+    .mobile-menu-open .mobile-menu-toggle > span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-open .mobile-menu-toggle > span:nth-child(3) {
+        transform: translateY(-5px) rotate(-45deg);
+    }
+
+    .mobile-nav-ready .navigation,
+    .mobile-nav-ready .news-page-nav,
+    .mobile-nav-ready .help-page-nav {
+        grid-area: nav;
+        width: 100%;
+        margin: 0;
+        padding: 8px;
+        display: none;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        overflow: visible;
+        border: 1px solid rgba(185, 149, 85, 0.22);
+        background: rgba(10, 8, 11, 0.98);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
+    }
+
+    .mobile-nav-ready.mobile-menu-open .navigation,
+    .mobile-nav-ready.mobile-menu-open .news-page-nav,
+    .mobile-nav-ready.mobile-menu-open .help-page-nav {
+        display: grid;
+    }
+
+    .mobile-nav-ready .navigation a,
+    .mobile-nav-ready .navigation .feedback-nav-button,
+    .mobile-nav-ready .news-page-nav a,
+    .mobile-nav-ready .help-page-nav a {
+        min-width: 0;
+        min-height: 44px;
+        padding: 9px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(185, 149, 85, 0.15);
+        color: #c8bcad;
+        background: rgba(25, 19, 24, 0.72);
+        font-size: 11px;
+        line-height: 1.2;
+        text-align: center;
+        white-space: normal;
+    }
+
+    .mobile-nav-ready .navigation a::after,
+    .mobile-nav-ready .navigation .feedback-nav-button::after {
+        display: none;
+    }
+
+    .header.mobile-nav-ready .navigation .feedback-nav-button {
+        grid-column: 1 / -1;
+    }
+
+    .header.mobile-nav-ready .language-picker,
+    .news-page-header.mobile-nav-ready .news-language-select {
+        grid-area: language;
+        width: 100%;
+        margin: 0;
+        display: none;
+    }
+
+    .header.mobile-nav-ready.mobile-menu-open .language-picker,
+    .news-page-header.mobile-nav-ready.mobile-menu-open .news-language-select {
+        display: block;
+    }
+
+    .header.mobile-nav-ready .language-picker select,
+    .news-page-header.mobile-nav-ready .news-language-select {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .header.mobile-nav-ready .logo h1,
+    .news-page-header.mobile-nav-ready .news-page-brand strong,
+    .help-page-header.mobile-nav-ready .help-page-brand strong {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ---------- Homepage / archive panels ---------- */
+    .information-board {
+        width: calc(100% - 16px);
+        margin: 10px auto 12px;
+    }
+
+    .main-information {
+        min-height: 210px;
+        padding: 20px 17px;
+    }
+
+    .browser-panel,
+    .main-content,
+    .player-panel {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    .main-content,
+    .ranking-panel,
+    .player-panel {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    /* Main database tabs become one horizontal touch strip. */
+    .tabs {
+        padding: 7px;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tab-button {
+        min-width: 112px;
+        min-height: 44px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        font-size: 10px;
+    }
+
+    .tab-content {
+        padding: 12px 10px 14px;
+    }
+
+    .database-search,
+    .character-filter-control select,
+    .ranking-filter input,
+    .ranking-filter select,
+    .uid-search input,
+    .feedback-field input,
+    .feedback-field select,
+    .feedback-field textarea,
+    .news-page-search input,
+    .news-language-select {
+        font-size: 16px;
+    }
+
+    /* Reactor filters: larger touch targets, swipe instead of wrapping. */
+    .database-filter-shell {
+        overflow: hidden;
+    }
+
+    .database-icon-filters {
+        margin: 0 -3px;
+        padding: 2px 3px 5px;
+        flex-wrap: nowrap;
+        gap: 7px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .database-icon-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .database-icon-filter {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        scroll-snap-align: start;
+    }
+
+    .database-filter-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .character-filter-row {
+        gap: 7px;
+    }
+
+    .character-filter-control select,
+    .character-filter-reset {
+        min-height: 44px;
+    }
+
+    /* Character cards stay readable in two columns on normal phones. */
+    .browser-panel .database-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .browser-panel .character-card,
+    .browser-panel .weapon-card {
+        padding: 6px;
+    }
+
+    .browser-panel .card-image {
+        aspect-ratio: 0.86;
+    }
+
+    .browser-panel .character-name,
+    .weapon-name,
+    .simulation-card-name,
+    .epiphany-card-name {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+
+    .character-card-meta {
+        min-height: 0;
+        gap: 4px;
+    }
+
+    .character-meta-chip {
+        max-width: 100%;
+        font-size: 7.5px;
+    }
+
+    .browser-panel .database-detail-button,
+    .simulation-card .database-detail-button,
+    .epiphany-card .database-detail-button {
+        min-height: 38px;
+        font-size: 8px;
+    }
+
+    /* Home news cards use the available phone width more efficiently. */
+    .news-image {
+        height: clamp(190px, 56vw, 250px);
+    }
+
+    .compact-news {
+        grid-template-columns: 104px minmax(0, 1fr);
+    }
+
+    .news-text h2 {
+        font-size: 21px;
+    }
+
+    .news-text h3 {
+        font-size: 16px;
+    }
+
+    /* ---------- Rankings: explicit two-axis touch scroll ---------- */
+    .ranking-tabs {
+        padding-bottom: 3px;
+        scroll-snap-type: x proximity;
+    }
+
+    .ranking-tab-button {
+        min-height: 44px;
+        scroll-snap-align: start;
+    }
+
+    .ranking-toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ranking-filter-search {
+        grid-column: 1 / -1;
+    }
+
+    .ranking-filter input,
+    .ranking-filter select {
+        min-height: 44px;
+    }
+
+    .ranking-table {
+        width: 100%;
+        max-height: min(62dvh, 520px);
+        overflow: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: auto;
+        touch-action: pan-x pan-y;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .ranking-table-head,
+    .ranking-row {
+        min-width: 760px;
+    }
+
+    .ranking-table-head {
+        min-height: 46px;
+    }
+
+    .ranking-row {
+        min-height: 72px;
+    }
+
+    .ranking-character-badge {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ranking-framework {
+        padding: 12px;
+    }
+
+    /* ---------- Full database detail modals ---------- */
+    .database-detail-modal {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .database-detail-panel {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding:
+            max(14px, env(safe-area-inset-top))
+            11px
+            max(24px, env(safe-area-inset-bottom));
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .database-detail-close {
+        width: 44px;
+        height: 44px;
+        top: 0;
+        margin: 0 0 8px 10px;
+    }
+
+    .full-detail-toolbar {
+        min-height: 48px;
+        padding-right: 50px;
+    }
+
+    .full-detail-hero {
+        gap: 16px;
+    }
+
+    .full-detail-art-shell {
+        width: 100%;
+        padding: 4px;
+    }
+
+    .full-detail-art {
+        min-height: 0;
+        height: auto;
+        max-height: none;
+        aspect-ratio: 4 / 5;
+    }
+
+    .full-detail-art img {
+        object-position: center top;
+    }
+
+    .full-detail-info,
+    .character-detail-info {
+        padding: 15px 10px 14px;
+    }
+
+    .full-detail-info h1 {
+        font-size: clamp(30px, 9vw, 38px);
+        overflow-wrap: anywhere;
+    }
+
+    .full-detail-title {
+        font-size: 15px;
+    }
+
+    .full-detail-grid,
+    .full-detail-grid-compact {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .full-detail-cell {
+        padding: 11px;
+    }
+
+    /* All detail tab systems use a swipeable horizontal strip. */
+    .character-detail-tabs,
+    .motive-detail-tabs,
+    .simulation-detail-tabs,
+    .epiphany-detail-tabs {
+        margin-left: -1px;
+        margin-right: -1px;
+        padding: 6px;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 5px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .character-detail-tabs::-webkit-scrollbar,
+    .motive-detail-tabs::-webkit-scrollbar,
+    .simulation-detail-tabs::-webkit-scrollbar,
+    .epiphany-detail-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .character-detail-tab-button {
+        min-width: 108px;
+        min-height: 44px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        font-size: 9px;
+    }
+
+    .character-detail-tab-panel {
+        padding: 13px 11px;
+    }
+
+    .character-stats-heading,
+    .character-observed-heading,
+    .character-mechanic-title-row {
+        align-items: flex-start;
+    }
+
+    .character-stat-level-switcher {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .character-stat-level-button {
+        min-width: 82px;
+        min-height: 42px;
+        flex: 0 0 auto;
+    }
+
+    .character-skill-detail-card summary {
+        min-height: 54px;
+        padding: 14px 42px 14px 13px;
+    }
+
+    .character-skill-summary-main {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .character-skill-summary-main .character-skill-type {
+        min-width: 0;
+        text-align: left;
+    }
+
+    .character-skill-summary-main h3 {
+        font-size: 16px;
+    }
+
+    .character-skill-detail-body {
+        padding: 0 13px 14px;
+    }
+
+    .character-mechanic-grid,
+    .character-psyche-grid,
+    .motive-users-grid,
+    .motive-scaling-grid,
+    .simulation-detail-slot-grid,
+    .simulation-glossary-grid,
+    .epiphany-summary-grid,
+    .epiphany-literature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* ---------- Feedback ---------- */
+    .feedback-modal {
+        padding: 6px;
+        align-items: flex-end;
+    }
+
+    .feedback-popup,
+    .feedback-popup-simple {
+        width: 100%;
+        max-height: calc(100dvh - 12px);
+        padding:
+            22px
+            14px
+            max(16px, env(safe-area-inset-bottom));
+        overflow-y: auto;
+        border-radius: 4px;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .feedback-close {
+        width: 42px;
+        height: 42px;
+    }
+
+    .feedback-popup-simple .feedback-popup-header h2 {
+        padding-right: 38px;
+        font-size: 24px;
+    }
+
+    .feedback-category {
+        min-height: 44px;
+        font-size: 12px;
+    }
+
+    .feedback-submit {
+        min-height: 46px;
+    }
+
+    .feedback-message-field textarea {
+        min-height: 132px;
+    }
+
+    /* ---------- Standalone News ---------- */
+    .news-page-shell {
+        width: calc(100% - 16px);
+        padding: 12px 0 40px;
+    }
+
+    .news-page-hero {
+        min-height: 190px;
+        padding: 18px 16px;
+    }
+
+    .news-page-hero h1 {
+        margin-top: 7px;
+        font-size: clamp(2.35rem, 11vw, 3.25rem);
+    }
+
+    .news-page-controls {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .news-filter-tabs {
+        width: 100%;
+        padding-bottom: 3px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .news-filter-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .news-filter-tabs button {
+        min-height: 44px;
+        flex: 0 0 auto;
+    }
+
+    .news-page-card {
+        min-height: 0;
+        padding: 17px 15px;
+    }
+
+    .news-page-card-meta {
+        margin-bottom: 18px;
+        padding-right: 35px;
+        flex-wrap: wrap;
+    }
+
+    .news-page-card h2 {
+        font-size: 20px;
+    }
+
+    .news-page-card-button {
+        min-height: 44px;
+    }
+
+    .news-page-article {
+        width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding:
+            max(22px, env(safe-area-inset-top))
+            15px
+            max(24px, env(safe-area-inset-bottom));
+        top: 0;
+        left: 0;
+        transform: none;
+        overscroll-behavior: contain;
+    }
+
+    .news-page-article-close {
+        width: 42px;
+        height: 42px;
+        top: max(10px, env(safe-area-inset-top));
+        right: 10px;
+    }
+
+    .news-page-article-head {
+        padding-right: 46px;
+    }
+
+    .news-page-article-head h2 {
+        font-size: clamp(2rem, 10vw, 2.8rem);
+    }
+
+    /* ---------- Standalone Help ---------- */
+    .help-page-shell {
+        width: calc(100% - 16px);
+        padding: 12px 0 40px;
+    }
+
+    .help-page-hero,
+    .help-page-section {
+        padding: 17px 15px;
+    }
+
+    .help-page-hero {
+        min-height: 190px;
+    }
+
+    .help-page-hero h1 {
+        font-size: clamp(2.45rem, 11vw, 3.3rem);
+    }
+
+    .help-page-sidebar {
+        padding: 12px;
+    }
+
+    .help-page-sidebar > nav {
+        margin: 8px -2px 12px;
+        padding: 0 2px 3px;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .help-page-sidebar > nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .help-page-sidebar nav a {
+        min-height: 44px;
+        flex: 0 0 auto;
+    }
+
+    .help-page-section-heading {
+        align-items: flex-start;
+    }
+
+    .help-source-card,
+    .help-explanation-grid article,
+    .help-status-card {
+        padding: 14px;
+    }
+
+    .help-flow {
+        align-items: stretch;
+    }
+
+    .help-flow span {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+@media (max-width: 520px) {
+    .character-filter-row,
+    .ranking-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .character-filter-reset,
+    .ranking-filter-search {
+        grid-column: auto;
+    }
+
+    .full-detail-grid,
+    .full-detail-grid-compact,
+    .character-overview-grid,
+    .character-base-stats-grid,
+    .character-base-stats-grid-large,
+    .character-ranking-preview-grid,
+    .character-build-stat-priority,
+    .simulation-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-detail-art {
+        aspect-ratio: 4 / 5;
+    }
+
+    .ranking-category-summary,
+    .ranking-result-bar,
+    .ranking-framework-heading {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .feedback-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feedback-category-other {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 390px) {
+    .header.mobile-nav-ready .logo h1,
+    .news-page-header.mobile-nav-ready .news-page-brand strong,
+    .help-page-header.mobile-nav-ready .help-page-brand strong {
+        font-size: 15px;
+    }
+
+    .header.mobile-nav-ready .logo p,
+    .news-page-header.mobile-nav-ready .news-page-brand span,
+    .help-page-header.mobile-nav-ready .help-page-brand span {
+        letter-spacing: 1.3px;
+    }
+
+    .browser-panel .database-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .compact-news {
+        grid-template-columns: 1fr;
+    }
+
+    .small-news-image {
+        min-height: 150px;
+        border-right: 0;
+        border-bottom: 1px solid #4b3d2e;
+    }
+
+    .feedback-category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feedback-category-other {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 760px) and (hover: none) {
+    .database-card:hover,
+    .database-card.character-card.rarity-4:hover,
+    .database-card.character-card.rarity-5-standard:hover,
+    .database-card.character-card.rarity-5-limited:hover,
+    .simulation-card:hover,
+    .database-icon-filter:hover:not(:disabled),
+    .feedback-category:hover {
+        transform: none;
+        filter: none;
+    }
+}
