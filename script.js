@@ -1595,11 +1595,17 @@ function createFilterButtonMarkup(config) {
                         <img
                             src="${icon}"
                             alt=""
+                            loading="lazy"
                             onerror="
                                 this.style.display='none';
                                 this.parentElement.classList.add('icon-missing');
                             "
                         >
+
+                        <span
+                            class="database-filter-icon-fallback"
+                            aria-hidden="true"
+                        ></span>
                     `
                     : `<span class="database-filter-icon-empty"></span>`
             }

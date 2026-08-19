@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Archive Updates | The Detective Archive</title>
+    <meta name="description" content="Silver Palace beta news and The Detective Archive update log.">
+    <meta name="robots" content="index, follow">
+    <meta name="application-name" content="The Detective Archive">
+    <link rel="canonical" href="https://thedetectivearchive.github.io/news.html">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="news-page-body">
+
+    <header class="news-page-header">
+        <a class="news-page-brand" href="index.html">
+            <img src="logo.png" alt="The Detective Archive logo">
+            <div>
+                <strong>The Detective Archive</strong>
+                <span>SILVER PALACE DATABASE</span>
+            </div>
+        </a>
+
+        <nav class="news-page-nav">
+            <a href="index.html" data-news-text="home">Home</a>
+            <a href="index.html#database" data-news-text="database">Database</a>
+            <a href="index.html#rankings" data-news-text="rankings">Rankings</a>
+            <a href="help.html" data-news-text="help">Help</a>
+        </nav>
+
+        <select id="newsLanguageSelect" class="news-language-select" aria-label="Language">
+            <option value="en">EN · English</option>
+            <option value="vi">VI · Tiếng Việt</option>
+            <option value="th">TH · ไทย</option>
+            <option value="ja">JA · 日本語</option>
+            <option value="zh-CN">ZH · 简体中文</option>
+            <option value="ko">KO · 한국어</option>
+            <option value="fr">FR · Français</option>
+            <option value="es">ES · Español</option>
+            <option value="ru">RU · Русский</option>
+        </select>
+    </header>
+
+
+    <main class="news-page-shell">
+
+        <section class="news-page-hero">
+            <p class="tag" id="newsPageTag">INTELLIGENCE DESK</p>
+            <h1 id="newsPageTitle">News & Archive Updates</h1>
+            <p id="newsPageLead">
+                Silver Palace beta records and a transparent changelog for The Detective Archive.
+            </p>
+        </section>
+
+
+        <section class="news-page-controls">
+            <div class="news-filter-tabs" id="newsFilterTabs">
+                <button class="active" type="button" data-news-filter="all" id="newsFilterAll">All</button>
+                <button type="button" data-news-filter="game" id="newsFilterGame">Game / Beta</button>
+                <button type="button" data-news-filter="archive" id="newsFilterArchive">Archive Updates</button>
+            </div>
+
+            <label class="news-page-search">
+                <span id="newsSearchLabel">SEARCH</span>
+                <input id="newsSearchInput" type="search" placeholder="Search news...">
+            </label>
+        </section>
+
+
+        <section class="news-page-summary">
+            <div>
+                <span id="newsResultLabel">ENTRIES</span>
+                <strong id="newsResultCount">0</strong>
+            </div>
+
+            <p id="newsPageBetaNote">
+                Beta information can change before release. Archive updates describe changes made to this fan-made database.
+            </p>
+        </section>
+
+
+        <section class="news-page-grid" id="newsPageGrid" aria-live="polite"></section>
+
+
+        <section class="news-page-empty" id="newsPageEmpty" hidden>
+            <strong id="newsEmptyTitle">No entries found.</strong>
+            <p id="newsEmptyText">Try another search or filter.</p>
+        </section>
+
+    </main>
+
+
+    <div class="news-page-modal" id="newsPageModal" aria-hidden="true">
+        <div class="news-page-modal-overlay" id="newsPageModalOverlay"></div>
+
+        <article class="news-page-article" role="dialog" aria-modal="true" aria-labelledby="newsArticleTitle">
+            <button type="button" class="news-page-article-close" id="newsPageArticleClose" aria-label="Close">×</button>
+
+            <div class="news-page-article-head">
+                <p class="tag" id="newsArticleCategory">NEWS</p>
+                <h2 id="newsArticleTitle">Article</h2>
+                <p id="newsArticleDate"></p>
+            </div>
+
+            <div class="news-page-article-tags" id="newsArticleTags"></div>
+            <div class="news-page-article-content" id="newsArticleContent"></div>
+        </article>
+    </div>
+
+
+    <footer class="news-page-footer">
+        <p>
+            The Detective Archive is a fan-made Silver Palace database.
+            Not affiliated with or endorsed by Elementa.
+        </p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="news-page.js"></script>
+</body>
+</html>
