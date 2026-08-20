@@ -21,7 +21,8 @@ const weaponsData = [
     {
         id: "the-burning-stone-mystery",
         name: "The Burning Stone Mystery",
-        image: "",
+        image: "images/motive/the-burning-stone-mystery.webp",
+        detailImage: "images/motive/detail/the-burning-stone-mystery.webp",
         rarity: 5,
         limited: true,
         featured: true,
@@ -48,7 +49,8 @@ const weaponsData = [
     {
         id: "the-bloodbath-mystery",
         name: "The Bloodbath Mystery",
-        image: "",
+        image: "images/motive/the-bloodbath-mystery.webp",
+        detailImage: "images/motive/detail/the-bloodbath-mystery.webp",
         rarity: 5,
         limited: false,
         featured: false,
@@ -75,7 +77,8 @@ const weaponsData = [
     {
         id: "the-ivory-tower-mystery",
         name: "The Ivory Tower Mystery",
-        image: "",
+        image: "images/motive/the-ivory-tower-mystery.webp",
+        detailImage: "images/motive/detail/the-ivory-tower-mystery.webp",
         rarity: 4,
         limited: false,
         featured: true,
@@ -102,7 +105,8 @@ const weaponsData = [
     {
         id: "the-would-be-adults-mystery",
         name: "The Would-Be Adults Mystery",
-        image: "",
+        image: "images/motive/the-would-be-adults-mystery.webp",
+        detailImage: "images/motive/detail/the-would-be-adults-mystery.webp",
         rarity: 4,
         limited: false,
         featured: true,
@@ -129,7 +133,8 @@ const weaponsData = [
     {
         id: "the-duplicity-mystery",
         name: "The Duplicity Mystery",
-        image: "",
+        image: "images/motive/the-duplicity-mystery.webp",
+        detailImage: "images/motive/detail/the-duplicity-mystery.webp",
         rarity: 4,
         limited: false,
         featured: true,
@@ -160,7 +165,8 @@ const weaponsData = [
     {
         id: "the-fatuity-mystery",
         name: "The Fatuity Mystery",
-        image: "",
+        image: "images/motive/the-fatuity-mystery.webp",
+        detailImage: "images/motive/detail/the-fatuity-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Witness",
@@ -180,7 +186,8 @@ const weaponsData = [
     {
         id: "the-bullet-mystery",
         name: "The Bullet Mystery",
-        image: "",
+        image: "images/motive/the-bullet-mystery.webp",
+        detailImage: "images/motive/detail/the-bullet-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Saviour",
@@ -200,7 +207,8 @@ const weaponsData = [
     {
         id: "the-soft-songs-mystery",
         name: "The Soft Songs Mystery",
-        image: "",
+        image: "images/motive/the-soft-songs-mystery.webp",
+        detailImage: "images/motive/detail/the-soft-songs-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Victim",
@@ -215,7 +223,8 @@ const weaponsData = [
     {
         id: "the-blade-wind-mystery",
         name: "The Blade Wind Mystery",
-        image: "",
+        image: "images/motive/the-blade-wind-mystery.webp",
+        detailImage: "images/motive/detail/the-blade-wind-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Saviour",
@@ -235,7 +244,8 @@ const weaponsData = [
     {
         id: "the-aberrant-mystery",
         name: "The Aberrant Mystery",
-        image: "",
+        image: "images/motive/the-aberrant-mystery.webp",
+        detailImage: "images/motive/detail/the-aberrant-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Outlaw",
@@ -255,7 +265,8 @@ const weaponsData = [
     {
         id: "the-rich-fragrance-mystery",
         name: "The Rich Fragrance Mystery",
-        image: "",
+        image: "images/motive/the-rich-fragrance-mystery.webp",
+        detailImage: "images/motive/detail/the-rich-fragrance-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Witness",
@@ -275,7 +286,8 @@ const weaponsData = [
     {
         id: "the-pincers-mystery",
         name: "The Pincers Mystery",
-        image: "",
+        image: "images/motive/the-pincers-mystery.webp",
+        detailImage: "images/motive/detail/the-pincers-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Guardian",
@@ -295,7 +307,8 @@ const weaponsData = [
     {
         id: "the-furious-speed-mystery",
         name: "The Furious Speed Mystery",
-        image: "",
+        image: "images/motive/the-furious-speed-mystery.webp",
+        detailImage: "images/motive/detail/the-furious-speed-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Outlaw",
@@ -315,7 +328,8 @@ const weaponsData = [
     {
         id: "the-coin-mystery",
         name: "The Coin Mystery",
-        image: "",
+        image: "images/motive/the-coin-mystery.webp",
+        detailImage: "images/motive/detail/the-coin-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Hero",
@@ -335,7 +349,8 @@ const weaponsData = [
     {
         id: "the-richness-mystery",
         name: "The Richness Mystery",
-        image: "",
+        image: "images/motive/the-richness-mystery.webp",
+        detailImage: "images/motive/detail/the-richness-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Guardian",
@@ -355,7 +370,8 @@ const weaponsData = [
     {
         id: "the-bellowing-mystery",
         name: "The Bellowing Mystery",
-        image: "",
+        image: "images/motive/the-bellowing-mystery.webp",
+        detailImage: "images/motive/detail/the-bellowing-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Hero",
@@ -375,7 +391,8 @@ const weaponsData = [
     {
         id: "the-protection-mystery",
         name: "The Protection Mystery",
-        image: "",
+        image: "images/motive/the-protection-mystery.webp",
+        detailImage: "images/motive/detail/the-protection-mystery.webp",
         rarity: 3,
         limited: false,
         identity: "Victim",
