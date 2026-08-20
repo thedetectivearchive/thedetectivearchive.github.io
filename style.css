@@ -12055,3 +12055,814 @@ html[lang="vi"] .ranking-tab-button {
 }
 
 
+/* =========================================================
+   THE DETECTIVE ARCHIVE v45 — SIMULATION POLISH
+========================================================= */
+
+/* Stable media area: image if supplied, archive placeholder otherwise. */
+.simulation-card .simulation-card-media {
+    height: 118px;
+
+    margin:
+        -12px
+        -12px
+        2px;
+
+    display: grid;
+    place-items: center;
+
+    overflow: hidden;
+
+    border-bottom:
+        1px solid
+        rgba(155, 209, 255, 0.18);
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(55, 88, 121, 0.26),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(24, 31, 40, 0.96),
+            rgba(11, 10, 14, 0.98)
+        );
+}
+
+.simulation-card .simulation-card-media img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+    object-position: center;
+
+    background:
+        rgba(8, 9, 12, 0.58);
+}
+
+.simulation-card-placeholder {
+    display: grid;
+    place-items: center;
+    gap: 4px;
+
+    color:
+        rgba(155, 209, 255, 0.38);
+
+    text-align: center;
+}
+
+.simulation-card-placeholder span {
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 38px;
+    line-height: 0.9;
+}
+
+.simulation-card-placeholder small {
+    font-size: 7px;
+    letter-spacing: 2px;
+}
+
+
+/* Compact status summary. */
+.simulation-card-data-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.simulation-card-data-status span,
+.simulation-detail-status-strip span {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 24px;
+
+    padding:
+        4px
+        7px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.18);
+
+    color: #998d80;
+
+    background:
+        rgba(11, 10, 13, 0.58);
+
+    font-size: 7px;
+    line-height: 1.25;
+    letter-spacing: 0.6px;
+
+    text-transform: uppercase;
+}
+
+.simulation-card-data-status span.verified,
+.simulation-detail-status-strip span.verified {
+    border-color:
+        rgba(185, 149, 85, 0.42);
+
+    color: var(--gold-light);
+
+    background:
+        rgba(77, 58, 31, 0.16);
+}
+
+.simulation-card-data-status span.partial,
+.simulation-detail-status-strip span.partial {
+    border-color:
+        rgba(155, 209, 255, 0.30);
+
+    color: var(--blue-light);
+
+    background:
+        rgba(41, 61, 83, 0.14);
+}
+
+
+/* Four Implement slots: recorded vs pending is visible at a glance. */
+.simulation-card-slots span {
+    position: relative;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.simulation-card-slots span::after {
+    content: "";
+
+    position: absolute;
+    right: 4px;
+    top: 4px;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(128, 118, 108, 0.52);
+}
+
+.simulation-card-slots span.verified {
+    border-color:
+        rgba(185, 149, 85, 0.44);
+
+    color: var(--gold-light);
+
+    background:
+        rgba(77, 58, 31, 0.18);
+}
+
+.simulation-card-slots span.verified::after {
+    background: var(--gold-light);
+
+    box-shadow:
+        0 0 8px
+        rgba(215, 177, 99, 0.42);
+}
+
+.simulation-card-slots span.pending {
+    color: #7f8994;
+}
+
+
+/* Detail hero artwork should never be cropped. */
+.simulation-detail-art img {
+    object-fit: contain !important;
+    object-position: center !important;
+
+    background:
+        rgba(8, 9, 12, 0.62);
+}
+
+
+/* Archive-status strip in Simulation Detail. */
+.simulation-detail-status-strip {
+    margin:
+        12px
+        0
+        2px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+
+/* Pending slots read intentionally, not as missing UI. */
+.simulation-detail-slot-card.pending strong {
+    color: #8f857a;
+
+    font-size: 11px;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.simulation-detail-slot-card.verified {
+    position: relative;
+}
+
+.simulation-detail-slot-card.verified::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 2px;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            var(--gold),
+            transparent
+        );
+}
+
+
+/* Keep 4 cards on desktop, 2x2 on compact screens, 1 column on phones. */
+@media (max-width: 900px) {
+
+    .simulation-detail-slot-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .simulation-detail-slot-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .simulation-card-data-status,
+    .simulation-detail-status-strip {
+        gap: 4px;
+    }
+
+    .simulation-card-data-status span,
+    .simulation-detail-status-strip span {
+        font-size: 6.5px;
+    }
+
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v45.1 — SIMULATION IMAGE FIX
+========================================================= */
+
+/* The actual image and fallback share ONE art panel. */
+.simulation-detail-art.has-simulation-image
+.simulation-detail-placeholder {
+    display: none !important;
+}
+
+/* Do not visually frame the contained image a second time. */
+.simulation-detail-art.has-simulation-image {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(14, 15, 19, 0.98),
+            rgba(8, 8, 11, 0.98)
+        );
+}
+
+.simulation-detail-art.has-simulation-image img {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain !important;
+    object-position: center !important;
+
+    background: transparent !important;
+}
+
+/* Card: if an image exists, only the existing media block is shown. */
+.simulation-card-media:not(.simulation-card-media-placeholder)
+.simulation-card-placeholder {
+    display: none !important;
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v46 — MOTIVE POLISH
+========================================================= */
+
+/* Motive card artwork uses one clean visual layer. */
+.weapon-card .weapon-image {
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(185, 149, 85, 0.13),
+            transparent 48%
+        ),
+        rgba(10, 9, 12, 0.96);
+}
+
+.weapon-card .weapon-image.has-motive-image
+.motive-card-placeholder {
+    display: none !important;
+}
+
+.weapon-card .weapon-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+    object-position: center;
+
+    background: transparent;
+}
+
+
+/* Name and identity read as one compact archive record. */
+.weapon-card .weapon-name {
+    margin-top: 2px;
+    line-height: 1.25;
+}
+
+.weapon-card .motive-card-identity {
+    margin-top: 2px;
+    margin-bottom: 8px;
+}
+
+
+/* Detail: image OR placeholder, never both. */
+.motive-full-detail-art.has-motive-image
+.motive-detail-placeholder {
+    display: none !important;
+}
+
+.motive-full-detail-art.has-motive-image {
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(185, 149, 85, 0.10),
+            transparent 52%
+        ),
+        rgba(8, 8, 11, 0.98);
+}
+
+.motive-full-detail-art.has-motive-image img {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain !important;
+    object-position: center !important;
+
+    background: transparent !important;
+}
+
+
+/* Existing tabs stay the same; a tiny dot only indicates recorded data. */
+.motive-detail-tabs
+.character-detail-tab-button {
+    position: relative;
+}
+
+.motive-detail-tabs
+.character-detail-tab-button.has-recorded-data::after {
+    content: "";
+
+    position: absolute;
+    right: 8px;
+    top: 8px;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: var(--gold-light);
+
+    box-shadow:
+        0 0 7px
+        rgba(215, 177, 99, 0.38);
+}
+
+
+/* Existing effect/scaling content gets clearer spacing, no extra labels. */
+.motive-effect-card {
+    line-height: 1.7;
+}
+
+.motive-scaling-section + .motive-scaling-section {
+    margin-top: 16px;
+}
+
+
+/* Archive metadata cells stay compact on smaller screens. */
+@media (max-width: 560px) {
+
+    .motive-detail-tabs
+    .character-detail-tab-button.has-recorded-data::after {
+        right: 5px;
+        top: 6px;
+    }
+
+    .weapon-card .weapon-image img {
+        object-fit: contain;
+    }
+
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v48 — ASSET RELIABILITY
+   Fallbacks only; normal images/layout remain unchanged.
+========================================================= */
+
+.archive-image-failed {
+    visibility: hidden !important;
+}
+
+.simulation-card-media.asset-missing,
+.epiphany-card-media.asset-missing,
+.news-image.asset-missing,
+.small-news-image.asset-missing,
+.news-page-card-media.asset-missing {
+    position: relative;
+}
+
+.simulation-card-media.asset-missing::after,
+.epiphany-card-media.asset-missing::after,
+.news-image.asset-missing::after,
+.small-news-image.asset-missing::after,
+.news-page-card-media.asset-missing::after {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    color: rgba(185, 149, 85, 0.42);
+
+    font-size: 8px;
+    letter-spacing: 1.4px;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(111, 50, 67, 0.10),
+            transparent 46%
+        ),
+        rgba(11, 9, 12, 0.88);
+}
+
+.simulation-card-media.asset-missing::after {
+    content: "SIMULATION";
+}
+
+.epiphany-card-media.asset-missing::after {
+    content: "EPIPHANY";
+}
+
+.news-image.asset-missing::after,
+.small-news-image.asset-missing::after,
+.news-page-card-media.asset-missing::after {
+    content: "ARCHIVE IMAGE";
+}
+
+.news-panel-media.asset-missing {
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(111, 50, 67, 0.09),
+            transparent 58%
+        ),
+        rgba(12, 10, 14, 0.72) !important;
+}
+
+
+/* Respect users who request less motion; no visual redesign. */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+    }
+
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v50 — PRODUCTION POLISH
+========================================================= */
+
+/* Keyboard focus is visible without changing mouse hover styling. */
+:where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [tabindex]
+):focus-visible {
+    outline:
+        2px solid
+        rgba(224, 187, 112, 0.92);
+
+    outline-offset: 3px;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(185, 149, 85, 0.12);
+}
+
+
+/* =========================
+   CUSTOM 404
+========================= */
+
+.archive-404-body {
+    min-height: 100vh;
+
+    margin: 0;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--ivory);
+
+    background:
+        radial-gradient(
+            circle at 50% 18%,
+            rgba(91, 47, 62, 0.20),
+            transparent 34%
+        ),
+        linear-gradient(
+            160deg,
+            #151116,
+            #09080b 62%,
+            #0f0d11
+        );
+}
+
+.archive-404-shell {
+    width:
+        min(
+            92vw,
+            820px
+        );
+
+    padding:
+        32px
+        0;
+}
+
+.archive-404-brand {
+    width: fit-content;
+
+    margin:
+        0
+        auto
+        20px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: inherit;
+
+    text-decoration: none;
+}
+
+.archive-404-brand img {
+    width: 52px;
+    height: 52px;
+
+    object-fit: contain;
+}
+
+.archive-404-brand strong,
+.archive-404-brand span {
+    display: block;
+}
+
+.archive-404-brand strong {
+    color: var(--ivory);
+
+    font-size: 17px;
+    font-weight: normal;
+}
+
+.archive-404-brand span {
+    margin-top: 3px;
+
+    color: #8f8275;
+
+    font-size: 8px;
+    letter-spacing: 1.6px;
+}
+
+.archive-404-panel {
+    position: relative;
+
+    overflow: hidden;
+
+    padding:
+        56px
+        52px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.34);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(26, 21, 26, 0.98),
+            rgba(11, 10, 14, 0.98)
+        );
+
+    box-shadow:
+        0 24px 60px
+        rgba(0, 0, 0, 0.42);
+}
+
+.archive-404-panel::before {
+    content: "";
+
+    position: absolute;
+    inset: 6px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.10);
+
+    pointer-events: none;
+}
+
+.archive-404-code {
+    position: absolute;
+    right: 24px;
+    top: -22px;
+
+    color:
+        rgba(185, 149, 85, 0.055);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 160px;
+    line-height: 1;
+
+    pointer-events: none;
+}
+
+.archive-404-panel h1 {
+    position: relative;
+
+    max-width: 620px;
+
+    margin:
+        10px
+        0
+        14px;
+
+    color: var(--ivory);
+
+    font-size:
+        clamp(
+            34px,
+            6vw,
+            58px
+        );
+
+    font-weight: normal;
+    line-height: 1.04;
+}
+
+.archive-404-description {
+    position: relative;
+
+    max-width: 610px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.archive-404-actions {
+    position: relative;
+
+    margin-top: 30px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.archive-404-actions a {
+    min-height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        0
+        16px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.30);
+
+    color: #cfc1ad;
+
+    background:
+        rgba(12, 10, 14, 0.72);
+
+    font-size: 9px;
+    letter-spacing: 1px;
+
+    text-decoration: none;
+
+    text-transform: uppercase;
+}
+
+.archive-404-actions
+.archive-404-primary {
+    color: #fff0c7;
+
+    border-color: var(--gold);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(75, 42, 55, 0.96),
+            rgba(35, 22, 29, 0.98)
+        );
+}
+
+.archive-404-actions a:hover {
+    border-color:
+        rgba(215, 177, 99, 0.74);
+
+    color: #fff1ce;
+}
+
+
+@media (max-width: 620px) {
+
+    .archive-404-panel {
+        padding:
+            42px
+            24px;
+    }
+
+    .archive-404-code {
+        right: 8px;
+
+        font-size: 112px;
+    }
+
+    .archive-404-actions {
+        display: grid;
+    }
+
+    .archive-404-actions a {
+        width: 100%;
+    }
+
+}
+

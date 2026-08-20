@@ -14,6 +14,14 @@
 
     <meta name="application-name" content="The Detective Archive">
 
+    <meta name="theme-color" content="#100d12">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Detective Archive | Silver Palace Rankings & Database">
+    <meta name="twitter:description" content="Unofficial Silver Palace character, Motive, Simulation, Epiphany, rankings and news archive.">
+    <meta name="twitter:image" content="https://thedetectivearchive.github.io/logo.png">
+
     <link rel="canonical"
           href="https://thedetectivearchive.github.io/">
 
@@ -58,6 +66,8 @@
                 class="site-logo"
                 src="logo.png"
                 alt="The Detective Archive logo"
+                decoding="async"
+                fetchpriority="high"
             >
 
             <div>
@@ -927,24 +937,27 @@
     </div>
 
 
-    <script src="mobile-nav.js"></script>
-    <script src="lang.js"></script>
+    <script src="asset-runtime.js"></script>
+    <script defer src="mobile-nav.js"></script>
+    <script defer src="lang.js"></script>
 
     <!-- v41 modular content: edit files inside /content instead of touching UI code -->
-    <script src="content/news.js"></script>
-    <script src="content/rankings.js"></script>
-    <script src="content/reactors.js"></script>
-    <script src="content/characters.js"></script>
-    <script src="content/motives.js"></script>
-    <script src="content/character-base-extensions.js"></script>
-    <script src="content/simulation.js"></script>
-    <script src="content/epiphanies.js"></script>
-    <script src="content/character-skills.js"></script>
-    <script src="content/character-psyches.js"></script>
-    <script src="content/archive-updates.js"></script>
-    <script src="content-validator.js"></script>
-    <script src="script.js"></script>
+    <script defer src="content/news.js"></script>
+    <script defer src="content/rankings.js"></script>
+    <script defer src="content/reactors.js"></script>
+    <script defer src="content/characters.js"></script>
+    <script defer src="content/motives.js"></script>
+    <script defer src="content/character-base-extensions.js"></script>
+    <script defer src="content/simulation.js"></script>
+    <script defer src="content/epiphanies.js"></script>
+    <script defer src="content/character-skills.js"></script>
+    <script defer src="content/character-psyches.js"></script>
+    <script defer src="content/archive-updates.js"></script>
+    <script defer src="content-validator.js"></script>
+    <script defer src="script.js"></script>
+    <script defer src="deep-link.js"></script>
 
+    <script defer src="accessibility.js"></script>
 </body>
 
 </html>

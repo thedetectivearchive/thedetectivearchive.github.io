@@ -215,7 +215,18 @@ function setInformationPanelMedia(panel, imagePath) {
             "news-panel-art";
 
         art.alt = "";
+        art.loading = "eager";
+        art.decoding = "async";
         art.setAttribute("aria-hidden", "true");
+
+        art.addEventListener(
+            "error",
+            function () {
+                art.style.display = "none";
+                media.classList.add("is-empty");
+                media.classList.add("asset-missing");
+            }
+        );
 
         media.appendChild(art);
         panel.prepend(media);
@@ -378,6 +389,8 @@ function renderNewsList() {
                         <img
                             src="${news.image}"
                             alt="${getLocalizedText(news.title)}"
+                            loading="lazy"
+                            decoding="async"
 
                             onerror="
                                 this.style.display='none'
@@ -437,6 +450,8 @@ function renderNewsList() {
                         <img
                             src="${news.image}"
                             alt="${getLocalizedText(news.title)}"
+                            loading="lazy"
+                            decoding="async"
 
                             onerror="
                                 this.style.display='none'
@@ -2519,6 +2534,8 @@ function renderCharacters(characters) {
                 <img
                     src="${characterImage}"
                     alt="${getLocalizedText(character.name)}"
+                    loading="lazy"
+                    decoding="async"
                     onerror="
                         this.style.display='none';
                         this.parentElement.classList.add('image-missing');
@@ -2686,6 +2703,8 @@ function renderWeapons(weapons) {
                             <img
                                 src="${weapon.image}"
                                 alt="${getLocalizedText(weapon.name)}"
+                                loading="lazy"
+                                decoding="async"
                                 onerror="
                                     this.style.display='none';
                                     this.parentElement.classList.add('image-missing');
@@ -2844,7 +2863,7 @@ function renderSimulations(simulationSets) {
         card.innerHTML = `
             ${simulationSet.image ? `
                 <div class="database-card-media simulation-card-media">
-                    <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" loading="lazy" onerror="this.parentElement.remove()">
+                    <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.add('asset-missing')">
                 </div>
             ` : ""}
 
@@ -2976,7 +2995,7 @@ function renderEpiphanies(epiphanies) {
         card.innerHTML = `
             ${epiphany.image ? `
                 <div class="database-card-media epiphany-card-media">
-                    <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" loading="lazy" onerror="this.parentElement.remove()">
+                    <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.add('asset-missing')">
                 </div>
             ` : ""}
 
@@ -3516,6 +3535,7 @@ function renderCharacterFullDetail(
                         src="${characterImage}"
                         data-fallback="${fallbackImage}"
                         alt="${getLocalizedText(character.name)}"
+                        decoding="async"
                         onerror="
                             if (this.dataset.fallback) {
                                 const fallback = this.dataset.fallback;
@@ -4309,6 +4329,7 @@ function renderWeaponFullDetail(
                                 <img
                                     src="${weapon.image}"
                                     alt="${getLocalizedText(weapon.name)}"
+                                    decoding="async"
                                     onerror="
                                         this.style.display='none';
                                         this.parentElement.classList.add('image-missing');
@@ -4858,7 +4879,7 @@ function renderSimulationFullDetail(
                     </div>
 
                     ${simulationSet.image ? `
-                        <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" onerror="this.remove()">
+                        <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.remove('has-simulation-image'); const p=this.parentElement.querySelector('.simulation-detail-placeholder'); if(p)p.style.display=''">
                     ` : ""}
 
                     <div class="full-detail-art-vignette"></div>
@@ -5350,7 +5371,7 @@ function renderEpiphanyFullDetail(
                     </div>
 
                     ${epiphany.image ? `
-                        <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" onerror="this.remove()">
+                        <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" decoding="async" onerror="this.style.display='none'; const p=this.parentElement.querySelector('.epiphany-large-book'); if(p)p.style.display=''">
                     ` : ""}
 
                     <div class="full-detail-art-vignette"></div>
@@ -7335,5 +7356,571 @@ renderCharacterFullDetail =
         );
 
     };
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v45 — SIMULATION POLISH
+   UI-only enhancement. No Simulation data is changed.
+========================================================= */
+
+function enhanceSimulationCardsV45(simulationSets) {
+
+    if (!simulationGrid || !Array.isArray(simulationSets)) {
+        return;
+    }
+
+    simulationSets.forEach(function (simulationSet) {
+
+        const card =
+            simulationGrid.querySelector(
+                `.simulation-card[data-id="${simulationSet.id}"]`
+            );
+
+        if (!card) {
+            return;
+        }
+
+        const slots =
+            Array.isArray(simulationSet.slots)
+                ? simulationSet.slots
+                : [];
+
+        const knownPieceCount =
+            slots.filter(function (piece) {
+                return piece && piece.name;
+            }).length;
+
+
+        /* Always keep a stable media area. */
+        let media =
+            card.querySelector(
+                ".simulation-card-media"
+            );
+
+        if (!media) {
+
+            media =
+                document.createElement(
+                    "div"
+                );
+
+            media.className =
+                "database-card-media simulation-card-media simulation-card-media-placeholder";
+
+            media.innerHTML = `
+                <div class="simulation-card-placeholder" aria-hidden="true">
+                    <span>S</span>
+                    <small>SIMULATION</small>
+                </div>
+            `;
+
+            card.prepend(media);
+
+        }
+
+
+        /* Make slot state visible without inventing missing names. */
+        const slotNodes =
+            card.querySelectorAll(
+                ".simulation-card-slots span"
+            );
+
+        slotNodes.forEach(function (node, index) {
+
+            const piece =
+                slots[index] || {};
+
+            node.classList.toggle(
+                "verified",
+                Boolean(piece.name)
+            );
+
+            node.classList.toggle(
+                "pending",
+                !piece.name
+            );
+
+            node.title =
+                `${piece.slot || simulationSystemInfo.slotNames[index] || ""}: ${
+                    piece.name
+                        ? getLocalizedText(piece.name)
+                        : t("notTranscribed")
+                }`;
+
+        });
+
+
+        /* Compact archive-status row. */
+        let statusRow =
+            card.querySelector(
+                ".simulation-card-data-status"
+            );
+
+        if (!statusRow) {
+
+            statusRow =
+                document.createElement(
+                    "div"
+                );
+
+            statusRow.className =
+                "simulation-card-data-status";
+
+            const slotGrid =
+                card.querySelector(
+                    ".simulation-card-slots"
+                );
+
+            if (slotGrid) {
+                slotGrid.insertAdjacentElement(
+                    "beforebegin",
+                    statusRow
+                );
+            }
+
+        }
+
+        statusRow.innerHTML = `
+            <span class="${simulationSet.fullSetObserved ? "verified" : "pending"}">
+                ${simulationSet.fullSetObserved
+                    ? `4 / 4 · ${t("fullSetObserved")}`
+                    : t("notTranscribed")
+                }
+            </span>
+
+            <span class="${knownPieceCount > 0 ? "partial" : "pending"}">
+                ${t("knownPieces")} · ${knownPieceCount} / 4
+            </span>
+
+            <span class="${simulationSet.setEffect ? "verified" : "pending"}">
+                ${simulationSet.setEffect
+                    ? t("setEffect")
+                    : t("setEffectPending")
+                }
+            </span>
+        `;
+
+    });
+
+}
+
+
+const renderSimulationsV44Base =
+    renderSimulations;
+
+renderSimulations =
+    function (simulationSets) {
+
+        renderSimulationsV44Base(
+            simulationSets
+        );
+
+        enhanceSimulationCardsV45(
+            simulationSets
+        );
+
+    };
+
+
+function enhanceSimulationFullDetailV45(
+    simulationSet
+) {
+
+    if (!databaseDetailContent) {
+        return;
+    }
+
+    const slots =
+        Array.isArray(simulationSet.slots)
+            ? simulationSet.slots
+            : [];
+
+    const knownPieceCount =
+        slots.filter(function (piece) {
+            return piece && piece.name;
+        }).length;
+
+
+    const info =
+        databaseDetailContent.querySelector(
+            ".simulation-detail-info"
+        );
+
+    if (info) {
+
+        const previewNote =
+            info.querySelector(
+                ".character-preview-note"
+            );
+
+        if (previewNote) {
+
+            const strip =
+                document.createElement(
+                    "div"
+                );
+
+            strip.className =
+                "simulation-detail-status-strip";
+
+            strip.innerHTML = `
+                <span class="${simulationSet.fullSetObserved ? "verified" : "pending"}">
+                    ${simulationSet.fullSetObserved
+                        ? `4 / 4 · ${t("fullSetObserved")}`
+                        : t("notTranscribed")
+                    }
+                </span>
+
+                <span class="${knownPieceCount > 0 ? "partial" : "pending"}">
+                    ${t("knownPieces")} · ${knownPieceCount} / 4
+                </span>
+
+                <span class="${simulationSet.setEffect ? "verified" : "pending"}">
+                    ${simulationSet.setEffect
+                        ? t("setEffect")
+                        : t("setEffectPending")
+                    }
+                </span>
+            `;
+
+            previewNote.insertAdjacentElement(
+                "afterend",
+                strip
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Empty piece names remain explicitly unknown instead of looking
+     * like a broken card.
+     */
+    databaseDetailContent
+        .querySelectorAll(
+            ".simulation-detail-slot-card.pending strong"
+        )
+        .forEach(function (nameNode) {
+
+            if (
+                nameNode.textContent.trim() === "--"
+            ) {
+                nameNode.textContent =
+                    t("notTranscribed");
+            }
+
+        });
+
+}
+
+
+const renderSimulationFullDetailV44Base =
+    renderSimulationFullDetail;
+
+renderSimulationFullDetail =
+    function (simulationSet) {
+
+        renderSimulationFullDetailV44Base(
+            simulationSet
+        );
+
+        enhanceSimulationFullDetailV45(
+            simulationSet
+        );
+
+    };
+
+
+/*
+ * The original page renders Simulation cards before this enhancement
+ * block is reached, so refresh that grid once after installing v45.
+ */
+if (
+    typeof applySimulationFilters === "function"
+) {
+    applySimulationFilters();
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v45.1 — SIMULATION IMAGE FIX
+   Keep exactly one visual image area per Simulation card/detail.
+========================================================= */
+
+function fixSimulationDetailMediaV451(simulationSet) {
+
+    if (!databaseDetailContent) {
+        return;
+    }
+
+    const art =
+        databaseDetailContent.querySelector(
+            ".simulation-detail-art"
+        );
+
+    if (!art) {
+        return;
+    }
+
+    const placeholder =
+        art.querySelector(
+            ".simulation-detail-placeholder"
+        );
+
+    const image =
+        art.querySelector(
+            "img"
+        );
+
+
+    /*
+     * The original Simulation detail contains a placeholder and,
+     * when an image exists, an <img> in the same art panel.
+     * With object-fit: contain the placeholder could remain visible
+     * around the image and look like a second image frame.
+     *
+     * v45.1 keeps only one visible media layer:
+     * image OR placeholder.
+     */
+    if (simulationSet.image && image) {
+
+        if (placeholder) {
+            placeholder.style.display =
+                "none";
+        }
+
+        art.classList.add(
+            "has-simulation-image"
+        );
+
+    } else {
+
+        if (placeholder) {
+            placeholder.style.display =
+                "";
+        }
+
+        art.classList.remove(
+            "has-simulation-image"
+        );
+
+    }
+
+}
+
+
+const renderSimulationFullDetailV45Base =
+    renderSimulationFullDetail;
+
+renderSimulationFullDetail =
+    function (simulationSet) {
+
+        renderSimulationFullDetailV45Base(
+            simulationSet
+        );
+
+        fixSimulationDetailMediaV451(
+            simulationSet
+        );
+
+    };
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v46 — MOTIVE POLISH
+   UI-only enhancement. No Motive data is changed.
+========================================================= */
+
+function enhanceMotiveCardsV46(weapons) {
+
+    if (!weaponGrid || !Array.isArray(weapons)) {
+        return;
+    }
+
+    weapons.forEach(function (weapon) {
+
+        const card =
+            weaponGrid.querySelector(
+                `.weapon-card[data-id="${weapon.id}"]`
+            );
+
+        if (!card) {
+            return;
+        }
+
+        const imageBox =
+            card.querySelector(
+                ".weapon-image"
+            );
+
+        if (!imageBox) {
+            return;
+        }
+
+        const placeholder =
+            imageBox.querySelector(
+                ".motive-card-placeholder"
+            );
+
+        const image =
+            imageBox.querySelector(
+                "img"
+            );
+
+        if (weapon.image && image) {
+
+            imageBox.classList.add(
+                "has-motive-image"
+            );
+
+            if (placeholder) {
+                placeholder.style.display = "none";
+            }
+
+        } else {
+
+            imageBox.classList.remove(
+                "has-motive-image"
+            );
+
+            if (placeholder) {
+                placeholder.style.display = "";
+            }
+
+        }
+
+    });
+
+}
+
+
+const renderWeaponsV45Base =
+    renderWeapons;
+
+renderWeapons =
+    function (weapons) {
+
+        renderWeaponsV45Base(
+            weapons
+        );
+
+        enhanceMotiveCardsV46(
+            weapons
+        );
+
+    };
+
+
+function enhanceMotiveFullDetailV46(
+    weapon
+) {
+
+    if (!databaseDetailContent) {
+        return;
+    }
+
+    const art =
+        databaseDetailContent.querySelector(
+            ".motive-full-detail-art"
+        );
+
+    if (art) {
+
+        const placeholder =
+            art.querySelector(
+                ".motive-detail-placeholder"
+            );
+
+        const image =
+            art.querySelector(
+                "img"
+            );
+
+        if (weapon.image && image) {
+
+            art.classList.add(
+                "has-motive-image"
+            );
+
+            if (placeholder) {
+                placeholder.style.display = "none";
+            }
+
+        } else {
+
+            art.classList.remove(
+                "has-motive-image"
+            );
+
+            if (placeholder) {
+                placeholder.style.display = "";
+            }
+
+        }
+
+    }
+
+
+    /*
+     * Add a small visual marker to tabs that already contain
+     * transcribed data. This does not add any new game information.
+     */
+    const verifiedEffect =
+        getLocalizedText(
+            weapon.effect || ""
+        );
+
+    const tabMap = {
+        effects: Boolean(verifiedEffect),
+        scaling: Boolean(
+            (weapon.stat1 && weapon.stat1.refine) ||
+            weapon.upgrade
+        )
+    };
+
+    Object.entries(tabMap)
+        .forEach(function ([tabId, hasData]) {
+
+            const button =
+                databaseDetailContent.querySelector(
+                    `[data-motive-detail-tab="${tabId}"]`
+                );
+
+            if (button) {
+                button.classList.toggle(
+                    "has-recorded-data",
+                    hasData
+                );
+            }
+
+        });
+
+}
+
+
+const renderMotiveFullDetailV45Base =
+    renderMotiveFullDetail;
+
+renderMotiveFullDetail =
+    function (weapon) {
+
+        renderMotiveFullDetailV45Base(
+            weapon
+        );
+
+        enhanceMotiveFullDetailV46(
+            weapon
+        );
+
+    };
+
+
+/* Refresh cards once because the original render ran before this block. */
+if (
+    typeof applyWeaponFilters === "function"
+) {
+    applyWeaponFilters();
+}
 
 

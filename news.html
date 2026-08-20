@@ -7,6 +7,19 @@
     <meta name="description" content="Silver Palace beta news and The Detective Archive update log.">
     <meta name="robots" content="index, follow">
     <meta name="application-name" content="The Detective Archive">
+    <meta name="theme-color" content="#100d12">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="News & Archive Updates | The Detective Archive">
+    <meta property="og:description" content="Silver Palace beta news and The Detective Archive update log.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thedetectivearchive.github.io/news.html">
+    <meta property="og:site_name" content="The Detective Archive">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://thedetectivearchive.github.io/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="News & Archive Updates | The Detective Archive">
+    <meta name="twitter:description" content="Silver Palace beta news and archive update records.">
+    <meta name="twitter:image" content="https://thedetectivearchive.github.io/logo.png">
     <link rel="canonical" href="https://thedetectivearchive.github.io/news.html">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
@@ -16,7 +29,7 @@
 
     <header class="news-page-header">
         <a class="news-page-brand" href="index.html">
-            <img src="logo.png" alt="The Detective Archive logo">
+            <img src="logo.png" alt="The Detective Archive logo" decoding="async" fetchpriority="high">
             <div>
                 <strong>The Detective Archive</strong>
                 <span>SILVER PALACE DATABASE</span>
@@ -118,7 +131,7 @@
             </div>
 
             <figure class="news-page-article-media" id="newsArticleMedia" hidden>
-                <img id="newsArticleImage" src="" alt="">
+                <img id="newsArticleImage" src="" alt="" decoding="async">
             </figure>
 
             <div class="news-page-article-tags" id="newsArticleTags"></div>
@@ -134,11 +147,13 @@
         </p>
     </footer>
 
-    <script src="mobile-nav.js"></script>
+    <script src="asset-runtime.js"></script>
+    <script defer src="mobile-nav.js"></script>
     <!-- News page only loads the content it needs. -->
-    <script src="content/news.js"></script>
-    <script src="content/archive-updates.js"></script>
-    <script src="content-validator.js"></script>
-    <script src="news-page.js"></script>
+    <script defer src="content/news.js"></script>
+    <script defer src="content/archive-updates.js"></script>
+    <script defer src="content-validator.js"></script>
+    <script defer src="news-page.js"></script>
+    <script defer src="accessibility.js"></script>
 </body>
 </html>
