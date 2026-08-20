@@ -155,130 +155,182 @@ const newsCount =
 
     return category.toUpperCase();
 }
-function renderFeaturedNews() {
 
-    if (newsData.length === 0) {
+function getSortedNewsData() {
+    return Array.isArray(newsData)
+        ? [...newsData].sort(function (a, b) {
+
+            const aFeatured = Boolean(a.featured);
+            const bFeatured = Boolean(b.featured);
+
+            if (aFeatured !== bFeatured) {
+                return Number(bFeatured) - Number(aFeatured);
+            }
+
+            return String(b.date || "")
+                .localeCompare(String(a.date || ""));
+        })
+        : [];
+}
+
+function setInformationPanelMedia(panel, imagePath) {
+
+    if (!panel) {
         return;
     }
 
+    panel.style.backgroundImage = "";
+    panel.style.backgroundSize = "";
+    panel.style.backgroundPosition = "";
+    panel.style.backgroundRepeat = "";
 
-    const news =
-        newsData[0];
-
-
-    featuredCategory.textContent =
-        getNewsCategory(
-            news.category
+    let media =
+        panel.querySelector(
+            ".news-panel-media"
         );
 
+    let art =
+        media
+            ? media.querySelector(
+                ".news-panel-art"
+            )
+            : null;
 
-    featuredTitle.textContent =
-        getLocalizedText(
-            news.title
-        );
+    if (!media) {
 
+        media =
+            document.createElement(
+                "div"
+            );
 
-    featuredDate.textContent =
-        news.date;
+        media.className =
+            "news-panel-media is-empty";
 
+        art =
+            document.createElement(
+                "img"
+            );
 
-    featuredDescription.textContent =
-        getLocalizedText(
-            news.description
-        );
+        art.className =
+            "news-panel-art";
 
+        art.alt = "";
+        art.setAttribute("aria-hidden", "true");
 
-    if (news.image) {
+        media.appendChild(art);
+        panel.prepend(media);
 
-        featuredNews.style.backgroundImage =
-            `url("${news.image}")`;
+    }
+
+    if (imagePath) {
+
+        art.src = imagePath;
+        art.style.display = "block";
+
+        media.classList.remove("is-empty");
+
+    } else {
+
+        art.removeAttribute("src");
+        art.style.display = "none";
+
+        media.classList.add("is-empty");
 
     }
 
 }
+
+
+function renderFeaturedNews() {
+
+    const sortedNews = getSortedNewsData();
+
+    if (sortedNews.length === 0) {
+        return;
+    }
+
+    const news = sortedNews[0];
+
+    featuredCategory.textContent =
+        getNewsCategory(news.category);
+
+    featuredTitle.textContent =
+        getLocalizedText(news.title);
+
+    featuredDate.textContent =
+        news.date;
+
+    featuredDescription.textContent =
+        getLocalizedText(news.description);
+
+    setInformationPanelMedia(
+        featuredNews,
+        news.image || ""
+    );
+
+}
 function renderSideNews() {
 
-    /* =========================
-       NEWS NUMBER 2
-    ========================= */
+    const sortedNews = getSortedNewsData();
 
-    if (newsData[1]) {
+    if (sortedNews[1]) {
 
-        const news =
-            newsData[1];
-
+        const news = sortedNews[1];
 
         sideOneCategory.textContent =
-            getNewsCategory(
-                news.category
-            );
-
+            getNewsCategory(news.category);
 
         sideOneTitle.textContent =
-            getLocalizedText(
-                news.title
-            );
-
+            getLocalizedText(news.title);
 
         sideOneDate.textContent =
             news.date;
 
-
         sideOneDescription.textContent =
-            getLocalizedText(
-                news.description
-            );
+            getLocalizedText(news.description);
 
+        setInformationPanelMedia(
+            sideNewsOne,
+            news.image || ""
+        );
 
-        if (news.image) {
+    } else {
 
-            sideNewsOne.style.backgroundImage =
-                `url("${news.image}")`;
-
-        }
+        setInformationPanelMedia(
+            sideNewsOne,
+            ""
+        );
 
     }
 
 
+    if (sortedNews[2]) {
 
-    /* =========================
-       NEWS NUMBER 3
-    ========================= */
-
-    if (newsData[2]) {
-
-        const news =
-            newsData[2];
-
+        const news = sortedNews[2];
 
         sideTwoCategory.textContent =
-            getNewsCategory(
-                news.category
-            );
-
+            getNewsCategory(news.category);
 
         sideTwoTitle.textContent =
-            getLocalizedText(
-                news.title
-            );
-
+            getLocalizedText(news.title);
 
         sideTwoDate.textContent =
             news.date;
 
-
         sideTwoDescription.textContent =
-            getLocalizedText(
-                news.description
-            );
+            getLocalizedText(news.description);
 
+        setInformationPanelMedia(
+            sideNewsTwo,
+            news.image || ""
+        );
 
-        if (news.image) {
+    } else {
 
-            sideNewsTwo.style.backgroundImage =
-                `url("${news.image}")`;
-
-        }
+        setInformationPanelMedia(
+            sideNewsTwo,
+            ""
+        );
 
     }
 
@@ -291,8 +343,10 @@ function renderNewsList() {
 
     newsList.innerHTML = "";
 
+    const sortedNews = getSortedNewsData();
 
-    newsData.forEach(
+
+    sortedNews.forEach(
         function (news, index) {
 
 
@@ -432,10 +486,12 @@ function renderNewsList() {
 
 
     newsCount.textContent =
-        `${newsData.length} ARTICLES`;
+        `${sortedNews.length} ARTICLES`;
 
 }
 function renderNewsSystem() {
+
+    const sortedNews = getSortedNewsData();
 
     renderFeaturedNews();
 
@@ -443,16 +499,16 @@ function renderNewsSystem() {
 
     renderNewsList();
 
-    if (newsData[0]) {
-        bindNewsEntry(featuredNews, newsData[0]);
+    if (sortedNews[0]) {
+        bindNewsEntry(featuredNews, sortedNews[0]);
     }
 
-    if (newsData[1]) {
-        bindNewsEntry(sideNewsOne, newsData[1]);
+    if (sortedNews[1]) {
+        bindNewsEntry(sideNewsOne, sortedNews[1]);
     }
 
-    if (newsData[2]) {
-        bindNewsEntry(sideNewsTwo, newsData[2]);
+    if (sortedNews[2]) {
+        bindNewsEntry(sideNewsTwo, sortedNews[2]);
     }
 
 }
@@ -541,7 +597,9 @@ function renderNewsDetail(news) {
     }
 
     const entryNumber =
-        Math.max(1, newsData.indexOf(news) + 1);
+        Math.max(1, getSortedNewsData().findIndex(function (entry) {
+            return entry.id === news.id;
+        }) + 1);
 
     const content =
         getLocalizedText(news.content);
@@ -1217,6 +1275,18 @@ const selectedDescription =
 const characterSearch =
     document.getElementById("characterSearch");
 
+const characterSearchClear =
+    document.getElementById("characterSearchClear");
+
+const characterActiveFilters =
+    document.getElementById("characterActiveFilters");
+
+const characterSort =
+    document.getElementById("characterSort");
+
+const characterSortLabel =
+    document.getElementById("characterSortLabel");
+
 const weaponSearch =
     document.getElementById("weaponSearch");
 
@@ -1247,6 +1317,7 @@ const weaponTypeFiltersContainer =
 let activeCharacterAttribute = "all";
 let activeCharacterStyle = "all";
 let activeCharacterRarity = "all";
+let activeCharacterSort = "default";
 let activeWeaponType = "all";
 
 
@@ -1574,6 +1645,17 @@ function normalizeDatabaseFilterValue(value) {
 }
 
 
+function normalizeCharacterSearchValue(value) {
+
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+
+}
+
+
 function createFilterButtonMarkup(config) {
 
     const icon =
@@ -1668,6 +1750,12 @@ function renderCharacterAttributeFilters() {
             activeCharacterAttribute
         );
 
+    allButton.dataset.tooltip = t("all") + " · " + charactersData.length;
+    allButton.setAttribute(
+        "aria-label",
+        t("all") + " (" + charactersData.length + ")"
+    );
+
     allButton.addEventListener(
         "click",
         function () {
@@ -1697,10 +1785,19 @@ function renderCharacterAttributeFilters() {
         button.type = "button";
         button.className = "database-icon-filter";
         button.dataset.filterValue = value;
-        button.dataset.tooltip = getLocalizedText(filter.name || filter.label || value);
+
+        const filterLabel =
+            getLocalizedText(filter.name || filter.label || value);
+
+        const filterCount =
+            charactersData.filter(function (character) {
+                return characterMatchesAttribute(character, value);
+            }).length;
+
+        button.dataset.tooltip = filterLabel + " · " + filterCount;
         button.setAttribute(
             "aria-label",
-            getLocalizedText(filter.name || filter.label || value)
+            filterLabel + " (" + filterCount + ")"
         );
 
         const isActive =
@@ -1939,23 +2036,38 @@ function weaponMatchesType(weapon, type) {
 
 function getCharacterSearchText(character) {
 
+    const rarity = String(character.rarity || "").trim();
+
     const values = [
         getLocalizedText(character.name),
         getLocalizedText(character.alias),
         getLocalizedText(character.title),
-        getLocalizedText(character.reactorAttribute)
+        getLocalizedText(character.reactorAttribute),
+        getLocalizedText(character.combatStyle),
+        getLocalizedText(character.identity),
+        getLocalizedText(character.affiliation),
+        getLocalizedText(character.occupation),
+        getLocalizedText(character.availability),
+        rarity,
+        rarity ? rarity + " star" : "",
+        rarity ? rarity + " stars" : "",
+        rarity ? rarity + "★" : ""
     ];
 
     if (Array.isArray(character.variants)) {
         character.variants.forEach(function (variant) {
             values.push(
                 getLocalizedText(variant.displayName),
-                getLocalizedText(variant.reactorAttribute)
+                getLocalizedText(variant.reactorAttribute),
+                getLocalizedText(variant.combatStyle),
+                getLocalizedText(variant.identity),
+                getLocalizedText(variant.affiliation),
+                getLocalizedText(variant.occupation)
             );
         });
     }
 
-    return values.join(" ").toLowerCase();
+    return normalizeCharacterSearchValue(values.join(" "));
 
 }
 
@@ -2048,9 +2160,218 @@ function updateCharacterFilterResultCount(filteredCount) {
 }
 
 
+function updateCharacterSearchControls() {
+
+    const hasSearch =
+        Boolean(characterSearch && characterSearch.value.trim());
+
+    if (characterSearchClear) {
+        characterSearchClear.hidden = !hasSearch;
+        characterSearchClear.setAttribute("aria-label", t("clearSearch"));
+        characterSearchClear.title = t("clearSearch");
+    }
+
+    if (characterSortLabel) {
+        characterSortLabel.textContent = t("characterSortLabel");
+    }
+
+    if (characterSort) {
+        characterSort.setAttribute("aria-label", t("characterSortLabel"));
+
+        const defaultOption =
+            characterSort.querySelector('option[value="default"]');
+
+        if (defaultOption) {
+            defaultOption.textContent = t("characterSortDefault");
+        }
+
+        const rarityDescOption =
+            characterSort.querySelector('option[value="rarity-desc"]');
+
+        const rarityAscOption =
+            characterSort.querySelector('option[value="rarity-asc"]');
+
+        if (rarityDescOption) {
+            rarityDescOption.textContent = t("characterSortRarityDesc");
+        }
+
+        if (rarityAscOption) {
+            rarityAscOption.textContent = t("characterSortRarityAsc");
+        }
+    }
+
+}
+
+
+function renderCharacterActiveFilters() {
+
+    if (!characterActiveFilters) {
+        return;
+    }
+
+    const filters = [];
+
+    if (activeCharacterAttribute !== "all") {
+        filters.push({
+            type: "attribute",
+            value: activeCharacterAttribute,
+            label: activeCharacterAttribute
+        });
+    }
+
+    if (activeCharacterStyle !== "all") {
+        filters.push({
+            type: "style",
+            value: activeCharacterStyle,
+            label: activeCharacterStyle
+        });
+    }
+
+    if (activeCharacterRarity !== "all") {
+        filters.push({
+            type: "rarity",
+            value: activeCharacterRarity,
+            label: activeCharacterRarity + "★"
+        });
+    }
+
+    characterActiveFilters.innerHTML = "";
+    characterActiveFilters.hidden = filters.length === 0;
+    characterActiveFilters.setAttribute("aria-label", t("activeFilters"));
+
+    filters.forEach(function (filter) {
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "character-filter-chip";
+        button.dataset.filterType = filter.type;
+        button.dataset.filterValue = filter.value;
+        button.setAttribute(
+            "aria-label",
+            t("removeFilter") + ": " + filter.label
+        );
+
+        const label = document.createElement("span");
+        label.textContent = filter.label;
+
+        const close = document.createElement("span");
+        close.className = "character-filter-chip-close";
+        close.setAttribute("aria-hidden", "true");
+        close.textContent = "×";
+
+        button.appendChild(label);
+        button.appendChild(close);
+
+        button.addEventListener("click", function () {
+
+            if (filter.type === "attribute") {
+                activeCharacterAttribute = "all";
+                renderCharacterAttributeFilters();
+            }
+
+            if (filter.type === "style") {
+                activeCharacterStyle = "all";
+                if (characterStyleFilter) {
+                    characterStyleFilter.value = "all";
+                }
+            }
+
+            if (filter.type === "rarity") {
+                activeCharacterRarity = "all";
+                if (characterRarityFilter) {
+                    characterRarityFilter.value = "all";
+                }
+            }
+
+            applyCharacterFilters();
+
+        });
+
+        characterActiveFilters.appendChild(button);
+
+    });
+
+}
+
+
+function sortCharacterResults(characters) {
+
+    const sorted = characters.slice();
+
+    if (activeCharacterSort === "default") {
+        return sorted;
+    }
+
+    if (activeCharacterSort === "name-asc" || activeCharacterSort === "name-desc") {
+        const direction = activeCharacterSort === "name-desc" ? -1 : 1;
+
+        return sorted.sort(function (a, b) {
+            return getLocalizedText(a.name).localeCompare(
+                getLocalizedText(b.name),
+                currentLanguage,
+                { sensitivity: "base" }
+            ) * direction;
+        });
+    }
+
+    if (activeCharacterSort === "rarity-desc" || activeCharacterSort === "rarity-asc") {
+        const direction = activeCharacterSort === "rarity-asc" ? 1 : -1;
+
+        return sorted.sort(function (a, b) {
+            const rarityDifference =
+                (Number(a.rarity) || 0) - (Number(b.rarity) || 0);
+
+            if (rarityDifference !== 0) {
+                return rarityDifference * direction;
+            }
+
+            return getLocalizedText(a.name).localeCompare(
+                getLocalizedText(b.name),
+                currentLanguage,
+                { sensitivity: "base" }
+            );
+        });
+    }
+
+    return sorted;
+
+}
+
+
+function resetCharacterFilters() {
+
+    activeCharacterAttribute = "all";
+    activeCharacterStyle = "all";
+    activeCharacterRarity = "all";
+    activeCharacterSort = "default";
+
+    if (characterSearch) {
+        characterSearch.value = "";
+    }
+
+    if (characterStyleFilter) {
+        characterStyleFilter.value = "all";
+    }
+
+    if (characterRarityFilter) {
+        characterRarityFilter.value = "all";
+    }
+
+    if (characterSort) {
+        characterSort.value = "default";
+    }
+
+    renderCharacterAttributeFilters();
+    applyCharacterFilters();
+
+}
+
+
 function applyCharacterFilters() {
 
-    const keyword = characterSearch ? characterSearch.value.toLowerCase().trim() : "";
+    const keyword = characterSearch
+        ? normalizeCharacterSearchValue(characterSearch.value)
+        : "";
 
     const filteredCharacters = charactersData.filter(function (character) {
 
@@ -2076,8 +2397,13 @@ function applyCharacterFilters() {
         return matchesSearch && matchesAttribute && matchesStyle && matchesRarity;
     });
 
+    const sortedCharacters =
+        sortCharacterResults(filteredCharacters);
+
     updateCharacterFilterResultCount(filteredCharacters.length);
-    renderCharacters(filteredCharacters);
+    updateCharacterSearchControls();
+    renderCharacterActiveFilters();
+    renderCharacters(sortedCharacters);
 }
 
 
@@ -2122,6 +2448,26 @@ function applyWeaponFilters() {
 function renderCharacters(characters) {
 
     characterGrid.innerHTML = "";
+
+    if (!characters.length) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "character-empty-state";
+        emptyState.innerHTML = `
+            <strong>${t("noCharacterMatches")}</strong>
+            <span>${t("adjustCharacterFilters")}</span>
+            <button type="button" class="character-empty-reset">${t("resetFilters")}</button>
+        `;
+
+        const resetButton =
+            emptyState.querySelector(".character-empty-reset");
+
+        if (resetButton) {
+            resetButton.addEventListener("click", resetCharacterFilters);
+        }
+
+        characterGrid.appendChild(emptyState);
+        return;
+    }
 
     characters.forEach(function (character) {
 
@@ -2496,6 +2842,12 @@ function renderSimulations(simulationSets) {
                 : 0;
 
         card.innerHTML = `
+            ${simulationSet.image ? `
+                <div class="database-card-media simulation-card-media">
+                    <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" loading="lazy" onerror="this.parentElement.remove()">
+                </div>
+            ` : ""}
+
             <div class="simulation-card-top">
                 <span class="simulation-card-symbol">S</span>
                 <span class="simulation-card-status">CBT2</span>
@@ -2622,6 +2974,12 @@ function renderEpiphanies(epiphanies) {
         card.dataset.id = epiphany.id;
 
         card.innerHTML = `
+            ${epiphany.image ? `
+                <div class="database-card-media epiphany-card-media">
+                    <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" loading="lazy" onerror="this.parentElement.remove()">
+                </div>
+            ` : ""}
+
             <div class="epiphany-card-top">
                 <span class="epiphany-book-icon">E</span>
                 <span class="epiphany-card-status">CBT2</span>
@@ -2667,6 +3025,7 @@ renderRankings();
 
 populateCharacterStyleFilter();
 updateCharacterRarityFilterLabels();
+updateCharacterSearchControls();
 renderCharacterAttributeFilters();
 renderWeaponTypeFilters();
 
@@ -2721,98 +3080,30 @@ const playerAvatar =
 
 
 
-uidSearchButton.addEventListener(
-    "click",
-    searchPlayer
-);
+if (uidInput) {
+    uidInput.disabled = true;
+    uidInput.setAttribute("aria-disabled", "true");
+}
 
-
-
-uidInput.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (event.key === "Enter") {
-
-            searchPlayer();
-
-        }
-
-    }
-);
-
-
+if (uidSearchButton) {
+    uidSearchButton.disabled = true;
+    uidSearchButton.setAttribute("aria-disabled", "true");
+}
 
 function searchPlayer() {
 
-    const uid =
-        uidInput.value.trim();
-
-
-    if (uid === "") {
-
-        uidMessage.textContent =
-           t("enterUidError")
-
-        return;
-
-    }
-
-
-    if (!/^\d+$/.test(uid)) {
-
-        uidMessage.textContent =
-            uidMessage.textContent =
-    t("digitsOnly");
-
-        return;
-
-    }
-
-
-    uidMessage.textContent =
-       uidMessage.textContent =
-    t("searchingPlayer");
-
-
     /*
-        DEMO ONLY
+        PLAYER LOOKUP PLACEHOLDER ONLY
 
-        Khi chúng ta có API Silver Palace thật,
-        phần này sẽ được thay bằng dữ liệu
-        lấy trực tiếp từ server.
+        No demo, guessed, or fabricated player data is shown.
+        Real lookup will be connected only after a reliable
+        official/public Silver Palace player-data source exists.
     */
 
-    setTimeout(function () {
-
-        playerName.textContent =
-           t("examplePlayer")
-
-
-        playerUID.textContent =
-            uid;
-
-
-        playerLevel.textContent =
-            "42";
-
-
-        playerServer.textContent =
-            t("asia")
-
-
-        playerSignature.textContent =
-            t("exampleSignature")
-
-
-        playerAvatar.textContent =
-            "SP";
-
-
-        uidMessage.textContent =
-            t("playerFound")
-
-    }, 500);
+    if (uidMessage) {
+        uidMessage.textContent = t("lookupWaiting");
+        delete uidMessage.dataset.changed;
+    }
 
 }
 /* =========================
@@ -2823,6 +3114,20 @@ characterSearch.addEventListener(
     "input",
     applyCharacterFilters
 );
+
+if (characterSearchClear) {
+    characterSearchClear.addEventListener(
+        "click",
+        function () {
+            if (characterSearch) {
+                characterSearch.value = "";
+                characterSearch.focus();
+            }
+
+            applyCharacterFilters();
+        }
+    );
+}
 
 if (characterStyleFilter) {
     characterStyleFilter.addEventListener(
@@ -2844,29 +3149,20 @@ if (characterRarityFilter) {
     );
 }
 
+if (characterSort) {
+    characterSort.addEventListener(
+        "change",
+        function () {
+            activeCharacterSort = characterSort.value;
+            applyCharacterFilters();
+        }
+    );
+}
+
 if (characterFilterReset) {
     characterFilterReset.addEventListener(
         "click",
-        function () {
-            activeCharacterAttribute = "all";
-            activeCharacterStyle = "all";
-            activeCharacterRarity = "all";
-
-            if (characterSearch) {
-                characterSearch.value = "";
-            }
-
-            if (characterStyleFilter) {
-                characterStyleFilter.value = "all";
-            }
-
-            if (characterRarityFilter) {
-                characterRarityFilter.value = "all";
-            }
-
-            renderCharacterAttributeFilters();
-            applyCharacterFilters();
-        }
+        resetCharacterFilters
     );
 }
 
@@ -2898,6 +3194,7 @@ window.refreshDynamicContent = function () {
 
     populateCharacterStyleFilter();
     updateCharacterRarityFilterLabels();
+    updateCharacterSearchControls();
 
     renderNewsSystem();
     renderRankings();
@@ -4560,6 +4857,10 @@ function renderSimulationFullDetail(
                         <small>SIMULATION</small>
                     </div>
 
+                    ${simulationSet.image ? `
+                        <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" onerror="this.remove()">
+                    ` : ""}
+
                     <div class="full-detail-art-vignette"></div>
 
                     <div class="full-detail-art-caption">
@@ -5047,6 +5348,10 @@ function renderEpiphanyFullDetail(
                         <span>E</span>
                         <small>EPIPHANY</small>
                     </div>
+
+                    ${epiphany.image ? `
+                        <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" onerror="this.remove()">
+                    ` : ""}
 
                     <div class="full-detail-art-vignette"></div>
 
@@ -6900,3 +7205,555 @@ function renderCharacterFullDetail(character) {
         });
     });
 }
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v44 — CHARACTER DETAIL POLISH
+   UI-only enhancements. No game data is modified.
+========================================================= */
+
+function getCharacterDetailKey(character) {
+
+    const variant =
+        typeof getSelectedCharacterVariant === "function"
+            ? getSelectedCharacterVariant(character)
+            : null;
+
+    return `${character.id}:${variant?.id || "base"}`;
+
+}
+
+
+function getCharacterDetailNeighbor(character, direction) {
+
+    if (!Array.isArray(charactersData)) {
+        return null;
+    }
+
+    const index =
+        charactersData.findIndex(function (entry) {
+            return entry.id === character.id;
+        });
+
+    if (index < 0) {
+        return null;
+    }
+
+    const targetIndex =
+        index + direction;
+
+    if (
+        targetIndex < 0 ||
+        targetIndex >= charactersData.length
+    ) {
+        return null;
+    }
+
+    return charactersData[targetIndex];
+
+}
+
+
+function openCharacterDetailNeighbor(
+    currentCharacter,
+    targetCharacter
+) {
+
+    if (!targetCharacter) {
+        return;
+    }
+
+    const currentKey =
+        getCharacterDetailKey(
+            currentCharacter
+        );
+
+    const targetKey =
+        getCharacterDetailKey(
+            targetCharacter
+        );
+
+    if (!window.characterDetailTab) {
+        window.characterDetailTab = {};
+    }
+
+    /*
+     * Preserve the currently viewed section when browsing
+     * between characters. This makes comparison much faster.
+     */
+    if (window.characterDetailTab[currentKey]) {
+        window.characterDetailTab[targetKey] =
+            window.characterDetailTab[currentKey];
+    }
+
+    window.currentFullDetailEntry = {
+        type: "character",
+        data: targetCharacter
+    };
+
+    if (typeof selectCharacter === "function") {
+        selectCharacter(targetCharacter);
+    }
+
+    renderCharacterFullDetail(
+        targetCharacter
+    );
+
+    const panel =
+        databaseDetailContent
+            ? databaseDetailContent.closest(
+                ".database-detail-panel"
+            )
+            : null;
+
+    if (panel) {
+        panel.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+}
+
+
+function getCharacterReactorIcon(
+    character
+) {
+
+    const variant =
+        typeof getSelectedCharacterVariant === "function"
+            ? getSelectedCharacterVariant(character)
+            : null;
+
+    const reactor =
+        getCharacterVariantField(
+            character,
+            variant,
+            "reactorAttribute"
+        );
+
+    if (
+        !reactor ||
+        !Array.isArray(
+            reactorAttributeFilters
+        )
+    ) {
+        return {
+            name: reactor || "",
+            icon: ""
+        };
+    }
+
+    const entry =
+        reactorAttributeFilters.find(
+            function (item) {
+                return item.id === reactor;
+            }
+        );
+
+    return {
+        name: reactor,
+        icon: entry?.icon || ""
+    };
+
+}
+
+
+function enhanceCharacterFullDetail(
+    character
+) {
+
+    if (
+        !databaseDetailContent ||
+        !Array.isArray(charactersData)
+    ) {
+        return;
+    }
+
+    const toolbar =
+        databaseDetailContent.querySelector(
+            ".full-detail-toolbar"
+        );
+
+    const rarity =
+        databaseDetailContent.querySelector(
+            ".full-detail-toolbar-rarity"
+        );
+
+    if (toolbar && rarity) {
+
+        const currentIndex =
+            charactersData.findIndex(
+                function (entry) {
+                    return entry.id === character.id;
+                }
+            );
+
+        const previous =
+            getCharacterDetailNeighbor(
+                character,
+                -1
+            );
+
+        const next =
+            getCharacterDetailNeighbor(
+                character,
+                1
+            );
+
+        const actions =
+            document.createElement(
+                "div"
+            );
+
+        actions.className =
+            "character-detail-toolbar-actions";
+
+        const navigation =
+            document.createElement(
+                "div"
+            );
+
+        navigation.className =
+            "character-detail-navigation";
+
+        navigation.innerHTML = `
+            <button
+                type="button"
+                class="character-detail-nav-button previous"
+                data-character-nav="previous"
+                ${previous ? "" : "disabled"}
+                aria-label="${previous ? `Previous: ${getLocalizedText(previous.name)}` : "Previous character"}"
+            >
+                <span aria-hidden="true">←</span>
+                <strong>${previous ? getLocalizedText(previous.name) : "—"}</strong>
+            </button>
+
+            <span class="character-detail-nav-position">
+                ${currentIndex + 1} / ${charactersData.length}
+            </span>
+
+            <button
+                type="button"
+                class="character-detail-nav-button next"
+                data-character-nav="next"
+                ${next ? "" : "disabled"}
+                aria-label="${next ? `Next: ${getLocalizedText(next.name)}` : "Next character"}"
+            >
+                <strong>${next ? getLocalizedText(next.name) : "—"}</strong>
+                <span aria-hidden="true">→</span>
+            </button>
+        `;
+
+        actions.appendChild(
+            navigation
+        );
+
+        actions.appendChild(
+            rarity
+        );
+
+        toolbar.appendChild(
+            actions
+        );
+
+        const previousButton =
+            navigation.querySelector(
+                '[data-character-nav="previous"]'
+            );
+
+        const nextButton =
+            navigation.querySelector(
+                '[data-character-nav="next"]'
+            );
+
+        if (
+            previousButton &&
+            previous
+        ) {
+            previousButton.addEventListener(
+                "click",
+                function () {
+                    openCharacterDetailNeighbor(
+                        character,
+                        previous
+                    );
+                }
+            );
+        }
+
+        if (
+            nextButton &&
+            next
+        ) {
+            nextButton.addEventListener(
+                "click",
+                function () {
+                    openCharacterDetailNeighbor(
+                        character,
+                        next
+                    );
+                }
+            );
+        }
+
+    }
+
+
+    const info =
+        databaseDetailContent.querySelector(
+            ".character-detail-info"
+        );
+
+    if (info) {
+
+        const kicker =
+            info.querySelector(
+                ".full-detail-kicker"
+            );
+
+        const reactor =
+            getCharacterReactorIcon(
+                character
+            );
+
+        if (
+            kicker &&
+            reactor.name
+        ) {
+
+            const badge =
+                document.createElement(
+                    "div"
+                );
+
+            badge.className =
+                "character-detail-reactor-badge";
+
+            badge.innerHTML = `
+                ${reactor.icon
+                    ? `<img src="${reactor.icon}" alt="" aria-hidden="true" onerror="this.remove()">`
+                    : ""
+                }
+                <span>${reactor.name}</span>
+            `;
+
+            kicker.insertAdjacentElement(
+                "afterend",
+                badge
+            );
+
+        }
+
+
+        const variant =
+            typeof getSelectedCharacterVariant === "function"
+                ? getSelectedCharacterVariant(character)
+                : null;
+
+        const skills =
+            getCharacterVariantField(
+                character,
+                variant,
+                "skills"
+            ) || [];
+
+        const psyches =
+            getCharacterVariantField(
+                character,
+                variant,
+                "psyches"
+            ) || [];
+
+        const metadataGrid =
+            info.querySelector(
+                ".full-detail-grid"
+            );
+
+        if (metadataGrid) {
+
+            const recordStatus =
+                document.createElement(
+                    "div"
+                );
+
+            recordStatus.className =
+                "character-detail-record-status";
+
+            recordStatus.innerHTML = `
+                <span>
+                    <strong>${Array.isArray(skills) ? skills.length : 0}</strong>
+                    ${t("skills")}
+                </span>
+
+                <span>
+                    <strong>${Array.isArray(psyches) ? psyches.length : 0}</strong>
+                    ${t("psyches")}
+                </span>
+            `;
+
+            metadataGrid.insertAdjacentElement(
+                "afterend",
+                recordStatus
+            );
+
+        }
+
+    }
+
+}
+
+
+/*
+ * Keep the existing, battle-tested renderer intact.
+ * v44 wraps it with UI-only enhancements so Character data,
+ * Skills, Psyches, Builds and ranking placeholders stay unchanged.
+ */
+const renderCharacterFullDetailV43 =
+    renderCharacterFullDetail;
+
+renderCharacterFullDetail =
+    function (character) {
+
+        renderCharacterFullDetailV43(
+            character
+        );
+
+        enhanceCharacterFullDetail(
+            character
+        );
+
+    };
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE — CHARACTER REACTOR BADGE ONLY
+   Keeps the v43 Character Detail layout unchanged.
+========================================================= */
+
+function getCharacterDetailReactorBadgeData(character) {
+
+    const variant =
+        typeof getSelectedCharacterVariant === "function"
+            ? getSelectedCharacterVariant(character)
+            : null;
+
+    const reactor =
+        getCharacterVariantField(
+            character,
+            variant,
+            "reactorAttribute"
+        );
+
+    if (!reactor) {
+        return {
+            name: "",
+            icon: ""
+        };
+    }
+
+    const entry =
+        Array.isArray(reactorAttributeFilters)
+            ? reactorAttributeFilters.find(
+                function (item) {
+                    return item.id === reactor;
+                }
+            )
+            : null;
+
+    return {
+        name: reactor,
+        icon: entry?.icon || ""
+    };
+
+}
+
+
+function addCharacterDetailReactorBadge(character) {
+
+    if (!databaseDetailContent) {
+        return;
+    }
+
+    const info =
+        databaseDetailContent.querySelector(
+            ".character-detail-info"
+        );
+
+    if (!info) {
+        return;
+    }
+
+    const oldBadge =
+        info.querySelector(
+            ".character-detail-reactor-badge"
+        );
+
+    if (oldBadge) {
+        oldBadge.remove();
+    }
+
+    const kicker =
+        info.querySelector(
+            ".full-detail-kicker"
+        );
+
+    if (!kicker) {
+        return;
+    }
+
+    const reactor =
+        getCharacterDetailReactorBadgeData(
+            character
+        );
+
+    if (!reactor.name) {
+        return;
+    }
+
+    const badge =
+        document.createElement(
+            "div"
+        );
+
+    badge.className =
+        "character-detail-reactor-badge";
+
+    badge.innerHTML = `
+        ${reactor.icon
+            ? `<img src="${reactor.icon}" alt="" aria-hidden="true" onerror="this.remove()">`
+            : ""
+        }
+        <span>${reactor.name}</span>
+    `;
+
+    kicker.insertAdjacentElement(
+        "afterend",
+        badge
+    );
+
+}
+
+
+/*
+ * Wrap the existing v43 renderer only to add the Reactor badge.
+ * No Previous/Next navigation, position counter, Skill/Psyche count,
+ * or toolbar/layout changes are added.
+ */
+const renderCharacterFullDetailReactorBase =
+    renderCharacterFullDetail;
+
+renderCharacterFullDetail =
+    function (character) {
+
+        renderCharacterFullDetailReactorBase(
+            character
+        );
+
+        addCharacterDetailReactorBadge(
+            character
+        );
+
+    };
+
+

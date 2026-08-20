@@ -100,8 +100,14 @@ function renderNewsPage() {
         const tags = Array.isArray(entry.tags) ? entry.tags.slice(0, 3) : [];
 
         return `
-            <article class="news-page-card ${entry.stream}" data-news-id="${entry.id}">
+            <article class="news-page-card ${entry.stream} ${entry.image ? "has-image" : ""}" data-news-id="${entry.id}">
                 <div class="news-page-card-index">${String(index + 1).padStart(2, "0")}</div>
+
+                ${entry.image ? `
+                    <div class="news-page-card-media">
+                        <img src="${entry.image}" alt="${title}" loading="lazy" onerror="this.parentElement.hidden=true">
+                    </div>
+                ` : ""}
 
                 <div class="news-page-card-meta">
                     <span>${getNewsCategoryLabel(entry)}</span>
@@ -141,10 +147,27 @@ function openNewsPageArticle(id) {
     const date = document.getElementById("newsArticleDate");
     const tags = document.getElementById("newsArticleTags");
     const content = document.getElementById("newsArticleContent");
+    const media = document.getElementById("newsArticleMedia");
+    const image = document.getElementById("newsArticleImage");
 
     category.textContent = getNewsCategoryLabel(entry);
     title.textContent = localizeNewsValue(entry.title);
     date.textContent = entry.date;
+
+    if (media && image) {
+        if (entry.image) {
+            media.hidden = false;
+            image.src = entry.image;
+            image.alt = localizeNewsValue(entry.title);
+            image.onerror = function () {
+                media.hidden = true;
+            };
+        } else {
+            media.hidden = true;
+            image.removeAttribute("src");
+            image.alt = "";
+        }
+    }
 
     const tagList = Array.isArray(entry.tags) ? entry.tags : [];
     tags.innerHTML = tagList.map(tag => `<span>${tag}</span>`).join("");

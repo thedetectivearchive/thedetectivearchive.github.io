@@ -117,6 +117,10 @@
                 <p id="newsArticleDate"></p>
             </div>
 
+            <figure class="news-page-article-media" id="newsArticleMedia" hidden>
+                <img id="newsArticleImage" src="" alt="">
+            </figure>
+
             <div class="news-page-article-tags" id="newsArticleTags"></div>
             <div class="news-page-article-content" id="newsArticleContent"></div>
         </article>
@@ -131,7 +135,10 @@
     </footer>
 
     <script src="mobile-nav.js"></script>
-    <script src="data.js"></script>
+    <!-- News page only loads the content it needs. -->
+    <script src="content/news.js"></script>
+    <script src="content/archive-updates.js"></script>
+    <script src="content-validator.js"></script>
     <script src="news-page.js"></script>
 </body>
 </html>

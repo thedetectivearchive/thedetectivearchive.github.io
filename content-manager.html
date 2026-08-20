@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Archive Content Studio 3.0 | The Detective Archive</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="content-manager.css">
+</head>
+<body>
+    <header class="studio-header">
+        <div>
+            <p>THE DETECTIVE ARCHIVE · CONTENT MANAGER 3.0</p>
+            <h1>Archive Content Studio 3.0</h1>
+            <span>Browse, compare, edit and export archive data without touching layout code.</span>
+        </div>
+        <div class="header-actions">
+            <a href="index.html">Back to archive</a>
+            <a href="news.html">Open News</a>
+        </div>
+    </header>
+
+    <main class="studio-shell">
+        <section class="studio-panel">
+            <div class="studio-panel-head">
+                <div>
+                    <p class="eyebrow">CURRENT DATA</p>
+                    <h2>Pre-update check</h2>
+                </div>
+                <button type="button" id="refreshDiagnostics">Refresh</button>
+            </div>
+            <div id="diagnosticCounts" class="diagnostic-counts"></div>
+            <div id="diagnosticStatus" class="diagnostic-status"></div>
+            <p class="studio-note">
+                This checks structure, duplicate IDs, image paths and several cross-section mistakes.
+                It does <strong>not</strong> decide whether Silver Palace information is true.
+            </p>
+        </section>
+
+        <section class="studio-panel">
+            <div class="studio-panel-head studio-panel-head-stack">
+                <div>
+                    <p class="eyebrow">CONTENT EDITOR</p>
+                    <h2>Create or update a record</h2>
+                </div>
+                <div class="studio-tabs" role="tablist" aria-label="Content type">
+                    <button class="active" type="button" data-studio-tab="news">News</button>
+                    <button type="button" data-studio-tab="character">Character</button>
+                    <button type="button" data-studio-tab="motive">Motive</button>
+                    <button type="button" data-studio-tab="simulation">Simulation</button>
+                    <button type="button" data-studio-tab="epiphany">Epiphany</button>
+                </div>
+            </div>
+
+            <div class="record-toolbar">
+                <label>
+                    <span>Existing record</span>
+                    <select id="existingRecordSelect">
+                        <option value="">New record</option>
+                    </select>
+                </label>
+                <button type="button" id="loadExisting">Load &amp; preview</button>
+                <button type="button" id="newRecord">New / clear form</button>
+                <span id="editModeBadge">NEW</span>
+            </div>
+
+            <div id="recordValidation" class="record-validation" hidden></div>
+
+            <section class="record-browser" aria-labelledby="recordBrowserTitle">
+                <div class="record-browser-head">
+                    <div>
+                        <p class="eyebrow">WORKING DATA</p>
+                        <h3 id="recordBrowserTitle">Record browser</h3>
+                    </div>
+                    <div class="record-browser-tools">
+                        <input id="recordSearch" type="search" placeholder="Search ID or title…">
+                        <button type="button" id="downloadWorkingFile">Download working file</button>
+                        <button type="button" id="resetWorkingChanges">Reset working changes</button>
+                    </div>
+                </div>
+                <div class="record-table-wrap">
+                    <table class="record-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name / title</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordTableBody"></tbody>
+                    </table>
+                </div>
+                <p id="recordBrowserCount" class="studio-note"></p>
+                <p class="studio-note">
+                    Edit, duplicate and delete operate on an in-browser working copy. Nothing in your website folder changes until you export a complete content file.
+                </p>
+            </section>
+
+
+            <form class="studio-form active" data-studio-form="news" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="news-004">
+                            <button type="button" data-auto-id="news">Auto</button>
+                        </div>
+                    </label>
+                    <label><span>Date</span><input name="date" type="date"></label>
+                    <label>
+                        <span>Category</span>
+                        <select name="category">
+                            <option value="news">News</option>
+                            <option value="update">Update</option>
+                            <option value="announcement">Announcement</option>
+                        </select>
+                    </label>
+                    <label class="checkbox-label">
+                        <input name="featured" type="checkbox">
+                        <span>Pin as Featured News</span>
+                    </label>
+                    <label class="span-2"><span>English title *</span><input name="titleEn" required></label>
+                    <label class="span-2"><span>Vietnamese title</span><input name="titleVi"></label>
+                    <label class="span-2"><span>English summary</span><textarea name="descriptionEn" rows="3"></textarea></label>
+                    <label class="span-2"><span>Vietnamese summary</span><textarea name="descriptionVi" rows="3"></textarea></label>
+                    <label class="span-2"><span>English article — separate paragraphs with a blank line</span><textarea name="contentEn" rows="7"></textarea></label>
+                    <label class="span-2"><span>Vietnamese article — separate paragraphs with a blank line</span><textarea name="contentVi" rows="7"></textarea></label>
+                    <label><span>Tags</span><input name="tags" placeholder="CBT2, Character, Update"></label>
+                    <label><span>Source / verification label</span><input name="sourceLabel" placeholder="Optional source note"></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/news/">
+                    <div class="image-inputs">
+                        <label><span>Select News image</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Website image path</span><input name="imagePath" placeholder="images/news/example.jpg"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>No image selected</span></div>
+                    <div class="image-info">
+                        <p>Recommended folder: <code>images/news/</code></p>
+                        <p data-image-name>No local image selected.</p>
+                        <button type="button" data-download-image>Download renamed image</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="news">Validate &amp; generate</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="character" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="character-name">
+                            <button type="button" data-auto-id="character">Auto</button>
+                        </div>
+                    </label>
+                    <label><span>Name *</span><input name="name" required></label>
+                    <label><span>Alias</span><input name="alias"></label>
+                    <label><span>Rarity</span><select name="rarity"><option value="5">5★</option><option value="4">4★</option><option value="3">3★</option></select></label>
+                    <label><span>Availability</span><input name="availability" placeholder="preview / protagonist / ..."></label>
+                    <label class="checkbox-label"><input name="limited" type="checkbox"><span>Limited character</span></label>
+                    <label>
+                        <span>Reactor</span>
+                        <select name="reactor">
+                            <option value="">Pending / unknown</option>
+                            <option>Ignis</option><option>Glacies</option><option>Fulmen</option>
+                            <option>Gravitas</option><option>Radiatio</option><option>Ferrugo</option><option>Alba</option>
+                        </select>
+                    </label>
+                    <label><span>Combat style</span><input name="combatStyle"></label>
+                    <label><span>Identity</span><input name="identity"></label>
+                    <label><span>Affiliation</span><input name="affiliation"></label>
+                    <label><span>Occupation</span><input name="occupation"></label>
+                    <label><span>Source / verification label</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>English description</span><textarea name="descriptionEn" rows="4"></textarea></label>
+                    <label class="span-2"><span>Vietnamese description</span><textarea name="descriptionVi" rows="4"></textarea></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/character/">
+                    <div class="image-inputs">
+                        <label><span>Select Character image</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Website image path</span><input name="imagePath" placeholder="images/character/name.png"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>No image selected</span></div>
+                    <div class="image-info">
+                        <p>Existing Character images stay in <code>images/character/</code>.</p>
+                        <p data-image-name>No local image selected.</p>
+                        <button type="button" data-download-image>Download renamed image</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="character">Validate &amp; generate</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="motive" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="the-example-mystery">
+                            <button type="button" data-auto-id="motive">Auto</button>
+                        </div>
+                    </label>
+                    <label><span>Name *</span><input name="name" required></label>
+                    <label><span>Rarity</span><select name="rarity"><option value="5">5★</option><option value="4">4★</option><option value="3">3★</option></select></label>
+                    <label><span>Identity</span><input name="identity"></label>
+                    <label><span>Availability</span><input name="availability"></label>
+                    <label class="checkbox-label"><input name="limited" type="checkbox"><span>Limited</span></label>
+                    <label class="checkbox-label"><input name="featured" type="checkbox"><span>Featured</span></label>
+                    <label><span>Source label</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Verified effect / passive</span><textarea name="effect" rows="4" placeholder="Leave blank if not verified"></textarea></label>
+                    <label class="span-2"><span>Archive note — English</span><textarea name="noteEn" rows="4"></textarea></label>
+                    <label class="span-2"><span>Archive note — Vietnamese</span><textarea name="noteVi" rows="4"></textarea></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/motive/">
+                    <div class="image-inputs">
+                        <label><span>Select Motive image</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Website image path</span><input name="imagePath" placeholder="images/motive/name.webp"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>No image selected</span></div>
+                    <div class="image-info">
+                        <p>Recommended folder: <code>images/motive/</code></p>
+                        <p data-image-name>No local image selected.</p>
+                        <button type="button" data-download-image>Download renamed image</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="motive">Validate &amp; generate</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="simulation" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="set-name">
+                            <button type="button" data-auto-id="simulation">Auto</button>
+                        </div>
+                    </label>
+                    <label><span>Set name *</span><input name="name" required></label>
+                    <label><span>Observed status</span><input name="observedStatus" value="Dichotomy CBT2"></label>
+                    <label><span>Observed on</span><input name="observedOn"></label>
+                    <label class="checkbox-label"><input name="fullSetObserved" type="checkbox"><span>Full 4/4 set observed</span></label>
+                    <label><span>Source label</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Verified set effect</span><textarea name="setEffect" rows="3" placeholder="Leave blank if not verified"></textarea></label>
+                    <label class="span-2"><span>Set-effect status</span><input name="setEffectStatus" placeholder="Exact set-effect text pending verification"></label>
+                    <label class="span-2"><span>English description</span><textarea name="descriptionEn" rows="4"></textarea></label>
+                    <label class="span-2"><span>Vietnamese description</span><textarea name="descriptionVi" rows="4"></textarea></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/simulation/">
+                    <div class="image-inputs">
+                        <label><span>Select Simulation image</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Website image path</span><input name="imagePath" placeholder="images/simulation/set.webp"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>No image selected</span></div>
+                    <div class="image-info">
+                        <p>Recommended folder: <code>images/simulation/</code></p>
+                        <p data-image-name>No local image selected.</p>
+                        <button type="button" data-download-image>Download renamed image</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="simulation">Validate &amp; generate</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="epiphany" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="book-name">
+                            <button type="button" data-auto-id="epiphany">Auto</button>
+                        </div>
+                    </label>
+                    <label><span>Name *</span><input name="name" required></label>
+                    <label><span>Literary source</span><input name="sourceText"></label>
+                    <label><span>Author / origin</span><input name="authorOrigin"></label>
+                    <label><span>Category</span><input name="category"></label>
+                    <label><span>Observed status</span><input name="observedStatus" value="Dichotomy CBT2"></label>
+                    <label><span>Observed on</span><input name="observedOn"></label>
+                    <label><span>Source label</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Verified passive</span><textarea name="passive" rows="4" placeholder="Leave blank if not verified"></textarea></label>
+                    <label class="span-2"><span>Passive status</span><input name="passiveStatus" value="Exact passive text pending"></label>
+                    <label class="checkbox-label"><input name="storyAvailable" type="checkbox" checked><span>Story button / story available</span></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/epiphany/">
+                    <div class="image-inputs">
+                        <label><span>Select Epiphany image</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Website image path</span><input name="imagePath" placeholder="images/epiphany/book.webp"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>No image selected</span></div>
+                    <div class="image-info">
+                        <p>Recommended folder: <code>images/epiphany/</code></p>
+                        <p data-image-name>No local image selected.</p>
+                        <button type="button" data-download-image>Download renamed image</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="epiphany">Validate &amp; generate</button></div>
+            </form>
+        </section>
+
+
+        <section class="studio-panel advanced-character-panel" id="characterAdvancedPanel" hidden>
+            <div class="studio-panel-head studio-panel-head-stack">
+                <div>
+                    <p class="eyebrow">ADVANCED CHARACTER DATA</p>
+                    <h2>Skills &amp; Psyches editor</h2>
+                </div>
+                <div class="advanced-character-selectors">
+                    <label>
+                        <span>Character</span>
+                        <select id="advancedCharacterSelect"></select>
+                    </label>
+                    <label>
+                        <span>Skill variant</span>
+                        <select id="skillVariantSelect"></select>
+                    </label>
+                </div>
+            </div>
+
+            <div id="advancedStatus" class="record-validation" hidden></div>
+
+            <div class="advanced-editor-grid">
+                <section class="advanced-editor-card">
+                    <div class="advanced-editor-head">
+                        <div>
+                            <p class="eyebrow">CHARACTER SKILLS</p>
+                            <h3>Skill record</h3>
+                        </div>
+                        <div class="advanced-mini-actions">
+                            <button type="button" id="newSkillRecord">New</button>
+                            <button type="button" id="loadSkillRecord">Load</button>
+                        </div>
+                    </div>
+
+                    <label class="advanced-select-row">
+                        <span>Existing skill</span>
+                        <select id="skillRecordSelect"></select>
+                    </label>
+
+                    <div class="form-grid advanced-form-grid">
+                        <label>
+                            <span>Type</span>
+                            <select id="skillType">
+                                <option value="basicAttack">Basic Attack</option>
+                                <option value="skill">Skill</option>
+                                <option value="ultimate">Ultimate</option>
+                                <option value="tacticalAssault">Tactical Assault</option>
+                                <option value="passive">Passive</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </label>
+                        <label><span>Name</span><input id="skillName"></label>
+                        <label class="span-2"><span>Description — English</span><textarea id="skillDescriptionEn" rows="3"></textarea></label>
+                        <label class="span-2"><span>Description — Vietnamese</span><textarea id="skillDescriptionVi" rows="3"></textarea></label>
+                        <label class="span-2"><span>Resource — English</span><textarea id="skillResourceEn" rows="2"></textarea></label>
+                        <label class="span-2"><span>Resource — Vietnamese</span><textarea id="skillResourceVi" rows="2"></textarea></label>
+                        <label class="span-2"><span>Mechanics — English (blank line = next item)</span><textarea id="skillMechanicsEn" rows="5"></textarea></label>
+                        <label class="span-2"><span>Mechanics — Vietnamese</span><textarea id="skillMechanicsVi" rows="5"></textarea></label>
+                        <label class="span-2"><span>Combo — English (blank line = next item)</span><textarea id="skillComboEn" rows="4"></textarea></label>
+                        <label class="span-2"><span>Combo — Vietnamese</span><textarea id="skillComboVi" rows="4"></textarea></label>
+                        <label class="span-2"><span>Source — English</span><input id="skillSourceEn"></label>
+                        <label class="span-2"><span>Source — Vietnamese</span><input id="skillSourceVi"></label>
+                    </div>
+
+                    <div class="advanced-action-row">
+                        <button type="button" id="saveSkillRecord">Save to working skills</button>
+                        <button type="button" id="deleteSkillRecord">Delete skill</button>
+                        <button type="button" id="downloadSkillsFile">Download character-skills.js</button>
+                    </div>
+                </section>
+
+                <section class="advanced-editor-card">
+                    <div class="advanced-editor-head">
+                        <div>
+                            <p class="eyebrow">CHARACTER PSYCHES</p>
+                            <h3>Psyche record</h3>
+                        </div>
+                        <div class="advanced-mini-actions">
+                            <button type="button" id="newPsycheRecord">New</button>
+                            <button type="button" id="loadPsycheRecord">Load</button>
+                        </div>
+                    </div>
+
+                    <label class="advanced-select-row">
+                        <span>Existing Psyche</span>
+                        <select id="psycheRecordSelect"></select>
+                    </label>
+
+                    <div class="form-grid advanced-form-grid">
+                        <label class="span-2"><span>Name</span><input id="psycheName"></label>
+                        <label class="span-2"><span>Description — English</span><textarea id="psycheDescriptionEn" rows="5"></textarea></label>
+                        <label class="span-2"><span>Description — Vietnamese</span><textarea id="psycheDescriptionVi" rows="5"></textarea></label>
+                    </div>
+
+                    <div class="advanced-action-row">
+                        <button type="button" id="savePsycheRecord">Save to working Psyches</button>
+                        <button type="button" id="deletePsycheRecord">Delete Psyche</button>
+                        <button type="button" id="downloadPsychesFile">Download character-psyches.js</button>
+                    </div>
+                </section>
+            </div>
+
+            <div class="advanced-package-row">
+                <p class="studio-note">
+                    Skills/Psyches changes stay in memory until exported. Existing unknown fields are preserved when you edit a record.
+                </p>
+                <button type="button" id="downloadAdvancedPackage">Download Skills + Psyches update ZIP</button>
+            </div>
+        </section>
+
+
+        <section class="studio-grid-two">
+            <section class="studio-panel studio-preview-panel">
+                <div class="studio-panel-head">
+                    <div>
+                        <p class="eyebrow">PREVIEW</p>
+                        <h2>Before you publish</h2>
+                    </div>
+                </div>
+                <div id="recordPreview" class="record-preview">
+                    <div class="preview-empty">Generate a record to preview it.</div>
+                </div>
+            </section>
+
+            <section class="studio-panel studio-output-panel">
+                <div class="studio-panel-head">
+                    <div>
+                        <p class="eyebrow">OUTPUT</p>
+                        <h2>Generated JavaScript</h2>
+                    </div>
+                    <button type="button" id="copyOutput">Copy</button>
+                </div>
+                <p id="outputDestination">Choose a content type and generate a record.</p>
+                <textarea id="studioOutput" spellcheck="false" readonly></textarea>
+                <div class="output-actions output-actions-four">
+                    <button type="button" id="downloadRecord" disabled>Download record .js</button>
+                    <button type="button" id="downloadFullFile" disabled>Download complete content file</button>
+                    <button type="button" id="downloadBackup">Download backup file</button>
+                    <button type="button" id="downloadUpdatePackage" disabled>Download update ZIP</button>
+                </div>
+                <p class="studio-note">
+                    “Complete content file” replaces the matching file in <code>content/</code>. The backup button exports the original loaded data; Update ZIP bundles the new content file, backup and the selected image when available.
+                </p>
+            </section>
+        </section>
+
+
+        <section class="studio-panel compare-panel">
+            <div class="studio-panel-head">
+                <div>
+                    <p class="eyebrow">CHANGE REVIEW</p>
+                    <h2>Before / After</h2>
+                </div>
+                <span id="changeSummary" class="change-summary">Load or generate a record to compare changes.</span>
+            </div>
+            <div id="changeCompare" class="change-compare">
+                <div class="preview-empty compare-empty">No comparison yet.</div>
+            </div>
+        </section>
+
+
+        <section class="studio-panel compact-guide">
+            <p class="eyebrow">SAFE DEPLOY FLOW</p>
+            <h2>Update without touching layout code</h2>
+            <ol>
+                <li>Choose a content type, then use <strong>New record</strong> or load an existing record.</li>
+                <li>Select an image. The Studio creates a safe filename and website path.</li>
+                <li>Generate the record and fix any red validation errors.</li>
+                <li>Use <strong>Download complete content file</strong> to avoid manual commas and brackets.</li>
+                <li>Use <strong>Download renamed image</strong> if you selected a new image.</li>
+                <li>Replace only that content file and upload only the matching image.</li>
+                <li>Open this Studio again and confirm the validator reports no structural errors.</li>
+            </ol>
+        </section>
+    </main>
+
+    <script src="content/news.js"></script>
+    <script src="content/rankings.js"></script>
+    <script src="content/reactors.js"></script>
+    <script src="content/characters.js"></script>
+    <script src="content/motives.js"></script>
+    <script src="content/character-base-extensions.js"></script>
+    <script src="content/simulation.js"></script>
+    <script src="content/epiphanies.js"></script>
+    <script src="content/character-skills.js"></script>
+    <script src="content/character-psyches.js"></script>
+    <script src="content/archive-updates.js"></script>
+    <script src="content-validator.js"></script>
+    <script src="content-manager.js"></script>
+</body>
+</html>

@@ -1799,6 +1799,118 @@ Object.assign(translations.vi, {
 });
 
 /* =========================================================
+   CHARACTER SEARCH & FILTER QUALITY-OF-LIFE v40
+========================================================= */
+
+Object.assign(translations.en, {
+    clearSearch: "Clear search",
+    characterSortLabel: "Sort characters",
+    characterSortDefault: "Default order",
+    characterSortRarityDesc: "★ High → Low",
+    characterSortRarityAsc: "★ Low → High",
+    activeFilters: "Active filters",
+    removeFilter: "Remove filter",
+    noCharacterMatches: "No characters match your search or filters.",
+    adjustCharacterFilters: "Clear or change a filter to show characters again."
+});
+
+Object.assign(translations.vi, {
+    clearSearch: "Xóa tìm kiếm",
+    characterSortLabel: "Sắp xếp nhân vật",
+    characterSortDefault: "Thứ tự mặc định",
+    characterSortRarityDesc: "★ Cao → Thấp",
+    characterSortRarityAsc: "★ Thấp → Cao",
+    activeFilters: "Bộ lọc đang dùng",
+    removeFilter: "Xóa bộ lọc",
+    noCharacterMatches: "Không có nhân vật phù hợp với tìm kiếm hoặc bộ lọc.",
+    adjustCharacterFilters: "Xóa hoặc thay đổi bộ lọc để hiển thị lại nhân vật."
+});
+
+Object.assign(translations.th, {
+    clearSearch: "ล้างการค้นหา",
+    characterSortLabel: "เรียงตัวละคร",
+    characterSortDefault: "ลำดับเริ่มต้น",
+    characterSortRarityDesc: "★ สูง → ต่ำ",
+    characterSortRarityAsc: "★ ต่ำ → สูง",
+    activeFilters: "ตัวกรองที่ใช้งาน",
+    removeFilter: "ลบตัวกรอง",
+    noCharacterMatches: "ไม่พบตัวละครที่ตรงกับการค้นหาหรือตัวกรอง",
+    adjustCharacterFilters: "ล้างหรือเปลี่ยนตัวกรองเพื่อแสดงตัวละครอีกครั้ง"
+});
+
+Object.assign(translations.ja, {
+    clearSearch: "検索をクリア",
+    characterSortLabel: "キャラクターを並べ替え",
+    characterSortDefault: "デフォルト順",
+    characterSortRarityDesc: "★ 高 → 低",
+    characterSortRarityAsc: "★ 低 → 高",
+    activeFilters: "適用中のフィルター",
+    removeFilter: "フィルターを解除",
+    noCharacterMatches: "検索またはフィルターに一致するキャラクターがいません。",
+    adjustCharacterFilters: "フィルターを解除または変更してください。"
+});
+
+Object.assign(translations["zh-CN"], {
+    clearSearch: "清除搜索",
+    characterSortLabel: "角色排序",
+    characterSortDefault: "默认顺序",
+    characterSortRarityDesc: "★ 高 → 低",
+    characterSortRarityAsc: "★ 低 → 高",
+    activeFilters: "当前筛选",
+    removeFilter: "移除筛选",
+    noCharacterMatches: "没有角色符合当前搜索或筛选条件。",
+    adjustCharacterFilters: "清除或调整筛选条件以重新显示角色。"
+});
+
+Object.assign(translations.ko, {
+    clearSearch: "검색 지우기",
+    characterSortLabel: "캐릭터 정렬",
+    characterSortDefault: "기본 순서",
+    characterSortRarityDesc: "★ 높음 → 낮음",
+    characterSortRarityAsc: "★ 낮음 → 높음",
+    activeFilters: "적용 중인 필터",
+    removeFilter: "필터 제거",
+    noCharacterMatches: "검색 또는 필터와 일치하는 캐릭터가 없습니다.",
+    adjustCharacterFilters: "필터를 지우거나 변경해 캐릭터를 다시 표시하세요."
+});
+
+Object.assign(translations.fr, {
+    clearSearch: "Effacer la recherche",
+    characterSortLabel: "Trier les personnages",
+    characterSortDefault: "Ordre par défaut",
+    characterSortRarityDesc: "★ Élevée → faible",
+    characterSortRarityAsc: "★ Faible → élevée",
+    activeFilters: "Filtres actifs",
+    removeFilter: "Retirer le filtre",
+    noCharacterMatches: "Aucun personnage ne correspond à la recherche ou aux filtres.",
+    adjustCharacterFilters: "Effacez ou modifiez un filtre pour afficher de nouveau les personnages."
+});
+
+Object.assign(translations.es, {
+    clearSearch: "Borrar búsqueda",
+    characterSortLabel: "Ordenar personajes",
+    characterSortDefault: "Orden predeterminado",
+    characterSortRarityDesc: "★ Alta → baja",
+    characterSortRarityAsc: "★ Baja → alta",
+    activeFilters: "Filtros activos",
+    removeFilter: "Quitar filtro",
+    noCharacterMatches: "Ningún personaje coincide con la búsqueda o los filtros.",
+    adjustCharacterFilters: "Borra o cambia un filtro para volver a mostrar personajes."
+});
+
+Object.assign(translations.ru, {
+    clearSearch: "Очистить поиск",
+    characterSortLabel: "Сортировать персонажей",
+    characterSortDefault: "Исходный порядок",
+    characterSortRarityDesc: "★ Высокая → низкая",
+    characterSortRarityAsc: "★ Низкая → высокая",
+    activeFilters: "Активные фильтры",
+    removeFilter: "Удалить фильтр",
+    noCharacterMatches: "Нет персонажей, соответствующих поиску или фильтрам.",
+    adjustCharacterFilters: "Очистите или измените фильтр, чтобы снова показать персонажей."
+});
+
+/* =========================================================
    GET TRANSLATION
 ========================================================= */
 
@@ -2512,6 +2624,8 @@ function setLanguage(language) {
     currentLanguage =
         language;
 
+    document.documentElement.lang = language;
+
 
     localStorage.setItem(
         "silverPalaceLanguage",
@@ -3172,3 +3286,12 @@ Object.assign(translations.vi, {
     feedbackSentSuccessfully: "✓ Đã gửi phản hồi thành công.",
     feedbackSendFailed: "Không thể gửi phản hồi. Vui lòng thử lại sau ít phút."
 });
+
+/* =========================================================
+   v39 INITIAL LANGUAGE CONSISTENCY
+   Re-apply translations after all late extension keys load.
+========================================================= */
+
+document.documentElement.lang = currentLanguage;
+translatePage();
+

@@ -235,13 +235,24 @@
 
             <div class="tab-content active" id="characters">
 
-                <input
-                    class="database-search"
-                    id="characterSearch"
-                    type="search"
-                    placeholder="Search characters..."
-                    autocomplete="off"
-                >
+                <div class="character-search-shell">
+                    <input
+                        class="database-search"
+                        id="characterSearch"
+                        type="search"
+                        placeholder="Search characters..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="character-search-clear"
+                        id="characterSearchClear"
+                        type="button"
+                        aria-label="Clear search"
+                        title="Clear search"
+                        hidden
+                    >×</button>
+                </div>
 
                 <div class="database-filter-shell">
                     <p
@@ -278,9 +289,35 @@
                     <button class="character-filter-reset" id="characterFilterReset" type="button">RESET</button>
                 </div>
 
+                <div
+                    class="character-active-filters"
+                    id="characterActiveFilters"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
                 <div class="character-filter-resultbar">
                     <p class="section-label">CHARACTERS</p>
-                    <span id="characterResultCount">0 / 0</span>
+
+                    <div class="character-result-tools">
+                        <label class="sr-only" for="characterSort" id="characterSortLabel">
+                            Sort characters
+                        </label>
+
+                        <select
+                            class="character-sort-select"
+                            id="characterSort"
+                            aria-labelledby="characterSortLabel"
+                        >
+                            <option value="default">Default order</option>
+                            <option value="name-asc">A → Z</option>
+                            <option value="name-desc">Z → A</option>
+                            <option value="rarity-desc">★ High → Low</option>
+                            <option value="rarity-asc">★ Low → High</option>
+                        </select>
+
+                        <span id="characterResultCount">0 / 0</span>
+                    </div>
                 </div>
 
                 <div class="database-grid" id="characterGrid">
@@ -536,9 +573,11 @@
                     placeholder="Enter UID..."
                     inputmode="numeric"
                     autocomplete="off"
+                    disabled
+                    aria-disabled="true"
                 >
 
-                <button id="uidSearchButton" type="button">
+                <button id="uidSearchButton" type="button" disabled aria-disabled="true">
                     SEARCH
                 </button>
             </div>
@@ -890,8 +929,21 @@
 
     <script src="mobile-nav.js"></script>
     <script src="lang.js"></script>
-<script src="data.js"></script>
-<script src="script.js"></script>
+
+    <!-- v41 modular content: edit files inside /content instead of touching UI code -->
+    <script src="content/news.js"></script>
+    <script src="content/rankings.js"></script>
+    <script src="content/reactors.js"></script>
+    <script src="content/characters.js"></script>
+    <script src="content/motives.js"></script>
+    <script src="content/character-base-extensions.js"></script>
+    <script src="content/simulation.js"></script>
+    <script src="content/epiphanies.js"></script>
+    <script src="content/character-skills.js"></script>
+    <script src="content/character-psyches.js"></script>
+    <script src="content/archive-updates.js"></script>
+    <script src="content-validator.js"></script>
+    <script src="script.js"></script>
 
 </body>
 

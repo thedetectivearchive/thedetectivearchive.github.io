@@ -10985,3 +10985,1361 @@ html {
         filter: none;
     }
 }
+
+/* =========================================================
+   v39 — UI POLISH & CONSISTENCY
+   Safe visual refinements only; no structural desktop changes.
+========================================================= */
+
+body {
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+}
+
+html[lang="vi"] body {
+    font-family:
+        Cambria,
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+html[lang="vi"] .navigation a,
+html[lang="vi"] .navigation .feedback-nav-button,
+html[lang="vi"] .tab-button,
+html[lang="vi"] .ranking-tab-button {
+    letter-spacing: 0.01em;
+}
+
+@media (min-width: 761px) {
+    .browser-panel .database-grid {
+        gap: 10px;
+    }
+}
+
+#characterGrid,
+#weaponGrid {
+    scrollbar-color: rgba(185, 149, 85, 0.42) rgba(11, 9, 12, 0.50);
+}
+
+#characterGrid::-webkit-scrollbar,
+#weaponGrid::-webkit-scrollbar {
+    width: 5px;
+}
+
+#characterGrid::-webkit-scrollbar-thumb,
+#weaponGrid::-webkit-scrollbar-thumb {
+    border: 0;
+    border-radius: 999px;
+    background: rgba(185, 149, 85, 0.42);
+}
+
+#characterGrid::-webkit-scrollbar-thumb:hover,
+#weaponGrid::-webkit-scrollbar-thumb:hover {
+    background: rgba(234, 214, 160, 0.58);
+}
+
+.database-icon-filter[aria-pressed="true"] {
+    border-color: rgba(234, 214, 160, 0.92);
+    box-shadow:
+        0 0 0 1px rgba(185, 149, 85, 0.12),
+        0 0 13px rgba(185, 149, 85, 0.22),
+        inset 0 0 14px rgba(234, 214, 160, 0.08);
+}
+
+.database-icon-filter[aria-pressed="true"]::before {
+    border-top-color: var(--gold-light);
+    border-left-color: var(--gold-light);
+    opacity: 0.9;
+}
+
+.database-icon-filter[aria-pressed="true"] .database-filter-icon img {
+    filter: drop-shadow(0 0 6px rgba(234, 214, 160, 0.28));
+}
+
+#rankingPublicationState {
+    min-height: 22px;
+    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(185, 149, 85, 0.24);
+    border-radius: 999px;
+    color: #a99b87;
+    background: rgba(16, 14, 18, 0.62);
+    line-height: 1.1;
+}
+
+#rankingPublicationState::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    flex: 0 0 5px;
+    border-radius: 50%;
+    background: var(--gold-dark);
+    box-shadow: 0 0 7px rgba(185, 149, 85, 0.28);
+}
+
+.uid-search input:disabled {
+    color: #83786b;
+    border-color: rgba(185, 149, 85, 0.22);
+    background: rgba(13, 11, 14, 0.72);
+    cursor: not-allowed;
+    opacity: 0.78;
+}
+
+.uid-search input:disabled::placeholder {
+    color: #665e55;
+}
+
+.uid-search button:disabled,
+.uid-search button:disabled:hover {
+    color: #817568;
+    border-color: rgba(185, 149, 85, 0.22);
+    background: linear-gradient(#282128, #171317);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.76;
+}
+
+.uid-message {
+    position: relative;
+    padding-left: 13px;
+    color: #8f8375;
+}
+
+.uid-message::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold-dark);
+    box-shadow: 0 0 6px rgba(185, 149, 85, 0.22);
+}
+
+.navigation a,
+.navigation .feedback-nav-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+}
+
+.navigation .feedback-nav-button {
+    line-height: 1.2;
+}
+
+@media (max-width: 760px) {
+    #rankingPublicationState {
+        align-self: flex-start;
+    }
+
+    .uid-search button:disabled {
+        min-width: 74px;
+    }
+}
+
+
+/* =========================================================
+   v40 — CHARACTER SEARCH & FILTER QUALITY-OF-LIFE
+   Additive controls only; core desktop layout remains intact.
+========================================================= */
+
+.character-search-shell {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.character-search-shell .database-search {
+    margin-bottom: 0;
+    padding-right: 42px;
+}
+
+.character-search-clear {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: #8f8376;
+    background: transparent;
+    cursor: pointer;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1;
+    transform: translateY(-50%);
+    transition: color .18s, border-color .18s, background .18s;
+}
+
+.character-search-clear:hover,
+.character-search-clear:focus-visible {
+    border-color: rgba(185, 149, 85, 0.34);
+    color: var(--gold-light);
+    background: rgba(185, 149, 85, 0.08);
+    outline: none;
+}
+
+.character-search-clear[hidden],
+.character-active-filters[hidden] {
+    display: none !important;
+}
+
+.character-active-filters {
+    margin: -3px 0 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.character-filter-chip {
+    min-height: 28px;
+    max-width: 100%;
+    padding: 5px 8px 5px 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid rgba(185, 149, 85, 0.32);
+    border-radius: 999px;
+    color: #c9baa1;
+    background: rgba(35, 27, 31, 0.8);
+    cursor: pointer;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 9px;
+    line-height: 1.2;
+    letter-spacing: .25px;
+    transition: border-color .18s, color .18s, background .18s;
+}
+
+.character-filter-chip > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.character-filter-chip:hover,
+.character-filter-chip:focus-visible {
+    border-color: rgba(234, 214, 160, 0.72);
+    color: var(--ivory);
+    background: rgba(73, 48, 56, 0.82);
+    outline: none;
+}
+
+.character-filter-chip-close {
+    color: var(--gold);
+    font-size: 14px;
+    line-height: 1;
+}
+
+.character-result-tools {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.character-sort-select {
+    width: 112px;
+    min-height: 28px;
+    padding: 5px 24px 5px 7px;
+    border: 1px solid rgba(185, 149, 85, 0.25);
+    border-radius: 3px;
+    color: #a99b87;
+    background: #0d0b0e;
+    outline: none;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 9px;
+    line-height: 1.2;
+}
+
+.character-sort-select:hover,
+.character-sort-select:focus {
+    border-color: rgba(185, 149, 85, 0.58);
+    color: var(--ivory);
+}
+
+.character-empty-state {
+    grid-column: 1 / -1;
+    min-height: 180px;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px dashed rgba(185, 149, 85, 0.28);
+    border-radius: 4px;
+    color: #8f8376;
+    background:
+        linear-gradient(180deg, rgba(185, 149, 85, 0.025), rgba(13, 11, 14, 0.16));
+    text-align: center;
+}
+
+.character-empty-state strong {
+    color: var(--ivory);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.character-empty-state span {
+    max-width: 280px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.character-empty-reset {
+    margin-top: 4px;
+    min-height: 32px;
+    padding: 7px 12px;
+    border: 1px solid rgba(185, 149, 85, 0.38);
+    border-radius: 3px;
+    color: var(--gold-light);
+    background: rgba(45, 27, 34, 0.75);
+    cursor: pointer;
+    font-size: 8px;
+    letter-spacing: .8px;
+}
+
+.character-empty-reset:hover,
+.character-empty-reset:focus-visible {
+    border-color: var(--gold);
+    background: rgba(73, 43, 53, 0.9);
+    outline: none;
+}
+
+@media (max-width: 760px) {
+    .character-search-clear {
+        width: 40px;
+        height: 40px;
+        right: 2px;
+    }
+
+    .character-filter-chip {
+        min-height: 34px;
+        padding: 7px 10px;
+        font-size: 10px;
+    }
+
+    .character-sort-select {
+        width: 128px;
+        min-height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    .character-filter-resultbar {
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .character-result-tools {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .character-sort-select {
+        flex: 0 1 150px;
+        width: auto;
+        max-width: 70%;
+    }
+}
+
+/* =========================================================
+   CONTENT MEDIA SUPPORT v41
+   Optional images do not affect records that have no image.
+========================================================= */
+
+.news-page-card-media {
+    margin: -20px -20px 18px;
+    aspect-ratio: 16 / 8;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(185, 149, 85, 0.20);
+    background: #0b090c;
+}
+
+.news-page-card-media img,
+.news-page-article-media img,
+.database-card-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.news-page-card.has-image .news-page-card-meta {
+    margin-bottom: 17px;
+}
+
+.news-page-article-media {
+    margin: 20px 0 22px;
+    max-height: 430px;
+    overflow: hidden;
+    border: 1px solid rgba(185, 149, 85, 0.22);
+    background: #09080a;
+}
+
+.news-page-article-media img {
+    max-height: 430px;
+    object-fit: contain;
+}
+
+.database-card-media {
+    height: 112px;
+    margin: -14px -14px 12px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(185, 149, 85, 0.18);
+    background: #0b090c;
+}
+
+.simulation-card-media img,
+.epiphany-card-media img {
+    object-fit: cover;
+}
+
+@media (max-width: 720px) {
+    .news-page-card-media {
+        margin: -20px -20px 15px;
+        aspect-ratio: 16 / 9;
+    }
+
+    .news-page-article-media {
+        margin: 16px 0 18px;
+    }
+}
+
+
+/* =========================================================
+   v41 — FEATURED NEWS FULL IMAGE FIX
+========================================================= */
+
+#featuredNews {
+    isolation: isolate;
+    background:
+        linear-gradient(
+            130deg,
+            #20161d,
+            #111117
+        );
+}
+
+#featuredNews .featured-news-art {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 52%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+    object-position: center;
+
+    background: #0d0c10;
+
+    z-index: 0;
+    pointer-events: none;
+}
+
+#featuredNews .information-overlay {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(11, 9, 12, 0.99) 0%,
+            rgba(11, 9, 12, 0.96) 34%,
+            rgba(11, 9, 12, 0.74) 47%,
+            rgba(11, 9, 12, 0.14) 58%,
+            rgba(11, 9, 12, 0.02) 100%
+        );
+
+    z-index: 1;
+}
+
+#featuredNews .information-content {
+    width: 47%;
+    max-width: 47%;
+    z-index: 2;
+}
+
+#featuredNews .information-description {
+    max-width: 100%;
+}
+
+#featuredNews h2 {
+    font-size: clamp(30px, 2.15vw, 40px);
+    line-height: 1.08;
+}
+
+@media (max-width: 760px) {
+
+    #featuredNews {
+        padding-top: 235px;
+        align-items: flex-end;
+    }
+
+    #featuredNews .featured-news-art {
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 230px;
+
+        object-fit: contain;
+        object-position: center;
+
+        border-bottom:
+            1px solid rgba(185, 149, 85, 0.28);
+    }
+
+    #featuredNews .information-overlay {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(11, 9, 12, 0.02) 0,
+                rgba(11, 9, 12, 0.16) 180px,
+                rgba(11, 9, 12, 0.94) 245px,
+                rgba(11, 9, 12, 0.98) 100%
+            );
+    }
+
+    #featuredNews .information-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   v41 — FEATURED NEWS TEXT CLIPPING FIX
+   Prevent category/tag text from touching the top border.
+========================================================= */
+
+#featuredNews {
+    align-items: center;
+    padding: 26px 30px;
+}
+
+#featuredNews .featured-news-art {
+    width: 48%;
+}
+
+#featuredNews .information-content {
+    width: 52%;
+    max-width: 52%;
+}
+
+#featuredNews .tag {
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
+#featuredNews h2 {
+    margin-top: 4px;
+    margin-bottom: 5px;
+
+    font-size: clamp(28px, 1.9vw, 36px);
+    line-height: 1.08;
+}
+
+#featuredNews .information-date {
+    margin-top: 0;
+    margin-bottom: 7px;
+}
+
+#featuredNews .information-description {
+    margin-top: 0;
+    margin-bottom: 14px;
+    line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+
+    #featuredNews {
+        align-items: flex-end;
+        padding:
+            235px
+            20px
+            22px;
+    }
+
+    #featuredNews .featured-news-art {
+        width: 100%;
+    }
+
+    #featuredNews .information-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #featuredNews h2 {
+        font-size: clamp(26px, 8vw, 34px);
+    }
+
+}
+
+
+/* =========================================================
+   v41 — INFORMATION BOARD LEFT MEDIA LAYOUT
+   All 3 home news panels use a dimmed media box on the left.
+========================================================= */
+
+.information-board .main-information,
+.information-board .small-information {
+    display: flex;
+    align-items: stretch;
+
+    padding: 0;
+    overflow: hidden;
+
+    isolation: isolate;
+}
+
+/* Left media region */
+.information-board .news-panel-media {
+    position: relative;
+    z-index: 0;
+    flex: 0 0 42%;
+    min-width: 42%;
+    overflow: hidden;
+
+    border-right: 1px solid rgba(185, 149, 85, 0.20);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(28, 23, 28, 0.96),
+            rgba(12, 11, 16, 0.96)
+        );
+}
+
+.information-board .small-information .news-panel-media {
+    flex-basis: 34%;
+    min-width: 34%;
+}
+
+.information-board .news-panel-media::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(11, 9, 12, 0.10) 0%,
+            rgba(11, 9, 12, 0.34) 44%,
+            rgba(11, 9, 12, 0.58) 100%
+        );
+
+    pointer-events: none;
+}
+
+.information-board .news-panel-media.is-empty::before {
+    content: "ARCHIVE";
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    color: rgba(185, 149, 85, 0.20);
+    font-size: 11px;
+    letter-spacing: 3px;
+
+    background:
+        radial-gradient(
+            circle at 32% 30%,
+            rgba(111, 50, 67, 0.18),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(35, 24, 31, 0.95),
+            rgba(13, 12, 16, 0.98)
+        );
+}
+
+.information-board .news-panel-art {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    opacity: 0.42;
+    filter: saturate(0.92) brightness(0.88);
+}
+
+/* Text region on the right */
+.information-board .information-content {
+    position: relative;
+    z-index: 2;
+
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 24px 26px 24px 24px;
+}
+
+#featuredNews .information-content {
+    width: auto;
+    max-width: none;
+}
+
+#featuredNews h2 {
+    font-size: clamp(28px, 1.95vw, 38px);
+    line-height: 1.08;
+    margin-top: 2px;
+    margin-bottom: 7px;
+}
+
+#featuredNews .information-description {
+    max-width: none;
+    margin-bottom: 14px;
+}
+
+#featuredNews .read-button {
+    margin-top: auto;
+}
+
+.information-board .small-information h3 {
+    margin-top: 4px;
+    margin-bottom: 5px;
+}
+
+.information-board .small-information .information-content {
+    padding: 18px 22px 18px 20px;
+}
+
+.information-board .small-information p:last-child,
+.information-board .small-information p {
+    max-width: none;
+}
+
+/* Overall board overlay now protects text on the right side */
+.information-board .information-overlay {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(11, 9, 12, 0.05) 0%,
+            rgba(11, 9, 12, 0.18) 28%,
+            rgba(11, 9, 12, 0.72) 48%,
+            rgba(11, 9, 12, 0.95) 72%,
+            rgba(11, 9, 12, 0.98) 100%
+        );
+}
+
+/* Remove previous special featured-image width assumptions */
+#featuredNews .featured-news-art {
+    display: none !important;
+}
+
+@media (max-width: 980px) {
+
+    .information-board .news-panel-media {
+        flex-basis: 38%;
+        min-width: 38%;
+    }
+
+    .information-board .small-information .news-panel-media {
+        flex-basis: 32%;
+        min-width: 32%;
+    }
+
+    #featuredNews h2 {
+        font-size: clamp(26px, 2.45vw, 34px);
+    }
+
+}
+
+@media (max-width: 760px) {
+
+    .information-board .main-information,
+    .information-board .small-information {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .information-board .news-panel-media {
+        flex-basis: 36%;
+        min-width: 36%;
+    }
+
+    .information-board .small-information .news-panel-media {
+        flex-basis: 32%;
+        min-width: 32%;
+    }
+
+    .information-board .information-content {
+        padding: 16px 16px 16px 16px;
+    }
+
+    #featuredNews .information-content,
+    .information-board .small-information .information-content {
+        width: auto;
+        max-width: none;
+    }
+
+    #featuredNews h2 {
+        font-size: clamp(24px, 6.8vw, 32px);
+    }
+
+}
+
+
+/* =========================================================
+   v41 — SEAMLESS NEWS MEDIA
+   Image stays clear. The media area visually merges with text.
+========================================================= */
+
+/* The 3 news panels are one continuous surface. */
+.information-board .main-information,
+.information-board .small-information {
+    background:
+        linear-gradient(
+            130deg,
+            rgba(23, 20, 24, 0.98),
+            rgba(13, 12, 16, 0.98)
+        );
+}
+
+/* Left image region has NO visible box/frame of its own. */
+.information-board .news-panel-media {
+    border: 0 !important;
+    border-right: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+
+    background: transparent !important;
+}
+
+/* Keep the artwork clear and unblurred. */
+.information-board .news-panel-art {
+    opacity: 1 !important;
+    filter: none !important;
+
+    object-fit: cover;
+    object-position: center;
+
+    background: transparent !important;
+}
+
+/* No "ARCHIVE" placeholder box when a news item has no image. */
+.information-board .news-panel-media.is-empty::before {
+    content: none !important;
+    display: none !important;
+}
+
+/* Blend only the RIGHT EDGE of the image into the text surface. */
+.information-board .news-panel-media::after {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    right: -1px;
+    bottom: 0;
+
+    width: 34%;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(15, 13, 17, 0) 0%,
+            rgba(15, 13, 17, 0.22) 35%,
+            rgba(15, 13, 17, 0.72) 75%,
+            rgba(15, 13, 17, 0.98) 100%
+        );
+
+    pointer-events: none;
+}
+
+/* Remove the old full-panel dark veil over the image. */
+.information-board .information-overlay {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(11, 9, 12, 0.02) 0%,
+            rgba(11, 9, 12, 0.02) 34%,
+            rgba(11, 9, 12, 0.10) 43%,
+            rgba(11, 9, 12, 0.28) 52%,
+            rgba(11, 9, 12, 0.60) 68%,
+            rgba(11, 9, 12, 0.82) 100%
+        ) !important;
+}
+
+/* Text remains on the right, but there is no separator line. */
+.information-board .information-content {
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Empty media areas simply become part of the same panel. */
+.information-board .news-panel-media.is-empty {
+    background:
+        radial-gradient(
+            circle at 70% 50%,
+            rgba(111, 50, 67, 0.08),
+            transparent 60%
+        ) !important;
+}
+
+/* Featured artwork gets a little more space without becoming a separate card. */
+#featuredNews .news-panel-media {
+    flex-basis: 43%;
+    min-width: 43%;
+}
+
+#featuredNews .information-content {
+    flex: 1 1 57%;
+}
+
+/* Side cards keep a smaller image area. */
+.information-board .small-information .news-panel-media {
+    flex-basis: 35%;
+    min-width: 35%;
+}
+
+@media (max-width: 760px) {
+
+    .information-board .news-panel-media::after {
+        width: 40%;
+    }
+
+    #featuredNews .news-panel-media {
+        flex-basis: 38%;
+        min-width: 38%;
+    }
+
+    .information-board .small-information .news-panel-media {
+        flex-basis: 34%;
+        min-width: 34%;
+    }
+
+}
+
+
+/* =========================================================
+   v41 — NEWS IMAGE CLEAR FIX
+   No panel-wide dark overlay over the artwork.
+========================================================= */
+
+/* Main featured card: overlay begins only after the image area. */
+#featuredNews .information-overlay {
+    left: 43% !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(15, 13, 17, 0.18) 0%,
+            rgba(15, 13, 17, 0.72) 18%,
+            rgba(15, 13, 17, 0.96) 42%,
+            rgba(15, 13, 17, 0.98) 100%
+        ) !important;
+}
+
+/* Side cards use their smaller media width. */
+.information-board .small-information .information-overlay {
+    left: 35% !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(15, 13, 17, 0.16) 0%,
+            rgba(15, 13, 17, 0.76) 22%,
+            rgba(15, 13, 17, 0.98) 52%,
+            rgba(15, 13, 17, 0.98) 100%
+        ) !important;
+}
+
+/* Image itself remains fully clear. */
+.information-board .news-panel-art {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+/* Only the rightmost edge of the image blends into text. */
+.information-board .news-panel-media::after {
+    left: auto !important;
+    right: 0 !important;
+    width: 18% !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(15, 13, 17, 0) 0%,
+            rgba(15, 13, 17, 0.16) 40%,
+            rgba(15, 13, 17, 0.72) 100%
+        ) !important;
+}
+
+@media (max-width: 760px) {
+
+    #featuredNews .information-overlay {
+        left: 38% !important;
+    }
+
+    .information-board .small-information .information-overlay {
+        left: 34% !important;
+    }
+
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE v44 — CHARACTER DETAIL POLISH
+========================================================= */
+
+.character-detail-toolbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.character-detail-navigation {
+    min-width: 360px;
+
+    display: grid;
+    grid-template-columns:
+        minmax(120px, 1fr)
+        auto
+        minmax(120px, 1fr);
+
+    align-items: center;
+    gap: 7px;
+}
+
+.character-detail-nav-button {
+    min-width: 0;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 0 10px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.30);
+
+    color: #d6cdbd;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(31, 24, 30, 0.94),
+            rgba(13, 11, 15, 0.96)
+        );
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.18s ease,
+        color 0.18s ease,
+        background 0.18s ease;
+}
+
+.character-detail-nav-button.previous {
+    justify-content: flex-start;
+}
+
+.character-detail-nav-button.next {
+    justify-content: flex-end;
+}
+
+.character-detail-nav-button span {
+    flex: 0 0 auto;
+
+    color: var(--gold-light);
+
+    font-size: 16px;
+}
+
+.character-detail-nav-button strong {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: inherit;
+
+    font-size: 9px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.character-detail-nav-button:hover:not(:disabled) {
+    color: #fff1ca;
+
+    border-color:
+        rgba(215, 177, 99, 0.72);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(62, 36, 48, 0.98),
+            rgba(29, 19, 25, 0.98)
+        );
+}
+
+.character-detail-nav-button:disabled {
+    opacity: 0.34;
+    cursor: default;
+}
+
+.character-detail-nav-position {
+    min-width: 48px;
+
+    color: #938779;
+
+    font-size: 9px;
+    letter-spacing: 1px;
+
+    text-align: center;
+}
+
+.character-detail-reactor-badge {
+    width: fit-content;
+
+    margin-top: 10px;
+    margin-bottom: 3px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 10px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.30);
+
+    background:
+        rgba(13, 11, 15, 0.64);
+}
+
+.character-detail-reactor-badge img {
+    width: 22px;
+    height: 22px;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+.character-detail-reactor-badge span {
+    color: #d8c7a1;
+
+    font-size: 9px;
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+.character-detail-record-status {
+    margin-top: 12px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.character-detail-record-status > span {
+    min-height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 7px 10px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.18);
+
+    color: #8f8478;
+
+    background:
+        rgba(8, 7, 10, 0.40);
+
+    font-size: 9px;
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+}
+
+.character-detail-record-status strong {
+    color: var(--gold-light);
+
+    font-size: 13px;
+    font-weight: normal;
+}
+
+
+/* Keep the character tabs readable while the detail modal scrolls. */
+.database-detail-modal.active
+.character-detail-tabs {
+    backdrop-filter: blur(10px);
+}
+
+
+/* Medium screens: navigation stays useful without dominating toolbar. */
+@media (max-width: 1100px) {
+
+    .full-detail-toolbar {
+        align-items: flex-start;
+    }
+
+    .character-detail-toolbar-actions {
+        width: min(100%, 520px);
+        gap: 10px;
+    }
+
+    .character-detail-navigation {
+        width: 100%;
+        min-width: 0;
+    }
+
+}
+
+
+/* Mobile: compact Previous / Next controls. */
+@media (max-width: 760px) {
+
+    .full-detail-toolbar {
+        padding-right: 50px;
+    }
+
+    .character-detail-toolbar-actions {
+        width: 100%;
+
+        align-items: stretch;
+        justify-content: stretch;
+    }
+
+    .character-detail-navigation {
+        order: 2;
+
+        width: 100%;
+
+        grid-template-columns:
+            minmax(48px, 1fr)
+            auto
+            minmax(48px, 1fr);
+    }
+
+    .character-detail-nav-button {
+        min-height: 42px;
+    }
+
+    .character-detail-nav-button strong {
+        max-width: 105px;
+    }
+
+    .full-detail-toolbar-rarity {
+        order: 1;
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+    .character-detail-record-status {
+        margin-top: 10px;
+    }
+
+}
+
+
+@media (max-width: 460px) {
+
+    .character-detail-nav-button strong {
+        display: none;
+    }
+
+    .character-detail-nav-button.previous,
+    .character-detail-nav-button.next {
+        justify-content: center;
+    }
+
+    .character-detail-reactor-badge {
+        margin-top: 7px;
+    }
+
+}
+
+
+/* =========================================================
+   CHARACTER DETAIL — REACTOR BADGE ONLY
+========================================================= */
+
+.character-detail-reactor-badge {
+    width: fit-content;
+
+    margin-top: 10px;
+    margin-bottom: 3px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 10px;
+
+    border:
+        1px solid
+        rgba(185, 149, 85, 0.30);
+
+    background:
+        rgba(13, 11, 15, 0.64);
+}
+
+.character-detail-reactor-badge img {
+    width: 22px;
+    height: 22px;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+.character-detail-reactor-badge span {
+    color: #d8c7a1;
+
+    font-size: 9px;
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+@media (max-width: 460px) {
+
+    .character-detail-reactor-badge {
+        margin-top: 7px;
+    }
+
+}
+
+
