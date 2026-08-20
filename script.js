@@ -4248,6 +4248,12 @@ function renderWeaponFullDetail(
     weapon
 ) {
 
+    // Motive cards and Motive Detail intentionally use separate images.
+    // `image` is card-only; `detailImage` is full splash artwork.
+    const motiveDetailArtwork =
+        weapon.detailImage ||
+        "";
+
     const rarityClass =
         weapon.rarity === 5 && weapon.limited
             ? "full-detail-rarity-5-limited"
@@ -4312,11 +4318,11 @@ function renderWeaponFullDetail(
         </div>
 
 
-        <div class="full-detail-hero ${rarityClass}">
+        <div class="full-detail-hero motive-full-detail-hero ${rarityClass}">
 
             <div class="full-detail-art-shell">
 
-                <div class="full-detail-art motive-full-detail-art">
+                <div class="full-detail-art motive-full-detail-art ${motiveDetailArtwork ? "has-motive-detail-image" : ""}">
 
                     <div class="full-detail-image-placeholder motive-detail-placeholder">
                         <span>M</span>
@@ -4324,14 +4330,17 @@ function renderWeaponFullDetail(
                     </div>
 
                     ${
-                        weapon.image
+                        motiveDetailArtwork
                             ? `
                                 <img
-                                    src="${weapon.image}"
-                                    alt="${getLocalizedText(weapon.name)}"
+                                    src="${motiveDetailArtwork}"
+                                    alt="${getLocalizedText(weapon.name)} full artwork"
                                     decoding="async"
+                                    loading="eager"
+                                    data-motive-detail-image="true"
                                     onerror="
                                         this.style.display='none';
+                                        this.parentElement.classList.remove('has-motive-detail-image');
                                         this.parentElement.classList.add('image-missing');
                                     "
                                 >
@@ -4339,19 +4348,6 @@ function renderWeaponFullDetail(
                             : ""
                     }
 
-                    <div class="full-detail-art-vignette"></div>
-
-                    <div class="full-detail-art-caption">
-
-                        <span>
-                            ${"★".repeat(weapon.rarity)}
-                        </span>
-
-                        <strong>
-                            ${getLocalizedText(weapon.name)}
-                        </strong>
-
-                    </div>
 
                 </div>
 
@@ -7837,7 +7833,7 @@ function enhanceMotiveFullDetailV46(
                 "img"
             );
 
-        if (weapon.image && image) {
+        if (weapon.detailImage && image) {
 
             art.classList.add(
                 "has-motive-image"
@@ -7899,13 +7895,13 @@ function enhanceMotiveFullDetailV46(
 }
 
 
-const renderMotiveFullDetailV45Base =
-    renderMotiveFullDetail;
+const renderWeaponFullDetailV46Base =
+    renderWeaponFullDetail;
 
-renderMotiveFullDetail =
+renderWeaponFullDetail =
     function (weapon) {
 
-        renderMotiveFullDetailV45Base(
+        renderWeaponFullDetailV46Base(
             weapon
         );
 

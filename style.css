@@ -12866,3 +12866,114 @@ html[lang="vi"] .ranking-tab-button {
 
 }
 
+/* =========================================================
+   v51.3 — MOTIVE DETAIL EXACT 2:1 ARTWORK SYSTEM
+   All supplied full Motive artworks are 2048 x 1024.
+========================================================= */
+
+.motive-full-detail-hero {
+    min-height: 0 !important;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(430px, 1.08fr) !important;
+
+    gap: 28px !important;
+    align-items: start !important;
+}
+
+.motive-full-detail-hero > .full-detail-art-shell {
+    width: 100% !important;
+    min-width: 0 !important;
+    align-self: start !important;
+
+    padding: 6px !important;
+}
+
+.motive-full-detail-art,
+.motive-full-detail-art.has-motive-detail-image,
+.motive-full-detail-art.has-motive-image {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    aspect-ratio: 2 / 1 !important;
+
+    display: block !important;
+    position: relative !important;
+    overflow: hidden !important;
+
+    background: #08080b !important;
+}
+
+.motive-full-detail-art.has-motive-detail-image
+.motive-detail-placeholder,
+.motive-full-detail-art.has-motive-image
+.motive-detail-placeholder {
+    display: none !important;
+}
+
+.motive-full-detail-art img,
+.motive-full-detail-art.has-motive-detail-image img,
+.motive-full-detail-art.has-motive-image img,
+.motive-full-detail-art img[data-motive-detail-image="true"] {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+
+    display: block !important;
+
+    object-fit: contain !important;
+    object-position: center center !important;
+
+    transform: none !important;
+    filter: none !important;
+
+    background: #08080b !important;
+}
+
+/* Artwork frame contains artwork only. */
+.motive-full-detail-art .full-detail-art-vignette,
+.motive-full-detail-art .full-detail-art-caption {
+    display: none !important;
+}
+
+.motive-full-detail-hero > .motive-detail-info {
+    min-height: 0 !important;
+    padding-top: 10px !important;
+}
+
+@media (max-width: 1100px) {
+
+    .motive-full-detail-hero {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .motive-full-detail-hero > .motive-detail-info {
+        padding-top: 4px !important;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .motive-full-detail-hero > .full-detail-art-shell {
+        padding: 4px !important;
+    }
+
+    .motive-full-detail-art,
+    .motive-full-detail-art.has-motive-detail-image,
+    .motive-full-detail-art.has-motive-image {
+        aspect-ratio: 2 / 1 !important;
+    }
+
+}
+
