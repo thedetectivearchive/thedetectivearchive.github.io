@@ -13504,3 +13504,55 @@ body {
     content: none !important;
     display: none !important;
 }
+
+/* =========================================================
+   v57.1 — UNIFIED DATABASE TAB SCROLL
+   Keep Characters, Motives, Simulation and Epiphanies using
+   the same internal scrolling behavior on desktop/tablet.
+========================================================= */
+
+@media (min-width: 761px) {
+    #characterGrid,
+    #weaponGrid,
+    #simulationGrid,
+    #epiphanyGrid {
+        max-height: 610px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 2px 5px 8px 1px;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(185, 149, 85, 0.42) rgba(11, 9, 12, 0.50);
+    }
+
+    #characterGrid::-webkit-scrollbar,
+    #weaponGrid::-webkit-scrollbar,
+    #simulationGrid::-webkit-scrollbar,
+    #epiphanyGrid::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    #characterGrid::-webkit-scrollbar-track,
+    #weaponGrid::-webkit-scrollbar-track,
+    #simulationGrid::-webkit-scrollbar-track,
+    #epiphanyGrid::-webkit-scrollbar-track {
+        background: rgba(11, 9, 12, 0.50);
+    }
+
+    #characterGrid::-webkit-scrollbar-thumb,
+    #weaponGrid::-webkit-scrollbar-thumb,
+    #simulationGrid::-webkit-scrollbar-thumb,
+    #epiphanyGrid::-webkit-scrollbar-thumb {
+        border: 0;
+        border-radius: 999px;
+        background: rgba(185, 149, 85, 0.42);
+    }
+
+    #characterGrid::-webkit-scrollbar-thumb:hover,
+    #weaponGrid::-webkit-scrollbar-thumb:hover,
+    #simulationGrid::-webkit-scrollbar-thumb:hover,
+    #epiphanyGrid::-webkit-scrollbar-thumb:hover {
+        background: rgba(234, 214, 160, 0.58);
+    }
+}
