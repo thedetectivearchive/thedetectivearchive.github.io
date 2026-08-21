@@ -1,1 +1,76 @@
+name: The Detective Archive — Scheduled Publishing
 
+on:
+  push:
+  schedule:
+    - cron: "*/10 * * * *"
+      timezone: "Asia/Ho_Chi_Minh"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: tda-pages-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Apply scheduled records that are due
+        run: node scripts/publish-scheduled.mjs
+
+      - name: Commit published records and queue cleanup
+        shell: bash
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "Publish scheduled archive content"
+            git push
+          fi
+
+      - name: Build Pages artifact
+        shell: bash
+        run: |
+          rm -rf dist
+          mkdir -p dist
+          rsync -a ./ dist/ \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude 'scripts/' \
+            --exclude 'scheduled/' \
+            --exclude 'backup/' \
+            --exclude 'dist/' \
+            --exclude 'SCHEDULE_SETUP_VI.txt'
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
