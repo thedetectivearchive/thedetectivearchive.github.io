@@ -1,12 +1,23 @@
 /* =========================================================
    THE DETECTIVE ARCHIVE v41 — MODULAR CONTENT
-   SIMULATION / IMPLEMENT SETS — add new sets here. Optional image: images/simulation/<file>.
+   SIMULATION / IMPLEMENT SETS — add new sets here.
+   Optional media field:
+   - cardImage: image used on the database card
+   - image: legacy fallback for the database card
+   Simulation detail intentionally uses the archive placeholder instead of artwork.
+   Example: images/simulation/<file>
    Keep IDs unique. Leave unknown/unverified values blank.
 ========================================================= */
 
 // =========================
 // SIMULATION / IMPLEMENT SETS
 // =========================
+
+
+/*
+    Optional image usage example:
+    cardImage: "images/simulation/embers-and-flame-card.webp"
+*/
 
 /*
     Dichotomy CBT2 terminology:
@@ -28,6 +39,7 @@ const simulationData = [
         type: "Implement Set",
         observedStatus: "Observed 4/4 in Dichotomy CBT2",
         observedOn: "Bentham",
+        cardImage: "images/simulation/embers-and-flame-card.png",
         fullSetObserved: true,
         sourceLabel: "SilverPalaceMeta — Equipment & Gear System (Dichotomy CBT2)",
         slots: [
@@ -86,6 +98,7 @@ const simulationData = [
         type: "Implement Set",
         observedStatus: "Observed 4/4 in Dichotomy CBT2",
         observedOn: "Lorin",
+        cardImage: "images/simulation/elitism-card.png",
         fullSetObserved: true,
         sourceLabel: "SilverPalaceMeta — Equipment & Gear System (Dichotomy CBT2)",
         slots: [
