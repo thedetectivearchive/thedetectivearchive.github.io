@@ -13556,3 +13556,23 @@ body {
         background: rgba(234, 214, 160, 0.58);
     }
 }
+
+/* =========================================================
+   v57.2 — EPIPHANY SCROLL FIX
+   Explicitly constrain the Epiphany database viewport on
+   desktop/tablet so the 30-card grid always scrolls internally.
+========================================================= */
+
+@media (min-width: 761px) {
+    #epiphanyGrid {
+        height: 610px;
+        max-height: 610px;
+        min-height: 0;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        align-content: start;
+        grid-auto-rows: max-content;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+}
