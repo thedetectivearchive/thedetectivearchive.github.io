@@ -10282,7 +10282,8 @@ html {
     }
 
     .header.mobile-nav-ready .language-picker,
-    .news-page-header.mobile-nav-ready .news-language-select {
+    .news-page-header.mobile-nav-ready .news-language-select,
+    .help-page-header.mobile-nav-ready .news-language-select {
         grid-area: language;
         width: 100%;
         margin: 0;
@@ -10290,12 +10291,14 @@ html {
     }
 
     .header.mobile-nav-ready.mobile-menu-open .language-picker,
-    .news-page-header.mobile-nav-ready.mobile-menu-open .news-language-select {
+    .news-page-header.mobile-nav-ready.mobile-menu-open .news-language-select,
+    .help-page-header.mobile-nav-ready.mobile-menu-open .news-language-select {
         display: block;
     }
 
     .header.mobile-nav-ready .language-picker select,
-    .news-page-header.mobile-nav-ready .news-language-select {
+    .news-page-header.mobile-nav-ready .news-language-select,
+    .help-page-header.mobile-nav-ready .news-language-select {
         width: 100%;
         max-width: none;
         min-width: 0;
@@ -12977,3 +12980,527 @@ html[lang="vi"] .ranking-tab-button {
 
 }
 
+
+/* =========================================================
+   v52 — SHARE / COPY LINK
+   Small, non-blocking controls for shareable record URLs.
+========================================================= */
+
+.record-share-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.record-copy-link {
+    min-height: 30px;
+    padding: 7px 11px;
+    border: 1px solid rgba(185, 149, 85, 0.36);
+    border-radius: 2px;
+    background: rgba(18, 14, 18, 0.88);
+    color: #cdbb91;
+    font: inherit;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1.25px;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.record-copy-link:hover,
+.record-copy-link:focus-visible {
+    border-color: var(--gold);
+    background: rgba(42, 26, 34, 0.96);
+    color: var(--gold-light);
+    outline: none;
+}
+
+.record-copy-link.is-copied {
+    border-color: rgba(185, 149, 85, 0.62);
+    color: var(--ivory);
+}
+
+.record-copy-link.is-failed {
+    border-color: rgba(190, 96, 96, 0.52);
+    color: #d9aaaa;
+}
+
+.news-record-share-actions {
+    align-items: flex-start;
+}
+
+.news-page-share-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0 18px;
+}
+
+@media (max-width: 700px) {
+    .full-detail-toolbar .record-share-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .news-detail-header .news-record-share-actions {
+        align-items: flex-end;
+    }
+
+    .record-copy-link {
+        min-height: 32px;
+        padding-inline: 10px;
+    }
+}
+
+/* =========================================================
+   v53 — CHARACTER SKILLS & PSYCHES READABILITY
+   Readability-only polish. No character data or page layout changes.
+========================================================= */
+
+.character-detailed-skill-list {
+    gap: 12px;
+}
+
+.character-skill-detail-card {
+    position: relative;
+    overflow: hidden;
+    border-left-width: 3px;
+    transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.character-skill-detail-card[data-skill-type="basicAttack"] {
+    border-left-color: rgba(215, 177, 99, 0.82);
+}
+
+.character-skill-detail-card[data-skill-type="skill"] {
+    border-left-color: rgba(185, 149, 85, 0.82);
+}
+
+.character-skill-detail-card[data-skill-type="ultimate"] {
+    border-left-color: rgba(124, 54, 67, 0.92);
+}
+
+.character-skill-detail-card[data-skill-type="tacticalAssault"] {
+    border-left-color: rgba(171, 111, 72, 0.88);
+}
+
+.character-skill-detail-card[data-skill-type="passive"] {
+    border-left-color: rgba(132, 119, 91, 0.88);
+}
+
+.character-skill-detail-card summary {
+    padding-top: 17px;
+    padding-bottom: 17px;
+}
+
+.character-skill-summary-main {
+    display: grid;
+    grid-template-columns: 126px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+}
+
+.character-skill-summary-main .character-skill-type {
+    min-width: 0;
+    padding: 5px 8px;
+    border-color: rgba(185, 149, 85, 0.22);
+    background: rgba(185, 149, 85, 0.045);
+    color: #bda77d;
+    font-size: 8px;
+    letter-spacing: 1.05px;
+    line-height: 1.35;
+}
+
+.character-skill-summary-main h3 {
+    line-height: 1.35;
+}
+
+.character-skill-detail-body {
+    padding-bottom: 20px;
+}
+
+.character-skill-description {
+    max-width: 920px;
+    padding: 17px 0 15px;
+    color: #ded4c5;
+    font-size: 13px;
+    line-height: 1.72;
+}
+
+.character-skill-subsection {
+    margin-top: 8px;
+    padding: 12px 14px;
+    border-left-width: 1px;
+    background: rgba(185, 149, 85, 0.028);
+}
+
+.character-skill-subsection > span {
+    margin-bottom: 7px;
+    font-size: 8px;
+    letter-spacing: 1.35px;
+}
+
+.character-skill-subsection p,
+.character-detail-bullet-list li {
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+.character-detail-bullet-list {
+    margin: 0;
+    padding-left: 19px;
+}
+
+.character-detail-bullet-list li + li {
+    margin-top: 8px;
+}
+
+.character-skill-resource-block {
+    border-left-color: rgba(185, 149, 85, 0.48);
+}
+
+.character-skill-mechanics-block {
+    border-left-color: rgba(185, 149, 85, 0.30);
+}
+
+.character-skill-combo-block {
+    border-left-color: rgba(124, 54, 67, 0.72);
+}
+
+/* Psyche status is already explained once in the system summary.
+   Per-card CBT2 pills are intentionally removed to reduce visual noise. */
+.character-psyche-grid {
+    gap: 12px;
+}
+
+.character-psyche-card {
+    min-height: 0;
+    grid-template-columns: 50px minmax(0, 1fr);
+    align-items: start;
+    padding: 17px 18px;
+    gap: 15px;
+    border-left: 2px solid rgba(185, 149, 85, 0.42);
+}
+
+.character-psyche-index {
+    width: 46px;
+    height: 30px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 0.8px;
+}
+
+.character-psyche-content {
+    min-width: 0;
+}
+
+.character-psyche-content h3 {
+    line-height: 1.4;
+}
+
+.character-psyche-content p {
+    margin-top: 8px;
+    max-width: 680px;
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+@media (max-width: 640px) {
+    .character-skill-summary-main {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .character-skill-summary-main .character-skill-type {
+        width: fit-content;
+    }
+
+    .character-skill-description {
+        font-size: 12px;
+    }
+
+    .character-psyche-card {
+        grid-template-columns: 44px minmax(0, 1fr);
+        padding: 15px 13px;
+        gap: 12px;
+    }
+
+    .character-psyche-index {
+        width: 40px;
+        height: 28px;
+    }
+}
+
+
+/* =========================================================
+   v53+ — SIMULATION CARD IMAGE SUPPORT
+   Simulation artwork is card-only. Detail stays data-focused.
+========================================================= */
+
+.simulation-card .simulation-card-media {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 118px;
+}
+
+.simulation-card .simulation-card-media img {
+    object-fit: contain;
+    object-position: center;
+}
+
+
+/* =========================================================
+   THE DETECTIVE ARCHIVE — ORNAMENT-ONLY POLISH
+   Keeps the original layout, colors, sizing and card styling.
+   Decoration only: archive lines, corner marks and watermarks.
+========================================================= */
+
+/* Very faint archive-paper linework behind the existing page. */
+body {
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(185, 149, 85, 0.018) 0,
+            rgba(185, 149, 85, 0.018) 1px,
+            transparent 1px,
+            transparent 46px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(185, 149, 85, 0.012) 0,
+            rgba(185, 149, 85, 0.012) 1px,
+            transparent 1px,
+            transparent 46px
+        );
+}
+
+/* Small crest on the existing gold header rule. */
+.header::before {
+    content: "◆";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    transform: translateX(-50%) rotate(45deg);
+    color: rgba(185, 149, 85, 0.78);
+    background: #100d11;
+    border: 1px solid rgba(185, 149, 85, 0.42);
+    font-size: 5px;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.header::before {
+    text-indent: -9999px;
+}
+
+/* Archive corner marks on the three large database columns. */
+.browser-panel::before,
+.main-content::before,
+.player-panel::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    width: 20px;
+    height: 20px;
+    border-top: 1px solid rgba(210, 178, 111, 0.52);
+    border-left: 1px solid rgba(210, 178, 111, 0.52);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.main-content::after,
+.player-panel::after {
+    content: "";
+    position: absolute;
+    right: 9px;
+    bottom: 9px;
+    width: 20px;
+    height: 20px;
+    border-right: 1px solid rgba(210, 178, 111, 0.38);
+    border-bottom: 1px solid rgba(210, 178, 111, 0.38);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Preserve the browser panel's original vertical ornament and add a tiny cap. */
+.browser-panel::after {
+    box-shadow: 0 -7px 0 -3px rgba(185, 149, 85, 0.72),
+                0 7px 0 -3px rgba(185, 149, 85, 0.72);
+}
+
+/* Section captions read more like labels on an archive folder. */
+.section-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.section-label::before {
+    content: "◆";
+    flex: 0 0 auto;
+    color: rgba(210, 178, 111, 0.82);
+    font-size: 6px;
+}
+
+.section-label::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    flex: 0 0 28px;
+    background: linear-gradient(
+        90deg,
+        rgba(185, 149, 85, 0.52),
+        transparent
+    );
+}
+
+/* Small diamond placed on existing major divider rules. */
+.content-header::after {
+    content: "◆";
+    position: absolute;
+    left: 18px;
+    bottom: -5px;
+    padding: 0 5px;
+    color: rgba(185, 149, 85, 0.66);
+    background: #100e12;
+    font-size: 7px;
+    line-height: 10px;
+    pointer-events: none;
+}
+
+/* Tiny archive marker on news records; no resizing or layout changes. */
+.news-card {
+    position: relative;
+}
+
+.news-card::before {
+    content: "◇";
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    color: rgba(185, 149, 85, 0.30);
+    font-size: 11px;
+    pointer-events: none;
+    z-index: 4;
+}
+
+/* Decorative corner bracket inside the player dossier heading. */
+.player-panel h2 {
+    position: relative;
+}
+
+.player-panel h2::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    width: 42px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(214, 181, 111, 0.65)
+    );
+}
+
+/* Detail view: only one extra bottom ornament; original modal stays intact. */
+.database-detail-panel::after {
+    content: "◆   ◇   ◆";
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    color: rgba(185, 149, 85, 0.24);
+    font-size: 6px;
+    letter-spacing: 7px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* Very faint archive stamp, visible only in open visual space. */
+.main-content > .content-header::before {
+    content: "ARCHIVE / SILVERNIA";
+    position: absolute;
+    right: 0;
+    top: -8px;
+    color: rgba(185, 149, 85, 0.075);
+    font-size: 8px;
+    letter-spacing: 3px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* Keep decorative marks restrained on compact screens. */
+@media (max-width: 720px) {
+    body {
+        background-image: none;
+    }
+
+    .header::before,
+    .main-content > .content-header::before,
+    .news-card::before {
+        display: none;
+    }
+
+    .browser-panel::before,
+    .main-content::before,
+    .main-content::after,
+    .player-panel::before,
+    .player-panel::after {
+        width: 14px;
+        height: 14px;
+    }
+
+    .section-label::after {
+        width: 18px;
+        flex-basis: 18px;
+    }
+}
+
+
+/* =========================================================
+   ORNAMENT CLEANUP — keep only the crest on the top header rule.
+   Remove square/diamond glyphs elsewhere; retain lines/corner brackets.
+========================================================= */
+
+.section-label::before,
+.content-header::after,
+.news-card::before,
+.database-detail-panel::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Keep the top-line crest visible on compact screens too. */
+@media (max-width: 720px) {
+    .header::before {
+        display: grid;
+    }
+}
+
+/* =========================================================
+   ORNAMENT CLEANUP 2 — remove panel corner boxes.
+   Keep only the centered crest on the top header rule.
+========================================================= */
+
+.browser-panel::before,
+.main-content::before,
+.main-content::after,
+.player-panel::before,
+.player-panel::after {
+    content: none !important;
+    display: none !important;
+}

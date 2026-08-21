@@ -2834,6 +2834,17 @@ function applySimulationFilters() {
 }
 
 
+function getSimulationCardImagePath(simulationSet) {
+
+    if (!simulationSet) {
+        return "";
+    }
+
+    return simulationSet.cardImage || simulationSet.image || "";
+}
+
+
+
 function renderSimulations(simulationSets) {
 
     if (!simulationGrid) {
@@ -2861,9 +2872,9 @@ function renderSimulations(simulationSets) {
                 : 0;
 
         card.innerHTML = `
-            ${simulationSet.image ? `
+            ${getSimulationCardImagePath(simulationSet) ? `
                 <div class="database-card-media simulation-card-media">
-                    <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.add('asset-missing')">
+                    <img src="${getSimulationCardImagePath(simulationSet)}" alt="${getLocalizedText(simulationSet.name)}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.add('asset-missing')">
                 </div>
             ` : ""}
 
@@ -4874,9 +4885,6 @@ function renderSimulationFullDetail(
                         <small>SIMULATION</small>
                     </div>
 
-                    ${simulationSet.image ? `
-                        <img src="${simulationSet.image}" alt="${getLocalizedText(simulationSet.name)}" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.remove('has-simulation-image'); const p=this.parentElement.querySelector('.simulation-detail-placeholder'); if(p)p.style.display=''">
-                    ` : ""}
 
                     <div class="full-detail-art-vignette"></div>
 
@@ -5361,14 +5369,14 @@ function renderEpiphanyFullDetail(
 
                 <div class="full-detail-art epiphany-detail-art">
 
-                    <div class="epiphany-large-book" aria-hidden="true">
-                        <span>E</span>
-                        <small>EPIPHANY</small>
-                    </div>
-
                     ${epiphany.image ? `
                         <img src="${epiphany.image}" alt="${getLocalizedText(epiphany.name)}" decoding="async" onerror="this.style.display='none'; const p=this.parentElement.querySelector('.epiphany-large-book'); if(p)p.style.display=''">
-                    ` : ""}
+                    ` : `
+                        <div class="epiphany-large-book" aria-hidden="true">
+                            <span>E</span>
+                            <small>EPIPHANY</small>
+                        </div>
+                    `}
 
                     <div class="full-detail-art-vignette"></div>
 
@@ -6632,27 +6640,31 @@ function renderCharacterObservedStatSnapshot(baseStats) {
 }
 
 function renderDetailedCharacterSkill(skill, index) {
+    const allowedSkillTypes = ["basicAttack", "skill", "ultimate", "tacticalAssault", "passive"];
+    const skillType = allowedSkillTypes.includes(skill.type) ? skill.type : "skill";
+    const skillName = getLocalizedText(skill.name || "").trim();
+    const descriptionText = getLocalizedText(skill.description || "").trim();
+    const resourceText = getLocalizedText(skill.resource || "").trim();
     const mechanics = renderDetailListItems(skill.mechanics);
     const combos = renderDetailListItems(skill.combo);
-    const resourceText = getLocalizedText(skill.resource);
     const hasDetails = Boolean(mechanics || combos || resourceText);
 
     return `
-        <details class="character-skill-detail-card" ${index === 0 ? "open" : ""}>
+        <details class="character-skill-detail-card" data-skill-type="${skillType}" ${index === 0 ? "open" : ""}>
             <summary>
                 <div class="character-skill-summary-main">
-                    <span class="character-skill-type">${t(skill.type || "skill")}</span>
-                    <h3>${getLocalizedText(skill.name)}</h3>
+                    <span class="character-skill-type">${t(skillType)}</span>
+                    ${skillName ? `<h3>${skillName}</h3>` : ""}
                 </div>
                 <span class="character-skill-expand-mark">+</span>
             </summary>
 
             <div class="character-skill-detail-body">
-                <p class="character-skill-description">${getLocalizedText(skill.description)}</p>
+                ${descriptionText ? `<p class="character-skill-description">${descriptionText}</p>` : ""}
 
                 ${resourceText
                     ? `
-                        <div class="character-skill-subsection">
+                        <div class="character-skill-subsection character-skill-resource-block">
                             <span>${t("resource")}</span>
                             <p>${resourceText}</p>
                         </div>
@@ -6662,7 +6674,7 @@ function renderDetailedCharacterSkill(skill, index) {
 
                 ${mechanics
                     ? `
-                        <div class="character-skill-subsection">
+                        <div class="character-skill-subsection character-skill-mechanics-block">
                             <span>${t("mechanics")}</span>
                             ${mechanics}
                         </div>
@@ -6905,15 +6917,15 @@ function renderCharacterPsyches(psyches, sourceLabel) {
 
         <div class="character-psyche-grid">
             ${psyches.map(function (psyche, index) {
+                const psycheName = getLocalizedText(psyche.name || "").trim();
+                const psycheDescription = getLocalizedText(psyche.description || "").trim();
+
                 return `
                     <article class="character-psyche-card">
                         <span class="character-psyche-index">P${index + 1}</span>
-                        <div>
-                            <div class="character-psyche-card-heading">
-                                <h3>${getLocalizedText(psyche.name)}</h3>
-                                <em>CBT2</em>
-                            </div>
-                            <p>${getLocalizedText(psyche.description)}</p>
+                        <div class="character-psyche-content">
+                            ${psycheName ? `<h3>${psycheName}</h3>` : ""}
+                            ${psycheDescription ? `<p>${psycheDescription}</p>` : ""}
                         </div>
                     </article>
                 `;
@@ -7664,44 +7676,19 @@ function fixSimulationDetailMediaV451(simulationSet) {
             ".simulation-detail-placeholder"
         );
 
-    const image =
-        art.querySelector(
-            "img"
-        );
-
-
     /*
-     * The original Simulation detail contains a placeholder and,
-     * when an image exists, an <img> in the same art panel.
-     * With object-fit: contain the placeholder could remain visible
-     * around the image and look like a second image frame.
-     *
-     * v45.1 keeps only one visible media layer:
-     * image OR placeholder.
+     * Simulation detail intentionally stays text/data focused.
+     * Artwork is shown on the database card only; the detail view
+     * keeps the archive placeholder so new sets do not require a
+     * second image asset.
      */
-    if (simulationSet.image && image) {
-
-        if (placeholder) {
-            placeholder.style.display =
-                "none";
-        }
-
-        art.classList.add(
-            "has-simulation-image"
-        );
-
-    } else {
-
-        if (placeholder) {
-            placeholder.style.display =
-                "";
-        }
-
-        art.classList.remove(
-            "has-simulation-image"
-        );
-
+    if (placeholder) {
+        placeholder.style.display = "";
     }
+
+    art.classList.remove(
+        "has-simulation-image"
+    );
 
 }
 

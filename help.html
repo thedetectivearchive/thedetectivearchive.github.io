@@ -40,7 +40,7 @@
             <img src="logo.png" alt="The Detective Archive logo" decoding="async" fetchpriority="high">
             <div>
                 <strong>The Detective Archive</strong>
-                <span>SILVER PALACE DATABASE</span>
+                <span data-i18n="gameDatabase">SILVER PALACE DATABASE</span>
             </div>
         </a>
 
@@ -58,24 +58,35 @@
         </button>
 
         <nav class="help-page-nav" id="mobileHelpNav">
-            <a href="index.html">Home</a>
-            <a href="news.html">News</a>
-            <a href="index.html#database">Database</a>
-            <a href="index.html#rankings">Rankings</a>
-            <a href="index.html#playerLookup">Player</a>
-            <a href="index.html?feedback=1">Send Feedback</a>
+            <a href="index.html" data-i18n="home">Home</a>
+            <a href="news.html" data-i18n="news">News</a>
+            <a href="index.html#database" data-i18n="database">Database</a>
+            <a href="index.html#rankings" data-i18n="rankings">Rankings</a>
+            <a href="index.html#playerLookup" data-i18n="player">Player</a>
+            <a href="index.html?feedback=1" data-i18n="feedback">Send Feedback</a>
         </nav>
+
+        <select id="languageSelect" class="news-language-select" aria-label="Language">
+            <option value="en">EN · English</option>
+            <option value="vi">VI · Tiếng Việt</option>
+            <option value="th">TH · ไทย</option>
+            <option value="ja">JA · 日本語</option>
+            <option value="zh-CN">ZH · 简体中文</option>
+            <option value="ko">KO · 한국어</option>
+            <option value="fr">FR · Français</option>
+            <option value="es">ES · Español</option>
+            <option value="ru">RU · Русский</option>
+        </select>
     </header>
 
 
     <main class="help-page-shell">
 
         <section class="help-page-hero">
-            <p class="tag">ARCHIVE SUPPORT</p>
-            <h1>Help Center</h1>
-            <p>
-                Source notes, archive rules, and explanations for information
-                that is intentionally left unpublished while Silver Palace is still in development.
+            <p class="tag" data-i18n="helpCenterTag">ARCHIVE SUPPORT</p>
+            <h1 data-i18n="helpCenterTitle">Help Center</h1>
+            <p data-i18n="helpCenterDescription">
+                Frequently asked questions, archive rules, and the source policy used by The Detective Archive.
             </p>
         </section>
 
@@ -88,27 +99,25 @@
                     <div class="help-page-section-heading">
                         <span>01</span>
                         <div>
-                            <p class="tag">SOURCE NOTES</p>
-                            <h2>Where the archive gets its information</h2>
+                            <p class="tag" data-i18n="helpSourceLabel">SOURCE NOTES</p>
+                            <h2 data-i18n="helpSourceTitle">How the archive is sourced</h2>
                         </div>
                     </div>
 
-                    <p class="help-page-lead">
-                        Source labels are collected here instead of being repeated under every
-                        character skill or database entry.
+                    <p class="help-page-lead" data-i18n="helpSourceIntro">
+                        Source labels are centralized here so character skills and database cards stay clean and easy to read.
                     </p>
 
                     <div class="help-source-list">
 
                         <article class="help-source-card help-source-official">
                             <div class="help-source-card-top">
-                                <span>OFFICIAL</span>
+                                <span data-i18n="helpOfficialBadge">OFFICIAL</span>
                                 <strong>Elementa Games / Silver Palace</strong>
                             </div>
 
-                            <p>
-                                Used for official announcements, beta rules, game status,
-                                and information published directly by the Silver Palace team.
+                            <p data-i18n="helpOfficialText">
+                                Used for official announcements, beta rules, game status, and information published directly by the Silver Palace team.
                             </p>
 
                             <a
@@ -116,21 +125,19 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Official Silver Palace Site ↗
+                                <span data-i18n="helpOfficialLink">Official Silver Palace Site ↗</span>
                             </a>
                         </article>
 
 
                         <article class="help-source-card">
                             <div class="help-source-card-top">
-                                <span>BETA TRANSCRIPT</span>
+                                <span data-i18n="helpBetaTranscriptBadge">BETA TRANSCRIPT</span>
                                 <strong>Kaiden.gg</strong>
                             </div>
 
-                            <p>
-                                Used mainly for CBT2 character skill text, mechanics,
-                                observed numeric values, upgrade rows, and other data
-                                transcribed from the beta client.
+                            <p data-i18n="helpKaidenText">
+                                Used mainly for CBT2 character skill text, mechanics, observed numeric values, upgrade rows, and other data transcribed from the beta client.
                             </p>
 
                             <a
@@ -138,21 +145,19 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Kaiden.gg Silver Palace ↗
+                                <span data-i18n="helpKaidenLink">Kaiden.gg Silver Palace ↗</span>
                             </a>
                         </article>
 
 
                         <article class="help-source-card">
                             <div class="help-source-card-top">
-                                <span>COMMUNITY REFERENCE</span>
+                                <span data-i18n="helpCommunityBadge">COMMUNITY REFERENCE</span>
                                 <strong>SilverPalaceMeta</strong>
                             </div>
 
-                            <p>
-                                Used for cross-checking CBT2 systems such as Motives,
-                                Simulation, Epiphany, terminology, beta observations,
-                                and literary-source mappings.
+                            <p data-i18n="helpMetaText">
+                                Used for cross-checking CBT2 systems such as Motives, Simulation, Epiphany, terminology, beta observations, and literary-source mappings.
                             </p>
 
                             <a
@@ -160,31 +165,19 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                SilverPalaceMeta Guides ↗
+                                <span data-i18n="helpMetaLink">SilverPalaceMeta Guides ↗</span>
                             </a>
                         </article>
 
                     </div>
 
                     <div class="help-source-policy">
-                        <span>ARCHIVE POLICY</span>
+                        <span data-i18n="helpPolicyLabel">ARCHIVE POLICY</span>
 
                         <ol>
-                            <li>
-                                Official information takes priority when an official source exists.
-                            </li>
-                            <li>
-                                Direct CBT2 observations and transcriptions are treated as beta data,
-                                not final release data.
-                            </li>
-                            <li>
-                                Community sources are cross-checked when possible.
-                                Conflicting or uncertain values remain unpublished.
-                            </li>
-                            <li>
-                                The archive does not invent missing stats, passive values,
-                                ranking scores, or player data.
-                            </li>
+                            <li data-i18n="helpPolicy1">Official information takes priority when an official source exists.</li>
+                            <li data-i18n="helpPolicy2">Direct CBT2 observations and transcriptions are treated as beta data, not release data.</li>
+                            <li data-i18n="helpPolicy3">Community sources are cross-checked when possible; conflicting or uncertain values remain unpublished.</li>
                         </ol>
                     </div>
                 </section>
@@ -194,43 +187,30 @@
                     <div class="help-page-section-heading">
                         <span>02</span>
                         <div>
-                            <p class="tag">MISSING DATA</p>
-                            <h2>Why some information is blank</h2>
+                            <p class="tag" data-i18n="dataPolicy">MISSING DATA</p>
+                            <h2 data-i18n="faqQuestion2">Why can some stats, passives, or ranking scores be blank?</h2>
                         </div>
                     </div>
 
                     <div class="help-explanation-grid">
                         <article>
-                            <strong>Pre-release data</strong>
-                            <p>
-                                Silver Palace is still in development, so CBT2 values,
-                                terminology, equipment rules, and balance can change.
-                            </p>
+                            <strong data-i18n="previewData">PREVIEW / BETA</strong>
+                            <p data-i18n="faqAnswer3">No. Dichotomy CBT2 is a development build. Skills, stats, terminology, equipment, availability, and balance can change before release.</p>
                         </article>
 
                         <article>
-                            <strong>No reliable transcription</strong>
-                            <p>
-                                If a stat, passive, item name, or level value cannot be read
-                                or cross-checked confidently, it is left blank.
-                            </p>
+                            <strong data-i18n="unverified">Unverified</strong>
+                            <p data-i18n="faqAnswer2">Silver Palace is still pre-release. When a value cannot be verified reliably, the archive leaves it blank instead of estimating or inventing it.</p>
                         </article>
 
                         <article>
-                            <strong>Conflicting beta records</strong>
-                            <p>
-                                When two beta/community records disagree, the archive does not
-                                silently choose one value. The field remains unpublished until
-                                better evidence is available.
-                            </p>
+                            <strong data-i18n="archivePolicy">Archive Policy</strong>
+                            <p data-i18n="helpPolicy3">Community sources are cross-checked when possible; conflicting or uncertain values remain unpublished.</p>
                         </article>
 
                         <article>
-                            <strong>No extrapolation</strong>
-                            <p>
-                                Missing Lv.MAX stats, refine values, or scaling are not calculated
-                                from lower-level data unless the game itself provides the formula.
-                            </p>
+                            <strong data-i18n="dataPolicy">Data Policy</strong>
+                            <p data-i18n="helpPolicy2">Direct CBT2 observations and transcriptions are treated as beta data, not release data.</p>
                         </article>
                     </div>
                 </section>
@@ -240,31 +220,25 @@
                     <div class="help-page-section-heading">
                         <span>03</span>
                         <div>
-                            <p class="tag">CHARACTER RANKINGS</p>
-                            <h2>Why ranking scores are not published yet</h2>
+                            <p class="tag" data-i18n="characterRankings">CHARACTER RANKINGS</p>
+                            <h2 data-i18n="faqQuestion7">Why are Character Ranking scores still unpublished?</h2>
                         </div>
                     </div>
 
                     <div class="help-status-card">
-                        <span class="help-status-pill">FRAMEWORK READY</span>
-                        <h3>Score / Tier / Top % are intentionally empty.</h3>
+                        <span class="help-status-pill" data-i18n="rankingFramework">FRAMEWORK</span>
+                        <h3 data-i18n="rankingResultsState">Scores unpublished</h3>
 
-                        <p>
-                            The ranking interface is already prepared, but publishing scores now
-                            would require assumptions that cannot yet be tested consistently.
-                        </p>
+                        <p data-i18n="rankingWaiting">No ranking scores are published yet. The table and filters are ready; verified values will be added when reliable combat data becomes available.</p>
 
                         <ul>
-                            <li>Characters have different intended combat roles.</li>
-                            <li>Comparable reference builds are still incomplete.</li>
-                            <li>Motive, Simulation, Epiphany, and balance values can change.</li>
-                            <li>Reliable repeatable combat benchmarks are not yet available.</li>
+                            <li data-i18n="ruleRoleText">DPS, Break, Support and Survival characters are not judged by one identical priority.</li>
+                            <li data-i18n="ruleBuildText">Comparisons require a documented Motive, Simulation, Epiphany and stat baseline.</li>
+                            <li data-i18n="ruleContextText">Damage and utility should be tested under consistent level, enemy and combat conditions.</li>
+                            <li data-i18n="ruleConfidenceText">A score stays unpublished when the available beta data is not strong enough to support it.</li>
                         </ul>
 
-                        <p>
-                            Rankings will be published only after the archive has a repeatable,
-                            role-aware scoring method and enough comparable combat data.
-                        </p>
+                        <p data-i18n="faqAnswer7">Scores will only be published after comparable combat data and a repeatable role-aware scoring method are available. The archive does not assign placeholder scores.</p>
                     </div>
                 </section>
 
@@ -273,35 +247,29 @@
                     <div class="help-page-section-heading">
                         <span>04</span>
                         <div>
-                            <p class="tag">PLAYER LOOKUP</p>
-                            <h2>Why UID lookup does not work yet</h2>
+                            <p class="tag" data-i18n="playerLookup">PLAYER LOOKUP</p>
+                            <h2 data-i18n="faqQuestion8">Why does Player Lookup not work yet?</h2>
                         </div>
                     </div>
 
                     <div class="help-status-card">
-                        <span class="help-status-pill waiting">WAITING FOR DATA SOURCE</span>
-                        <h3>The UID box is a future-facing placeholder.</h3>
+                        <span class="help-status-pill waiting" data-i18n="status">STATUS</span>
+                        <h3 data-i18n="lookupWaiting">Player lookup is waiting for an official/public data source.</h3>
 
-                        <p>
-                            A real Player Lookup needs a reliable public or official source that can
-                            return Silver Palace player profile and showcased-character data from a UID.
-                        </p>
+                        <p data-i18n="lookupStatus">Real UID lookup will be connected only when a reliable data source is available.</p>
 
-                        <p>
-                            Until such a source exists, the archive will not simulate profiles or return
-                            invented player data. The planned future flow is:
-                        </p>
+                        <p data-i18n="faqAnswer8">UID lookup requires a reliable public or official Silver Palace player-data source. The feature remains a placeholder until such a source exists.</p>
 
                         <div class="help-flow">
                             <span>UID</span>
                             <b>→</b>
-                            <span>Player Profile</span>
+                            <span data-i18n="playerDatabase">Player Profile</span>
                             <b>→</b>
-                            <span>Showcase</span>
+                            <span data-i18n="characterShowcase">Showcase</span>
                             <b>→</b>
-                            <span>Build Data</span>
+                            <span data-i18n="build">Build Data</span>
                             <b>→</b>
-                            <span>Score / Ranking</span>
+                            <span data-i18n="ranking">Score / Ranking</span>
                         </div>
                     </div>
                 </section>
@@ -311,48 +279,50 @@
                     <div class="help-page-section-heading">
                         <span>05</span>
                         <div>
-                            <p class="tag">FAQ</p>
-                            <h2>Frequently asked questions</h2>
+                            <p class="tag" data-i18n="helpFaqLabel">FAQ</p>
+                            <h2 data-i18n="helpFaqTitle">Archive FAQ</h2>
                         </div>
                     </div>
 
                     <div class="help-faq-list">
                         <details class="help-faq-item" open>
-                            <summary>Is The Detective Archive official?</summary>
-                            <p>
-                                No. It is an independent fan-made database and is not affiliated
-                                with or endorsed by Elementa.
-                            </p>
+                            <summary id="faqQuestion1" data-i18n="faqQuestion1">Is The Detective Archive an official Silver Palace website?</summary>
+                            <p id="faqAnswer1" data-i18n="faqAnswer1">No. The Detective Archive is an independent fan-made database and is not affiliated with or endorsed by Elementa.</p>
                         </details>
 
                         <details class="help-faq-item">
-                            <summary>Are CBT2 numbers final?</summary>
-                            <p>
-                                No. They are pre-release observations and may change before launch.
-                            </p>
+                            <summary id="faqQuestion2" data-i18n="faqQuestion2">Why can some stats, passives, or ranking scores be blank?</summary>
+                            <p id="faqAnswer2" data-i18n="faqAnswer2">Silver Palace is still pre-release. When a value cannot be verified reliably, the archive leaves it blank instead of estimating or inventing it.</p>
                         </details>
 
                         <details class="help-faq-item">
-                            <summary>Will blank data be filled later?</summary>
-                            <p>
-                                Yes, when a sufficiently reliable official or beta source becomes available.
-                            </p>
+                            <summary id="faqQuestion3" data-i18n="faqQuestion3">Are CBT2 numbers final?</summary>
+                            <p id="faqAnswer3" data-i18n="faqAnswer3">No. Dichotomy CBT2 is a development build. Skills, stats, terminology, equipment, availability, and balance can change before release.</p>
                         </details>
 
                         <details class="help-faq-item">
-                            <summary>Will Rankings eventually have real scores?</summary>
-                            <p>
-                                Yes. Score, Tier, and Top % are already supported by the interface,
-                                but they will remain empty until a defensible scoring method exists.
-                            </p>
+                            <summary id="faqQuestion4" data-i18n="faqQuestion4">What is a Motive?</summary>
+                            <p id="faqAnswer4" data-i18n="faqAnswer4">A Motive is equippable gear that provides character stats and a Motive Skill. Its Identity determines which characters can use it.</p>
                         </details>
 
                         <details class="help-faq-item">
-                            <summary>Will Player Lookup become like Enka.Network?</summary>
-                            <p>
-                                That is the long-term direction, but it depends on Silver Palace exposing
-                                a usable public or official player-data source.
-                            </p>
+                            <summary id="faqQuestion5" data-i18n="faqQuestion5">What is the difference between Simulation Implements and Epiphany?</summary>
+                            <p id="faqAnswer5" data-i18n="faqAnswer5">Simulation uses four Implement slots that form equipment sets. Epiphany occupies a separate book slot and is the rollable-substat layer observed in CBT2.</p>
+                        </details>
+
+                        <details class="help-faq-item">
+                            <summary id="faqQuestion6" data-i18n="faqQuestion6">What are Psyches?</summary>
+                            <p id="faqAnswer6" data-i18n="faqAnswer6">Psyches are duplicate-copy character upgrades. The current CBT2 archive records six Psyche levels, P1 through P6, for each playable character entry.</p>
+                        </details>
+
+                        <details class="help-faq-item">
+                            <summary id="faqQuestion7" data-i18n="faqQuestion7">Why are Character Ranking scores still unpublished?</summary>
+                            <p id="faqAnswer7" data-i18n="faqAnswer7">Scores will only be published after comparable combat data and a repeatable role-aware scoring method are available. The archive does not assign placeholder scores.</p>
+                        </details>
+
+                        <details class="help-faq-item">
+                            <summary id="faqQuestion8" data-i18n="faqQuestion8">Why does Player Lookup not work yet?</summary>
+                            <p id="faqAnswer8" data-i18n="faqAnswer8">UID lookup requires a reliable public or official Silver Palace player-data source. The feature remains a placeholder until such a source exists.</p>
                         </details>
                     </div>
                 </section>
@@ -361,41 +331,41 @@
 
 
             <aside class="help-page-sidebar">
-                <p class="tag">HELP INDEX</p>
+                <p class="tag" data-i18n="help">HELP INDEX</p>
 
                 <nav>
                     <a href="#sources">
                         <span>01</span>
-                        Source Notes
+                        <span data-i18n="helpSourceLabel">Source Notes</span>
                     </a>
 
                     <a href="#missing-data">
                         <span>02</span>
-                        Missing Data
+                        <span data-i18n="dataPolicy">Missing Data</span>
                     </a>
 
                     <a href="#ranking-help">
                         <span>03</span>
-                        Rankings
+                        <span data-i18n="rankings">Rankings</span>
                     </a>
 
                     <a href="#uid-help">
                         <span>04</span>
-                        UID Lookup
+                        <span data-i18n="playerLookup">UID Lookup</span>
                     </a>
 
                     <a href="#faq">
                         <span>05</span>
-                        FAQ
+                        <span data-i18n="helpFaqTitle">FAQ</span>
                     </a>
                 </nav>
 
                 <a class="help-back-button" href="index.html">
-                    ← Back to Archive
+                    ← <span data-i18n="home">Home</span>
                 </a>
 
-                <a class="help-feedback-button" href="index.html?feedback=1">
-                    Send Feedback
+                <a class="help-feedback-button" href="index.html?feedback=1" data-i18n="feedback">
+                    Feedback
                 </a>
             </aside>
 
@@ -405,14 +375,15 @@
 
 
     <footer class="help-page-footer">
-        <p>
-            The Detective Archive is a fan-made Silver Palace database.
-            Not affiliated with or endorsed by Elementa.
+        <p data-i18n="footerDisclaimer">
+            The Detective Archive is an unofficial fan-made database and is not affiliated with or endorsed by Elementa.
         </p>
     </footer>
 
     <script src="asset-runtime.js"></script>
     <script defer src="mobile-nav.js"></script>
+    <script defer src="lang.js"></script>
+    <script defer src="locales/archive-locales.js"></script>
     <script defer src="accessibility.js"></script>
 </body>
 </html>

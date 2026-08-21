@@ -1,7 +1,7 @@
 /* =========================================================
-   THE DETECTIVE ARCHIVE v49 — DEEP LINKS
+   THE DETECTIVE ARCHIVE v52 — DEEP LINKS + COPY LINK
    Shareable URLs for database records and home-page News.
-   UI is unchanged.
+   Adds a small copy-link control without changing record renderers.
 ========================================================= */
 
 (function () {
@@ -16,6 +16,166 @@
     ];
 
     let applyingLocation = false;
+
+    const COPY_STATE_MS = 1600;
+
+
+    function getShareCopy(key) {
+
+        const sharedKeys = {
+            copy: "copyLink",
+            copied: "copied",
+            failed: "copyFailed",
+            aria: "copyRecordAria"
+        };
+
+        const translationKey =
+            sharedKeys[key] || key;
+
+        if (typeof t === "function") {
+            return t(translationKey);
+        }
+
+        const fallback = {
+            copy: "COPY LINK",
+            copied: "✓ COPIED",
+            failed: "COPY FAILED",
+            aria: "Copy link to this record"
+        };
+
+        return fallback[key] || key;
+    }
+
+
+
+    async function copyTextToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        const copied = document.execCommand("copy");
+        textarea.remove();
+
+        if (!copied) {
+            throw new Error("Copy command failed");
+        }
+    }
+
+
+    function resetCopyButton(button) {
+        if (!button) {
+            return;
+        }
+
+        window.clearTimeout(button._copyResetTimer);
+        button.classList.remove("is-copied", "is-failed");
+        button.textContent = getShareCopy("copy");
+        button.setAttribute("aria-label", getShareCopy("aria"));
+        button.title = getShareCopy("aria");
+    }
+
+
+    function createCopyLinkButton() {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "record-copy-link";
+        resetCopyButton(button);
+
+        button.addEventListener("click", async function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            try {
+                await copyTextToClipboard(window.location.href);
+                button.classList.remove("is-failed");
+                button.classList.add("is-copied");
+                button.textContent = getShareCopy("copied");
+            }
+            catch (error) {
+                button.classList.remove("is-copied");
+                button.classList.add("is-failed");
+                button.textContent = getShareCopy("failed");
+            }
+
+            window.clearTimeout(button._copyResetTimer);
+            button._copyResetTimer = window.setTimeout(
+                function () {
+                    resetCopyButton(button);
+                },
+                COPY_STATE_MS
+            );
+        });
+
+        return button;
+    }
+
+
+    function ensureDatabaseCopyButton() {
+        const content =
+            document.getElementById("databaseDetailContent");
+
+        if (!content || content.querySelector(".record-copy-link")) {
+            return;
+        }
+
+        const toolbar =
+            content.querySelector(".full-detail-toolbar");
+
+        if (!toolbar || toolbar.children.length < 2) {
+            return;
+        }
+
+        const existingRight = toolbar.lastElementChild;
+        const actions = document.createElement("div");
+        actions.className = "record-share-actions";
+
+        toolbar.insertBefore(actions, existingRight);
+        actions.appendChild(existingRight);
+        actions.appendChild(createCopyLinkButton());
+    }
+
+
+    function ensureNewsCopyButton() {
+        const header =
+            document.querySelector("#newsDetailModal .news-detail-header");
+
+        const index =
+            document.getElementById("newsDetailIndex");
+
+        if (
+            !header ||
+            !index ||
+            header.querySelector(".record-copy-link")
+        ) {
+            return;
+        }
+
+        const actions = document.createElement("div");
+        actions.className = "record-share-actions news-record-share-actions";
+
+        header.insertBefore(actions, index);
+        actions.appendChild(index);
+        actions.appendChild(createCopyLinkButton());
+    }
+
+
+    function refreshCopyButtons() {
+        document.querySelectorAll(".record-copy-link").forEach(
+            function (button) {
+                resetCopyButton(button);
+            }
+        );
+    }
 
 
     function getUrl() {
@@ -472,6 +632,37 @@
         document.getElementById(
             "newsDetailModal"
         )
+    );
+
+
+    const databaseDetailContent =
+        document.getElementById("databaseDetailContent");
+
+    if (databaseDetailContent) {
+        const detailObserver = new MutationObserver(
+            function () {
+                ensureDatabaseCopyButton();
+            }
+        );
+
+        detailObserver.observe(
+            databaseDetailContent,
+            { childList: true }
+        );
+    }
+
+    ensureDatabaseCopyButton();
+    ensureNewsCopyButton();
+
+    const languageObserver = new MutationObserver(
+        function () {
+            refreshCopyButtons();
+        }
+    );
+
+    languageObserver.observe(
+        document.documentElement,
+        { attributes: true, attributeFilter: ["lang"] }
     );
 
 

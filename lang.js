@@ -1949,10 +1949,19 @@ function getLocalizedText(value) {
 
     if (typeof value === "object") {
 
+        const language = normalizeArchiveLanguage(
+            typeof currentLanguage !== "undefined"
+                ? currentLanguage
+                : "en"
+        );
+
         return (
-            value[currentLanguage] ||
+            value[language] ||
             value.en ||
-            Object.values(value)[0] ||
+            value.vi ||
+            Object.values(value).find(function (item) {
+                return typeof item === "string" && item.trim();
+            }) ||
             ""
         );
 
@@ -2615,6 +2624,8 @@ function translatePage() {
 ========================================================= */
 
 function setLanguage(language) {
+
+    language = normalizeArchiveLanguage(language);
 
     if (!translations[language]) {
         language = "en";
@@ -3288,10 +3299,360 @@ Object.assign(translations.vi, {
 });
 
 /* =========================================================
-   v39 INITIAL LANGUAGE CONSISTENCY
+   SHARED PAGE / SHARE COPY v54
+   Centralized so News and Deep Link do not keep private EN/VI dictionaries.
+========================================================= */
+
+Object.assign(translations.en, {
+    copyLink: "COPY LINK",
+    copied: "✓ COPIED",
+    copyFailed: "COPY FAILED",
+    copyRecordAria: "Copy link to this record",
+    copyArticleAria: "Copy link to this article",
+    newsPageTag: "INTELLIGENCE DESK",
+    newsPageTitle: "News & Archive Updates",
+    newsPageLead: "Silver Palace beta records and a transparent changelog for The Detective Archive.",
+    newsPageGame: "Game / Beta",
+    newsPageArchive: "Archive Updates",
+    newsPageSearch: "SEARCH",
+    newsPageSearchPlaceholder: "Search news...",
+    newsPageEntries: "ENTRIES",
+    newsPageBetaNote: "Beta information can change before release. Archive updates describe changes made to this fan-made database.",
+    newsPageEmptyTitle: "No entries found.",
+    newsPageEmptyText: "Try another search or filter.",
+    newsPageReadMore: "READ ARTICLE",
+    newsPageArchiveCategory: "ARCHIVE UPDATE"
+});
+
+Object.assign(translations.vi, {
+    copyLink: "SAO CHÉP LINK",
+    copied: "✓ ĐÃ SAO CHÉP",
+    copyFailed: "SAO CHÉP LỖI",
+    copyRecordAria: "Sao chép liên kết tới mục này",
+    copyArticleAria: "Sao chép liên kết tới bài viết này",
+    newsPageTag: "BÀN TIN TÌNH BÁO",
+    newsPageTitle: "Tin tức & Nhật ký cập nhật",
+    newsPageLead: "Thông tin beta Silver Palace và nhật ký thay đổi minh bạch của The Detective Archive.",
+    newsPageGame: "Game / Beta",
+    newsPageArchive: "Cập nhật Archive",
+    newsPageSearch: "TÌM KIẾM",
+    newsPageSearchPlaceholder: "Tìm tin tức...",
+    newsPageEntries: "MỤC",
+    newsPageBetaNote: "Thông tin beta có thể thay đổi trước khi phát hành. Các bản cập nhật Archive mô tả thay đổi trên cơ sở dữ liệu fan-made này.",
+    newsPageEmptyTitle: "Không tìm thấy mục nào.",
+    newsPageEmptyText: "Hãy thử từ khóa hoặc bộ lọc khác.",
+    newsPageReadMore: "ĐỌC CHI TIẾT",
+    newsPageArchiveCategory: "CẬP NHẬT ARCHIVE"
+});
+
+
+/* =========================================================
+   LOCALIZATION FOUNDATION v54
+   Safe fallback + per-language extension files + content overlays.
+
+   Maintenance rules:
+   1) UI strings belong in translations / locale extension files.
+   2) Content fields that need translation should use { en, vi, ... }.
+   3) A missing language never breaks rendering: English is the fallback.
+   4) Locale files may add translations without editing the base content files.
+========================================================= */
+
+const archiveSupportedLanguages = [
+    "en",
+    "vi",
+    "th",
+    "ja",
+    "zh-CN",
+    "ko",
+    "fr",
+    "es",
+    "ru"
+];
+
+
+function normalizeArchiveLanguage(language) {
+
+    if (!language) {
+        return "en";
+    }
+
+    const raw = String(language).trim();
+
+    const aliases = {
+        zh: "zh-CN",
+        "zh-cn": "zh-CN",
+        "zh_CN": "zh-CN",
+        jp: "ja",
+        kr: "ko"
+    };
+
+    const normalized = aliases[raw] || aliases[raw.toLowerCase()] || raw;
+
+    return archiveSupportedLanguages.includes(normalized)
+        ? normalized
+        : "en";
+}
+
+
+function isLocalizedArchiveObject(value) {
+
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+        return false;
+    }
+
+    return archiveSupportedLanguages.some(function (language) {
+        return Object.prototype.hasOwnProperty.call(value, language);
+    });
+}
+
+
+function getArchiveLanguage() {
+    return normalizeArchiveLanguage(currentLanguage);
+}
+
+
+function getTranslationAudit(language) {
+
+    const targetLanguage = normalizeArchiveLanguage(language);
+    const englishKeys = Object.keys(translations.en || {});
+    const target = translations[targetLanguage] || {};
+
+    return {
+        language: targetLanguage,
+        total: englishKeys.length,
+        translated: englishKeys.filter(function (key) {
+            return Object.prototype.hasOwnProperty.call(target, key);
+        }).length,
+        missing: englishKeys.filter(function (key) {
+            return !Object.prototype.hasOwnProperty.call(target, key);
+        })
+    };
+}
+
+
+function applyArchiveDataI18n() {
+
+    document.querySelectorAll("[data-i18n]").forEach(function (element) {
+        element.textContent = t(element.dataset.i18n);
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
+        element.placeholder = t(element.dataset.i18nPlaceholder);
+    });
+
+    document.querySelectorAll("[data-i18n-title]").forEach(function (element) {
+        element.title = t(element.dataset.i18nTitle);
+    });
+
+    document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
+        element.setAttribute(
+            "aria-label",
+            t(element.dataset.i18nAriaLabel)
+        );
+    });
+}
+
+
+const translatePageV53Base = translatePage;
+
+translatePage = function () {
+    translatePageV53Base();
+    applyArchiveDataI18n();
+};
+
+
+function getArchiveContentCollection(collectionName) {
+
+    switch (collectionName) {
+        case "characters":
+            return typeof charactersData !== "undefined" ? charactersData : null;
+        case "motives":
+            return typeof weaponsData !== "undefined" ? weaponsData : null;
+        case "simulation":
+            return typeof simulationData !== "undefined" ? simulationData : null;
+        case "epiphanies":
+            return typeof epiphanyData !== "undefined" ? epiphanyData : null;
+        case "news":
+            return typeof newsData !== "undefined" ? newsData : null;
+        case "skills":
+            return typeof characterSkillDetailPatchV26 !== "undefined"
+                ? characterSkillDetailPatchV26
+                : null;
+        case "psyches":
+            return typeof characterPsycheDetailPatchV30 !== "undefined"
+                ? characterPsycheDetailPatchV30
+                : null;
+        default:
+            return null;
+    }
+}
+
+
+function applyArchiveLocalizedOverlay(target, overlay, language) {
+
+    if (target === null || target === undefined || overlay === null || overlay === undefined) {
+        return;
+    }
+
+    if (Array.isArray(target) && Array.isArray(overlay)) {
+        overlay.forEach(function (item, index) {
+            if (target[index] !== undefined) {
+                applyArchiveLocalizedOverlay(target[index], item, language);
+            }
+        });
+        return;
+    }
+
+    if (
+        typeof target === "object" &&
+        !Array.isArray(target) &&
+        typeof overlay === "object" &&
+        !Array.isArray(overlay)
+    ) {
+
+        Object.keys(overlay).forEach(function (key) {
+
+            if (!Object.prototype.hasOwnProperty.call(target, key)) {
+                return;
+            }
+
+            const baseValue = target[key];
+            const translatedValue = overlay[key];
+
+            if (
+                isLocalizedArchiveObject(baseValue) &&
+                (typeof translatedValue === "string" || Array.isArray(translatedValue))
+            ) {
+                baseValue[language] = Array.isArray(translatedValue)
+                    ? translatedValue.slice()
+                    : translatedValue;
+                return;
+            }
+
+            /*
+             * Translation overlays may also promote an explicitly translated
+             * plain display string into a localized object. This keeps the base
+             * content schema simple while letting Content Manager translate
+             * fields such as Motive effects or Epiphany passive text later.
+             */
+            if (
+                typeof baseValue === "string" &&
+                typeof translatedValue === "string"
+            ) {
+                target[key] = {
+                    en: baseValue,
+                    [language]: translatedValue
+                };
+                return;
+            }
+
+            if (
+                baseValue &&
+                typeof baseValue === "object" &&
+                translatedValue &&
+                typeof translatedValue === "object"
+            ) {
+                applyArchiveLocalizedOverlay(
+                    baseValue,
+                    translatedValue,
+                    language
+                );
+            }
+        });
+    }
+}
+
+
+function applyArchiveContentTranslations(language, contentConfig) {
+
+    if (!contentConfig || typeof contentConfig !== "object") {
+        return;
+    }
+
+    Object.keys(contentConfig).forEach(function (collectionName) {
+
+        const collection = getArchiveContentCollection(collectionName);
+        const overrides = contentConfig[collectionName];
+
+        if (!collection || !overrides) {
+            return;
+        }
+
+        Object.keys(overrides).forEach(function (recordId) {
+
+            let record = null;
+
+            if (Array.isArray(collection)) {
+                record = collection.find(function (item) {
+                    return item && item.id === recordId;
+                });
+            } else if (typeof collection === "object") {
+                record = collection[recordId] || null;
+            }
+
+            if (!record) {
+                return;
+            }
+
+            applyArchiveLocalizedOverlay(
+                record,
+                overrides[recordId],
+                language
+            );
+        });
+    });
+}
+
+
+function registerArchiveLocale(language, config) {
+
+    const targetLanguage = normalizeArchiveLanguage(language);
+    const localeConfig = config || {};
+
+    if (!translations[targetLanguage]) {
+        translations[targetLanguage] = {};
+    }
+
+    if (localeConfig.ui && typeof localeConfig.ui === "object") {
+        Object.assign(
+            translations[targetLanguage],
+            localeConfig.ui
+        );
+    }
+
+    if (localeConfig.content) {
+        applyArchiveContentTranslations(
+            targetLanguage,
+            localeConfig.content
+        );
+    }
+
+    if (getArchiveLanguage() === targetLanguage) {
+        translatePage();
+    }
+}
+
+
+/*
+ * Expose a small maintenance API for future updates.
+ * This is intentionally additive and does not change existing data files.
+ */
+window.ArchiveI18n = {
+    languages: archiveSupportedLanguages.slice(),
+    getLanguage: getArchiveLanguage,
+    setLanguage: setLanguage,
+    t: t,
+    localize: getLocalizedText,
+    audit: getTranslationAudit,
+    registerLocale: registerArchiveLocale
+};
+
+
+/* =========================================================
+   v54 INITIAL LANGUAGE CONSISTENCY
    Re-apply translations after all late extension keys load.
 ========================================================= */
 
-document.documentElement.lang = currentLanguage;
+document.documentElement.lang = getArchiveLanguage();
 translatePage();
 

@@ -1,46 +1,62 @@
 const NEWS_LANGUAGE_KEY = "silverPalaceLanguage";
 
-const newsPageTranslations = {
-    en: {
-        home: "Home", database: "Database", rankings: "Rankings", help: "Help",
-        pageTag: "INTELLIGENCE DESK",
-        pageTitle: "News & Archive Updates",
-        pageLead: "Silver Palace beta records and a transparent changelog for The Detective Archive.",
-        all: "All", game: "Game / Beta", archive: "Archive Updates",
-        search: "SEARCH", searchPlaceholder: "Search news...", entries: "ENTRIES",
-        betaNote: "Beta information can change before release. Archive updates describe changes made to this fan-made database.",
-        emptyTitle: "No entries found.", emptyText: "Try another search or filter.",
-        readMore: "READ ARTICLE", news: "NEWS", update: "UPDATE",
-        announcement: "ANNOUNCEMENT", archiveCategory: "ARCHIVE UPDATE"
-    },
-    vi: {
-        home: "Trang chủ", database: "Dữ liệu", rankings: "Xếp hạng", help: "Trợ giúp",
-        pageTag: "BÀN TIN TÌNH BÁO",
-        pageTitle: "Tin tức & Nhật ký cập nhật",
-        pageLead: "Thông tin beta Silver Palace và nhật ký thay đổi minh bạch của The Detective Archive.",
-        all: "Tất cả", game: "Game / Beta", archive: "Cập nhật Archive",
-        search: "TÌM KIẾM", searchPlaceholder: "Tìm tin tức...", entries: "MỤC",
-        betaNote: "Thông tin beta có thể thay đổi trước khi phát hành. Các bản cập nhật Archive mô tả thay đổi trên cơ sở dữ liệu fan-made này.",
-        emptyTitle: "Không tìm thấy mục nào.", emptyText: "Hãy thử từ khóa hoặc bộ lọc khác.",
-        readMore: "ĐỌC CHI TIẾT", news: "TIN TỨC", update: "CẬP NHẬT",
-        announcement: "THÔNG BÁO", archiveCategory: "CẬP NHẬT ARCHIVE"
-    }
+const NEWS_SHARED_KEYS = {
+    home: "home",
+    database: "database",
+    rankings: "rankings",
+    help: "help",
+    pageTag: "newsPageTag",
+    pageTitle: "newsPageTitle",
+    pageLead: "newsPageLead",
+    all: "all",
+    game: "newsPageGame",
+    archive: "newsPageArchive",
+    search: "newsPageSearch",
+    searchPlaceholder: "newsPageSearchPlaceholder",
+    entries: "newsPageEntries",
+    betaNote: "newsPageBetaNote",
+    emptyTitle: "newsPageEmptyTitle",
+    emptyText: "newsPageEmptyText",
+    readMore: "newsPageReadMore",
+    news: "news",
+    update: "update",
+    announcement: "announcement",
+    archiveCategory: "newsPageArchiveCategory",
+    copyLink: "copyLink",
+    copied: "copied",
+    copyFailed: "copyFailed",
+    copyAria: "copyArticleAria"
 };
 
-let newsPageLanguage = "en";
+let newsPageLanguage =
+    typeof getArchiveLanguage === "function"
+        ? getArchiveLanguage()
+        : "en";
+
 let activeNewsFilter = "all";
 let activeNewsArticle = null;
 
 function newsT(key) {
-    const active = newsPageTranslations[newsPageLanguage] || newsPageTranslations.en;
-    return active[key] ?? newsPageTranslations.en[key] ?? key;
+    const sharedKey = NEWS_SHARED_KEYS[key] || key;
+
+    if (typeof t === "function") {
+        return t(sharedKey);
+    }
+
+    return sharedKey;
 }
 
 function localizeNewsValue(value) {
+    if (typeof getLocalizedText === "function") {
+        return getLocalizedText(value);
+    }
+
     if (value === null || value === undefined) return "";
     if (typeof value === "string") return value;
+
     return value[newsPageLanguage] ?? value.en ?? Object.values(value)[0] ?? "";
 }
+
 
 function getAllNewsEntries() {
     const gameEntries = Array.isArray(newsData)
@@ -62,6 +78,70 @@ function getNewsCategoryLabel(entry) {
     if (entry.category === "announcement") return newsT("announcement");
     if (entry.category === "update") return newsT("update");
     return newsT("news");
+}
+
+async function copyNewsPageLink() {
+    const button = document.getElementById("newsPageCopyLink");
+    if (!button) return;
+
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(window.location.href);
+        } else {
+            const textarea = document.createElement("textarea");
+            textarea.value = window.location.href;
+            textarea.setAttribute("readonly", "");
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+            const copied = document.execCommand("copy");
+            textarea.remove();
+            if (!copied) throw new Error("Copy command failed");
+        }
+
+        button.classList.remove("is-failed");
+        button.classList.add("is-copied");
+        button.textContent = newsT("copied");
+    } catch (error) {
+        button.classList.remove("is-copied");
+        button.classList.add("is-failed");
+        button.textContent = newsT("copyFailed");
+    }
+
+    window.clearTimeout(button._copyResetTimer);
+    button._copyResetTimer = window.setTimeout(() => {
+        button.classList.remove("is-copied", "is-failed");
+        button.textContent = newsT("copyLink");
+        button.setAttribute("aria-label", newsT("copyAria"));
+        button.title = newsT("copyAria");
+    }, 1600);
+}
+
+function ensureNewsPageCopyButton() {
+    const article = document.querySelector(".news-page-article");
+    const head = document.querySelector(".news-page-article-head");
+    if (!article || !head) return;
+
+    let button = document.getElementById("newsPageCopyLink");
+    if (!button) {
+        const row = document.createElement("div");
+        row.className = "news-page-share-row";
+
+        button = document.createElement("button");
+        button.type = "button";
+        button.id = "newsPageCopyLink";
+        button.className = "record-copy-link";
+        button.addEventListener("click", copyNewsPageLink);
+
+        row.appendChild(button);
+        head.insertAdjacentElement("afterend", row);
+    }
+
+    button.classList.remove("is-copied", "is-failed");
+    button.textContent = newsT("copyLink");
+    button.setAttribute("aria-label", newsT("copyAria"));
+    button.title = newsT("copyAria");
 }
 
 function getNewsSearchText(entry) {
@@ -175,14 +255,10 @@ function openNewsPageArticle(id) {
     const contentValue = entry.content;
     let paragraphs = "";
 
-    if (contentValue && typeof contentValue === "object") {
-        paragraphs =
-            contentValue[newsPageLanguage] ??
-            contentValue.en ??
-            Object.values(contentValue)[0] ??
-            "";
+    if (contentValue) {
+        paragraphs = localizeNewsValue(contentValue);
     } else {
-        paragraphs = contentValue || localizeNewsValue(entry.description);
+        paragraphs = localizeNewsValue(entry.description) || "";
     }
 
     if (Array.isArray(paragraphs)) {
@@ -195,6 +271,7 @@ function openNewsPageArticle(id) {
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
     history.replaceState(null, "", `#${entry.id}`);
+    ensureNewsPageCopyButton();
 }
 
 function closeNewsPageArticle() {
@@ -215,10 +292,12 @@ function closeNewsPageArticle() {
 }
 
 function applyNewsPageLanguage() {
-    const language =
-        newsPageTranslations[newsPageLanguage] ? newsPageLanguage : "en";
+    newsPageLanguage =
+        typeof getArchiveLanguage === "function"
+            ? getArchiveLanguage()
+            : newsPageLanguage;
 
-    document.documentElement.lang = language;
+    document.documentElement.lang = newsPageLanguage;
 
     document.querySelectorAll("[data-news-text]").forEach(node => {
         node.textContent = newsT(node.dataset.newsText);
@@ -238,6 +317,7 @@ function applyNewsPageLanguage() {
     document.getElementById("newsEmptyText").textContent = newsT("emptyText");
 
     renderNewsPage();
+    ensureNewsPageCopyButton();
 
     if (activeNewsArticle) {
         openNewsPageArticle(activeNewsArticle.id);
@@ -263,10 +343,14 @@ if (newsSearchInput) {
 
 const newsLanguageSelect = document.getElementById("newsLanguageSelect");
 
-try {
-    newsPageLanguage = localStorage.getItem(NEWS_LANGUAGE_KEY) || "en";
-} catch (error) {
-    newsPageLanguage = "en";
+if (typeof getArchiveLanguage === "function") {
+    newsPageLanguage = getArchiveLanguage();
+} else {
+    try {
+        newsPageLanguage = localStorage.getItem(NEWS_LANGUAGE_KEY) || "en";
+    } catch (error) {
+        newsPageLanguage = "en";
+    }
 }
 
 if (
@@ -279,12 +363,18 @@ if (
 
 newsLanguageSelect.value = newsPageLanguage;
 
+
 newsLanguageSelect.addEventListener("change", () => {
     newsPageLanguage = newsLanguageSelect.value;
 
-    try {
-        localStorage.setItem(NEWS_LANGUAGE_KEY, newsPageLanguage);
-    } catch (error) {}
+    if (typeof setLanguage === "function") {
+        setLanguage(newsPageLanguage);
+        newsPageLanguage = getArchiveLanguage();
+    } else {
+        try {
+            localStorage.setItem(NEWS_LANGUAGE_KEY, newsPageLanguage);
+        } catch (error) {}
+    }
 
     applyNewsPageLanguage();
 });
