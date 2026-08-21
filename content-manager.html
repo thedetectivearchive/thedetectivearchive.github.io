@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Trình quản lý nội dung 3.0 | The Detective Archive</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="content-manager.css">
+</head>
+<body>
+    <header class="studio-header">
+        <div>
+            <p>THE DETECTIVE ARCHIVE · TRÌNH QUẢN LÝ NỘI DUNG 3.0</p>
+            <h1>Trình quản lý nội dung 3.0</h1>
+            <span>Duyệt, so sánh, chỉnh sửa và xuất dữ liệu kho lưu trữ mà không cần đụng vào mã bố cục.</span>
+        </div>
+        <div class="header-actions">
+            <a href="index.html">Quay lại kho lưu trữ</a>
+            <a href="news.html">Mở Tin tức</a>
+        </div>
+    </header>
+
+    <main class="studio-shell">
+        <section class="studio-panel">
+            <div class="studio-panel-head">
+                <div>
+                    <p class="eyebrow">DỮ LIỆU HIỆN TẠI</p>
+                    <h2>Kiểm tra trước khi cập nhật</h2>
+                </div>
+                <button type="button" id="refreshDiagnostics">Làm mới</button>
+            </div>
+            <div id="diagnosticCounts" class="diagnostic-counts"></div>
+            <div id="diagnosticStatus" class="diagnostic-status"></div>
+            <p class="studio-note">
+                Công cụ này kiểm tra cấu trúc, ID trùng, đường dẫn ảnh và một số lỗi liên kết giữa các phần.
+                Nó <strong>không</strong> xác định thông tin Silver Palace có chính xác hay không.
+            </p>
+        </section>
+
+        <section class="studio-panel">
+            <div class="studio-panel-head studio-panel-head-stack">
+                <div>
+                    <p class="eyebrow">TRÌNH SỬA NỘI DUNG</p>
+                    <h2>Tạo hoặc cập nhật bản ghi</h2>
+                </div>
+                <div class="studio-tabs" role="tablist" aria-label="Loại nội dung">
+                    <button class="active" type="button" data-studio-tab="news">Tin tức</button>
+                    <button type="button" data-studio-tab="character">Nhân vật</button>
+                    <button type="button" data-studio-tab="motive">Motive</button>
+                    <button type="button" data-studio-tab="simulation">Simulation</button>
+                    <button type="button" data-studio-tab="epiphany">Epiphany</button>
+                </div>
+            </div>
+
+            <div class="record-toolbar">
+                <label>
+                    <span>Bản ghi hiện có</span>
+                    <select id="existingRecordSelect">
+                        <option value="">Bản ghi mới</option>
+                    </select>
+                </label>
+                <button type="button" id="loadExisting">Tải &amp; xem trước</button>
+                <button type="button" id="newRecord">Mới / xóa biểu mẫu</button>
+                <span id="editModeBadge">MỚI</span>
+            </div>
+
+            <div id="recordValidation" class="record-validation" hidden></div>
+
+            <section class="record-browser" aria-labelledby="recordBrowserTitle">
+                <div class="record-browser-head">
+                    <div>
+                        <p class="eyebrow">DỮ LIỆU ĐANG CHỈNH</p>
+                        <h3 id="recordBrowserTitle">Trình duyệt bản ghi</h3>
+                    </div>
+                    <div class="record-browser-tools">
+                        <input id="recordSearch" type="search" placeholder="Tìm ID hoặc tiêu đề…">
+                        <button type="button" id="downloadWorkingFile">Tải file đang chỉnh</button>
+                        <button type="button" id="resetWorkingChanges">Đặt lại thay đổi</button>
+                    </div>
+                </div>
+                <div class="record-table-wrap">
+                    <table class="record-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên / tiêu đề</th>
+                                <th>Trạng thái</th>
+                                <th>Bản dịch</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordTableBody"></tbody>
+                    </table>
+                </div>
+                <p id="recordBrowserCount" class="studio-note"></p>
+                <p class="studio-note">
+                    Sửa, nhân bản và xóa chỉ tác động lên bản sao đang chỉnh trong trình duyệt. Không có gì trong thư mục website thay đổi cho tới khi bạn xuất file nội dung hoàn chỉnh.
+                </p>
+            </section>
+
+
+            <section class="publish-scheduler" aria-labelledby="publishSchedulerTitle">
+                <div class="publish-scheduler-head">
+                    <div>
+                        <p class="eyebrow">LỊCH XUẤT BẢN</p>
+                        <h3 id="publishSchedulerTitle">Scheduled Publishing</h3>
+                    </div>
+                    <span class="schedule-timezone-badge">Asia/Ho_Chi_Minh · UTC+7</span>
+                </div>
+
+                <p class="studio-note">
+                    Chuẩn bị bản ghi trong biểu mẫu như bình thường, sau đó chọn ngày giờ và tải ZIP lên lịch.
+                    Bản ghi sẽ <strong>không được đưa vào file public ngay</strong>; GitHub Actions sẽ tự xuất bản khi đến giờ.
+                </p>
+
+                <div class="schedule-create-grid">
+                    <label>
+                        <span>Ngày &amp; giờ xuất bản</span>
+                        <input id="schedulePublishAt" type="datetime-local" step="60">
+                    </label>
+                    <div class="schedule-current-record">
+                        <span>Bản ghi đang chọn</span>
+                        <strong id="scheduleCurrentRecord">Chưa có bản ghi</strong>
+                    </div>
+                    <button type="button" id="createScheduledPackage" class="schedule-primary-action">Tạo ZIP lên lịch</button>
+                </div>
+
+                <div id="scheduleStatus" class="schedule-status" aria-live="polite"></div>
+
+                <div class="schedule-table-wrap">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Loại</th>
+                                <th>Bản ghi</th>
+                                <th>Thời gian</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleQueueBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="schedule-bottom-actions">
+                    <button type="button" id="downloadScheduleState">Tải ZIP cập nhật danh sách lịch</button>
+                    <button type="button" id="downloadSchedulerSetup">Tải bộ cài GitHub Actions</button>
+                </div>
+
+                <p class="studio-note schedule-note">
+                    Khi hủy một lịch, hãy tải ZIP cập nhật danh sách lịch và ghi đè lên repository.
+                    Workflow sẽ tự dọn payload/ảnh nháp không còn được sử dụng.
+                </p>
+            </section>
+
+            <form class="studio-form active" data-studio-form="news" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="news-004">
+                            <button type="button" data-auto-id="news">Tự tạo</button>
+                        </div>
+                    </label>
+                    <label><span>Ngày</span><input name="date" type="date"></label>
+                    <label>
+                        <span>Danh mục</span>
+                        <select name="category">
+                            <option value="news">Tin tức</option>
+                            <option value="update">Cập nhật</option>
+                            <option value="announcement">Thông báo</option>
+                        </select>
+                    </label>
+                    <label class="checkbox-label">
+                        <input name="featured" type="checkbox">
+                        <span>Ghim làm Tin tức nổi bật</span>
+                    </label>
+                    <label class="span-2"><span>Tiêu đề tiếng Anh *</span><input name="titleEn" required></label>
+                    <label class="span-2"><span>Tiêu đề tiếng Việt</span><input name="titleVi"></label>
+                    <label class="span-2"><span>Tóm tắt tiếng Anh</span><textarea name="descriptionEn" rows="3"></textarea></label>
+                    <label class="span-2"><span>Tóm tắt tiếng Việt</span><textarea name="descriptionVi" rows="3"></textarea></label>
+                    <label class="span-2"><span>Bài viết tiếng Anh — ngăn các đoạn bằng một dòng trống</span><textarea name="contentEn" rows="7"></textarea></label>
+                    <label class="span-2"><span>Bài viết tiếng Việt — ngăn các đoạn bằng một dòng trống</span><textarea name="contentVi" rows="7"></textarea></label>
+                    <label><span>Thẻ</span><input name="tags" placeholder="CBT2, Character, Update"></label>
+                    <label><span>Nguồn / nhãn xác minh</span><input name="sourceLabel" placeholder="Ghi chú nguồn (không bắt buộc)"></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/news/">
+                    <div class="image-inputs">
+                        <label><span>Chọn ảnh Tin tức</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Đường dẫn ảnh trên website</span><input name="imagePath" placeholder="images/news/example.jpg"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>Chưa chọn ảnh</span></div>
+                    <div class="image-info">
+                        <p>Thư mục khuyến nghị: <code>images/news/</code></p>
+                        <p data-image-name>Chưa chọn ảnh cục bộ.</p>
+                        <button type="button" data-download-image>Tải ảnh đã đổi tên</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="news">Kiểm tra &amp; tạo dữ liệu</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="character" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="character-name">
+                            <button type="button" data-auto-id="character">Tự tạo</button>
+                        </div>
+                    </label>
+                    <label><span>Tên *</span><input name="name" required></label>
+                    <label><span>Bí danh</span><input name="alias"></label>
+                    <label><span>Độ hiếm</span><select name="rarity"><option value="5">5★</option><option value="4">4★</option><option value="3">3★</option></select></label>
+                    <label><span>Khả năng sở hữu</span><input name="availability" placeholder="preview / protagonist / ..."></label>
+                    <label class="checkbox-label"><input name="limited" type="checkbox"><span>Nhân vật giới hạn</span></label>
+                    <label>
+                        <span>Reactor</span>
+                        <select name="reactor">
+                            <option value="">Đang chờ / chưa rõ</option>
+                            <option>Ignis</option><option>Glacies</option><option>Fulmen</option>
+                            <option>Gravitas</option><option>Radiatio</option><option>Ferrugo</option><option>Alba</option>
+                        </select>
+                    </label>
+                    <label><span>Phong cách chiến đấu</span><input name="combatStyle"></label>
+                    <label><span>Danh tính</span><input name="identity"></label>
+                    <label><span>Tổ chức</span><input name="affiliation"></label>
+                    <label><span>Nghề nghiệp</span><input name="occupation"></label>
+                    <label><span>Nguồn / nhãn xác minh</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Mô tả tiếng Anh</span><textarea name="descriptionEn" rows="4"></textarea></label>
+                    <label class="span-2"><span>Mô tả tiếng Việt</span><textarea name="descriptionVi" rows="4"></textarea></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/character/">
+                    <div class="image-inputs">
+                        <label><span>Chọn ảnh Nhân vật</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Đường dẫn ảnh trên website</span><input name="imagePath" placeholder="images/character/name.png"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>Chưa chọn ảnh</span></div>
+                    <div class="image-info">
+                        <p>Ảnh Nhân vật hiện có vẫn nằm trong <code>images/character/</code>.</p>
+                        <p data-image-name>Chưa chọn ảnh cục bộ.</p>
+                        <button type="button" data-download-image>Tải ảnh đã đổi tên</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="character">Kiểm tra &amp; tạo dữ liệu</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="motive" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="the-example-mystery">
+                            <button type="button" data-auto-id="motive">Tự tạo</button>
+                        </div>
+                    </label>
+                    <label><span>Tên *</span><input name="name" required></label>
+                    <label><span>Độ hiếm</span><select name="rarity"><option value="5">5★</option><option value="4">4★</option><option value="3">3★</option></select></label>
+                    <label><span>Danh tính</span><input name="identity"></label>
+                    <label><span>Khả năng sở hữu</span><input name="availability"></label>
+                    <label class="checkbox-label"><input name="limited" type="checkbox"><span>Giới hạn</span></label>
+                    <label class="checkbox-label"><input name="featured" type="checkbox"><span>Nổi bật</span></label>
+                    <label><span>Nhãn nguồn</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Hiệu ứng / passive đã xác minh</span><textarea name="effect" rows="4" placeholder="Để trống nếu chưa xác minh"></textarea></label>
+                    <label class="span-2"><span>Ghi chú kho lưu trữ — tiếng Anh</span><textarea name="noteEn" rows="4"></textarea></label>
+                    <label class="span-2"><span>Ghi chú kho lưu trữ — tiếng Việt</span><textarea name="noteVi" rows="4"></textarea></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/motive/">
+                    <div class="image-inputs">
+                        <label><span>Chọn ảnh Motive</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Đường dẫn ảnh trên website</span><input name="imagePath" placeholder="images/motive/name.webp"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>Chưa chọn ảnh</span></div>
+                    <div class="image-info">
+                        <p>Thư mục khuyến nghị: <code>images/motive/</code></p>
+                        <p data-image-name>Chưa chọn ảnh cục bộ.</p>
+                        <button type="button" data-download-image>Tải ảnh đã đổi tên</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="motive">Kiểm tra &amp; tạo dữ liệu</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="simulation" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="set-name">
+                            <button type="button" data-auto-id="simulation">Tự tạo</button>
+                        </div>
+                    </label>
+                    <label><span>Tên bộ *</span><input name="name" required></label>
+                    <label><span>Trạng thái quan sát</span><input name="observedStatus" value="Dichotomy CBT2"></label>
+                    <label><span>Đã quan sát trên</span><input name="observedOn"></label>
+                    <label class="checkbox-label"><input name="fullSetObserved" type="checkbox"><span>Đã quan sát đủ bộ 4/4</span></label>
+                    <label><span>Nhãn nguồn</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Hiệu ứng bộ đã xác minh</span><textarea name="setEffect" rows="3" placeholder="Để trống nếu chưa xác minh"></textarea></label>
+                    <label class="span-2"><span>Trạng thái hiệu ứng bộ</span><input name="setEffectStatus" placeholder="Đang chờ xác minh nội dung hiệu ứng bộ chính xác"></label>
+                    <label class="span-2"><span>Mô tả tiếng Anh</span><textarea name="descriptionEn" rows="4"></textarea></label>
+                    <label class="span-2"><span>Mô tả tiếng Việt</span><textarea name="descriptionVi" rows="4"></textarea></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/simulation/">
+                    <div class="image-inputs">
+                        <label><span>Chọn ảnh Simulation</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Đường dẫn ảnh trên website</span><input name="imagePath" placeholder="images/simulation/set.webp"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>Chưa chọn ảnh</span></div>
+                    <div class="image-info">
+                        <p>Thư mục khuyến nghị: <code>images/simulation/</code></p>
+                        <p data-image-name>Chưa chọn ảnh cục bộ.</p>
+                        <button type="button" data-download-image>Tải ảnh đã đổi tên</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="simulation">Kiểm tra &amp; tạo dữ liệu</button></div>
+            </form>
+
+            <form class="studio-form" data-studio-form="epiphany" novalidate>
+                <div class="form-grid">
+                    <label>
+                        <span>ID</span>
+                        <div class="field-with-action">
+                            <input name="id" placeholder="book-name">
+                            <button type="button" data-auto-id="epiphany">Tự tạo</button>
+                        </div>
+                    </label>
+                    <label><span>Tên *</span><input name="name" required></label>
+                    <label><span>Nguồn văn học</span><input name="sourceText"></label>
+                    <label><span>Tác giả / nguồn gốc</span><input name="authorOrigin"></label>
+                    <label><span>Danh mục</span><input name="category"></label>
+                    <label><span>Trạng thái quan sát</span><input name="observedStatus" value="Dichotomy CBT2"></label>
+                    <label><span>Đã quan sát trên</span><input name="observedOn"></label>
+                    <label><span>Nhãn nguồn</span><input name="sourceLabel"></label>
+                    <label class="span-2"><span>Passive đã xác minh</span><textarea name="passive" rows="4" placeholder="Để trống nếu chưa xác minh"></textarea></label>
+                    <label class="span-2"><span>Trạng thái passive</span><input name="passiveStatus" value="Exact passive text pending"></label>
+                    <label class="checkbox-label"><input name="storyAvailable" type="checkbox" checked><span>Có nút Story / nội dung truyện</span></label>
+                </div>
+                <div class="image-helper" data-image-folder="images/epiphany/">
+                    <div class="image-inputs">
+                        <label><span>Chọn ảnh Epiphany</span><input name="imageFile" type="file" accept="image/*"></label>
+                        <label><span>Đường dẫn ảnh trên website</span><input name="imagePath" placeholder="images/epiphany/book.webp"></label>
+                    </div>
+                    <div class="image-preview" data-image-preview><span>Chưa chọn ảnh</span></div>
+                    <div class="image-info">
+                        <p>Thư mục khuyến nghị: <code>images/epiphany/</code></p>
+                        <p data-image-name>Chưa chọn ảnh cục bộ.</p>
+                        <button type="button" data-download-image>Tải ảnh đã đổi tên</button>
+                    </div>
+                </div>
+                <div class="form-actions"><button type="button" data-generate="epiphany">Kiểm tra &amp; tạo dữ liệu</button></div>
+            </form>
+        </section>
+
+
+        <section class="studio-panel translation-manager-panel" id="translationManagerPanel">
+            <div class="studio-panel-head studio-panel-head-stack">
+                <div>
+                    <p class="eyebrow">TRÌNH QUẢN LÝ BẢN DỊCH</p>
+                    <h2>Bản dịch bản ghi</h2>
+                    <span>Dịch nội dung bản ghi theo ID ổn định mà không cần sửa mã bố cục hoặc nhân đôi file dữ liệu gốc.</span>
+                </div>
+                <div class="translation-manager-actions">
+                    <button type="button" id="downloadTranslationFile">Tải file bản dịch</button>
+                    <button type="button" id="downloadTranslationPackage">Tải ZIP bản dịch</button>
+                    <button type="button" id="resetTranslationChanges">Đặt lại thay đổi bản dịch</button>
+                </div>
+            </div>
+
+            <div class="translation-manager-toolbar">
+                <label>
+                    <span>Loại nội dung</span>
+                    <select id="translationTypeSelect">
+                        <option value="news">Tin tức</option>
+                        <option value="character">Nhân vật</option>
+                        <option value="motive">Motive</option>
+                        <option value="simulation">Simulation</option>
+                        <option value="epiphany">Epiphany</option>
+                    </select>
+                </label>
+                <label class="translation-record-select">
+                    <span>Bản ghi</span>
+                    <select id="translationRecordSelect"></select>
+                </label>
+            </div>
+
+            <div class="translation-coverage-shell">
+                <div>
+                    <p class="eyebrow">TRẠNG THÁI BẢN DỊCH</p>
+                    <strong id="translationCoverageSummary">Chọn một bản ghi.</strong>
+                </div>
+                <div id="translationLanguageTabs" class="translation-language-tabs" role="tablist" aria-label="Ngôn ngữ bản dịch"></div>
+            </div>
+
+            <div id="translationEditor" class="translation-editor">
+                <div class="preview-empty">Chọn một bản ghi để chỉnh sửa bản dịch.</div>
+            </div>
+
+            <div id="translationManagerStatus" class="record-validation" hidden></div>
+
+            <div class="translation-bottom-actions">
+                <button type="button" id="saveTranslationRecord">Lưu bản dịch vào bản đang chỉnh</button>
+                <button type="button" id="clearTranslationRecord" class="danger-button">Xóa bản dịch ngôn ngữ đang chọn</button>
+            </div>
+
+            <p class="studio-note">
+                Tiếng Anh là dữ liệu gốc và vẫn nằm trong <code>content/*.js</code>. Trình quản lý này lưu nội dung bản ghi của các ngôn ngữ khác vào
+                <code>locales/archive-content-translations.js</code>. Nếu thiếu bản dịch, website sẽ tự dùng tiếng Anh, vì vậy thêm bản ghi mới sẽ không làm hỏng trang.
+            </p>
+        </section>
+
+
+        <section class="studio-panel advanced-character-panel" id="characterAdvancedPanel" hidden>
+            <div class="studio-panel-head studio-panel-head-stack">
+                <div>
+                    <p class="eyebrow">DỮ LIỆU NHÂN VẬT NÂNG CAO</p>
+                    <h2>Trình sửa Skills &amp; Psyches</h2>
+                </div>
+                <div class="advanced-character-selectors">
+                    <label>
+                        <span>Nhân vật</span>
+                        <select id="advancedCharacterSelect"></select>
+                    </label>
+                    <label>
+                        <span>Biến thể Skill</span>
+                        <select id="skillVariantSelect"></select>
+                    </label>
+                </div>
+            </div>
+
+            <div id="advancedStatus" class="record-validation" hidden></div>
+
+            <div class="advanced-editor-grid">
+                <section class="advanced-editor-card">
+                    <div class="advanced-editor-head">
+                        <div>
+                            <p class="eyebrow">SKILLS NHÂN VẬT</p>
+                            <h3>Bản ghi Skill</h3>
+                        </div>
+                        <div class="advanced-mini-actions">
+                            <button type="button" id="newSkillRecord">Mới</button>
+                            <button type="button" id="loadSkillRecord">Tải</button>
+                        </div>
+                    </div>
+
+                    <label class="advanced-select-row">
+                        <span>Skill hiện có</span>
+                        <select id="skillRecordSelect"></select>
+                    </label>
+
+                    <div class="form-grid advanced-form-grid">
+                        <label>
+                            <span>Loại</span>
+                            <select id="skillType">
+                                <option value="basicAttack">Đòn đánh thường</option>
+                                <option value="skill">Skill</option>
+                                <option value="ultimate">Ultimate</option>
+                                <option value="tacticalAssault">Tactical Assault</option>
+                                <option value="passive">Passive</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </label>
+                        <label><span>Tên</span><input id="skillName"></label>
+                        <label class="span-2"><span>Mô tả — tiếng Anh</span><textarea id="skillDescriptionEn" rows="3"></textarea></label>
+                        <label class="span-2"><span>Mô tả — tiếng Việt</span><textarea id="skillDescriptionVi" rows="3"></textarea></label>
+                        <label class="span-2"><span>Tài nguyên — tiếng Anh</span><textarea id="skillResourceEn" rows="2"></textarea></label>
+                        <label class="span-2"><span>Tài nguyên — tiếng Việt</span><textarea id="skillResourceVi" rows="2"></textarea></label>
+                        <label class="span-2"><span>Cơ chế — tiếng Anh (dòng trống = mục tiếp theo)</span><textarea id="skillMechanicsEn" rows="5"></textarea></label>
+                        <label class="span-2"><span>Cơ chế — tiếng Việt</span><textarea id="skillMechanicsVi" rows="5"></textarea></label>
+                        <label class="span-2"><span>Combo — tiếng Anh (dòng trống = mục tiếp theo)</span><textarea id="skillComboEn" rows="4"></textarea></label>
+                        <label class="span-2"><span>Combo — tiếng Việt</span><textarea id="skillComboVi" rows="4"></textarea></label>
+                        <label class="span-2"><span>Nguồn — tiếng Anh</span><input id="skillSourceEn"></label>
+                        <label class="span-2"><span>Nguồn — tiếng Việt</span><input id="skillSourceVi"></label>
+                    </div>
+
+                    <div class="advanced-action-row">
+                        <button type="button" id="saveSkillRecord">Lưu vào Skills đang chỉnh</button>
+                        <button type="button" id="deleteSkillRecord">Xóa Skill</button>
+                        <button type="button" id="downloadSkillsFile">Tải character-skills.js</button>
+                    </div>
+                </section>
+
+                <section class="advanced-editor-card">
+                    <div class="advanced-editor-head">
+                        <div>
+                            <p class="eyebrow">PSYCHES NHÂN VẬT</p>
+                            <h3>Bản ghi Psyche</h3>
+                        </div>
+                        <div class="advanced-mini-actions">
+                            <button type="button" id="newPsycheRecord">Mới</button>
+                            <button type="button" id="loadPsycheRecord">Tải</button>
+                        </div>
+                    </div>
+
+                    <label class="advanced-select-row">
+                        <span>Psyche hiện có</span>
+                        <select id="psycheRecordSelect"></select>
+                    </label>
+
+                    <div class="form-grid advanced-form-grid">
+                        <label class="span-2"><span>Tên</span><input id="psycheName"></label>
+                        <label class="span-2"><span>Mô tả — tiếng Anh</span><textarea id="psycheDescriptionEn" rows="5"></textarea></label>
+                        <label class="span-2"><span>Mô tả — tiếng Việt</span><textarea id="psycheDescriptionVi" rows="5"></textarea></label>
+                    </div>
+
+                    <div class="advanced-action-row">
+                        <button type="button" id="savePsycheRecord">Lưu vào Psyches đang chỉnh</button>
+                        <button type="button" id="deletePsycheRecord">Xóa Psyche</button>
+                        <button type="button" id="downloadPsychesFile">Tải character-psyches.js</button>
+                    </div>
+                </section>
+            </div>
+
+            <div class="advanced-package-row">
+                <p class="studio-note">
+                    Thay đổi Skills/Psyches chỉ được giữ trong bộ nhớ cho tới khi xuất file. Các trường chưa xác định hiện có vẫn được giữ nguyên khi bạn sửa bản ghi.
+                </p>
+                <button type="button" id="downloadAdvancedPackage">Tải ZIP cập nhật Skills + Psyches</button>
+            </div>
+        </section>
+
+
+        <section class="studio-grid-two">
+            <section class="studio-panel studio-preview-panel">
+                <div class="studio-panel-head">
+                    <div>
+                        <p class="eyebrow">XEM TRƯỚC</p>
+                        <h2>Trước khi đăng</h2>
+                    </div>
+                </div>
+                <div id="recordPreview" class="record-preview">
+                    <div class="preview-empty">Tạo một bản ghi để xem trước.</div>
+                </div>
+            </section>
+
+            <section class="studio-panel studio-output-panel">
+                <div class="studio-panel-head">
+                    <div>
+                        <p class="eyebrow">ĐẦU RA</p>
+                        <h2>JavaScript đã tạo</h2>
+                    </div>
+                    <button type="button" id="copyOutput">Sao chép</button>
+                </div>
+                <p id="outputDestination">Chọn loại nội dung và tạo một bản ghi.</p>
+                <textarea id="studioOutput" spellcheck="false" readonly></textarea>
+                <div class="output-actions output-actions-four">
+                    <button type="button" id="downloadRecord" disabled>Tải bản ghi .js</button>
+                    <button type="button" id="downloadFullFile" disabled>Tải file nội dung hoàn chỉnh</button>
+                    <button type="button" id="downloadBackup">Tải file sao lưu</button>
+                    <button type="button" id="downloadUpdatePackage" disabled>Tải ZIP cập nhật</button>
+                </div>
+                <p class="studio-note">
+                    “File nội dung hoàn chỉnh” sẽ thay thế file tương ứng trong <code>content/</code>. Nút sao lưu xuất dữ liệu gốc đã tải; ZIP cập nhật gồm file nội dung mới, bản sao lưu và ảnh đã chọn nếu có.
+                </p>
+            </section>
+        </section>
+
+
+        <section class="studio-panel compare-panel">
+            <div class="studio-panel-head">
+                <div>
+                    <p class="eyebrow">KIỂM TRA THAY ĐỔI</p>
+                    <h2>Trước / Sau</h2>
+                </div>
+                <span id="changeSummary" class="change-summary">Tải hoặc tạo một bản ghi để so sánh thay đổi.</span>
+            </div>
+            <div id="changeCompare" class="change-compare">
+                <div class="preview-empty compare-empty">Chưa có dữ liệu để so sánh.</div>
+            </div>
+        </section>
+
+
+        <section class="studio-panel compact-guide">
+            <p class="eyebrow">QUY TRÌNH CẬP NHẬT AN TOÀN</p>
+            <h2>Cập nhật mà không cần sửa mã bố cục</h2>
+            <ol>
+                <li>Chọn loại nội dung, sau đó dùng <strong>Bản ghi mới</strong> hoặc tải một bản ghi hiện có.</li>
+                <li>Chọn ảnh. Trình quản lý sẽ tạo tên file an toàn và đường dẫn dùng trên website.</li>
+                <li>Tạo bản ghi và sửa mọi lỗi kiểm tra màu đỏ.</li>
+                <li>Dùng <strong>Tải file nội dung hoàn chỉnh</strong> để tránh phải tự sửa dấu phẩy và dấu ngoặc.</li>
+                <li>Dùng <strong>Tải ảnh đã đổi tên</strong> nếu bạn đã chọn ảnh mới.</li>
+                <li>Chỉ thay file nội dung đó và chỉ tải lên ảnh tương ứng.</li>
+                <li>Mở lại Trình quản lý và xác nhận bộ kiểm tra không báo lỗi cấu trúc.</li>
+            </ol>
+        </section>
+    </main>
+
+    <script src="content/news.js"></script>
+    <script src="content/rankings.js"></script>
+    <script src="content/reactors.js"></script>
+    <script src="content/characters.js"></script>
+    <script src="content/motives.js"></script>
+    <script src="content/character-base-extensions.js"></script>
+    <script src="content/simulation.js"></script>
+    <script src="content/epiphanies.js"></script>
+    <script src="content/character-skills.js"></script>
+    <script src="content/character-psyches.js"></script>
+    <script src="content/archive-updates.js"></script>
+    <script src="locales/archive-content-translations.js"></script>
+    <script src="content/publish-schedule.js"></script>
+    <script src="content-validator.js"></script>
+    <script src="content-manager.js"></script>
+</body>
+</html>
