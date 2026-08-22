@@ -13576,3 +13576,36 @@ body {
         -webkit-overflow-scrolling: touch;
     }
 }
+
+/* =========================================================
+   CHARACTER STATS PROGRESSION — Lv.1 to Lv.80
+   Keeps the existing detail style while supporting 8 levels.
+========================================================= */
+
+.character-stat-level-switcher {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.character-stat-level-button {
+    min-width: 70px;
+    flex: 0 0 auto;
+}
+
+.character-base-stats-grid-large {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+@media (max-width: 640px) {
+    .character-base-stats-grid-large {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .character-base-stats-grid-large {
+        grid-template-columns: 1fr;
+    }
+}

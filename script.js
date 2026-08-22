@@ -588,7 +588,7 @@ function bindNewsEntry(element, news) {
     element.setAttribute("tabindex", "0");
     element.setAttribute(
         "aria-label",
-        `${getLocalizedText(news.title)} — ${t("readMore")}`
+        getLocalizedText(news.title)
     );
 
     element.onclick = function (event) {
@@ -6569,10 +6569,16 @@ function renderCharacterStatCards(snapshot) {
         [t("statLevel"), snapshot.level ?? "--"],
         [t("hp"), snapshot.hp ?? "--"],
         [t("atk"), snapshot.atk ?? "--"],
-        [t("def"), snapshot.def ?? "--"],
-        [t("critRate"), snapshot.critRate ?? "--"],
-        [t("critDamage"), snapshot.critDamage ?? "--"]
+        [t("def"), snapshot.def ?? "--"]
     ];
+
+    if (snapshot.critRate !== undefined && snapshot.critRate !== null && snapshot.critRate !== "") {
+        statEntries.push([t("critRate"), snapshot.critRate]);
+    }
+
+    if (snapshot.critDamage !== undefined && snapshot.critDamage !== null && snapshot.critDamage !== "") {
+        statEntries.push([t("critDamage"), snapshot.critDamage]);
+    }
 
     return `
         <div class="character-base-stats-grid character-base-stats-grid-large">
@@ -6588,12 +6594,42 @@ function renderCharacterStatCards(snapshot) {
     `;
 }
 
+function getCharacterStatLevels(baseStats) {
+    if (!baseStats || !baseStats.levels || typeof baseStats.levels !== "object") {
+        return [];
+    }
+
+    return Object.keys(baseStats.levels)
+        .map(function (level) {
+            return Number(level);
+        })
+        .filter(function (level) {
+            return Number.isFinite(level);
+        })
+        .sort(function (a, b) {
+            return a - b;
+        });
+}
+
 function getCharacterStatSnapshot(baseStats, mode) {
     if (!baseStats) {
         return null;
     }
 
-    if (mode === "level1") {
+    const progressionLevels = getCharacterStatLevels(baseStats);
+
+    if (progressionLevels.length > 0) {
+        const numericMode = Number(mode);
+        const snapshot = baseStats.levels[numericMode] || baseStats.levels[String(numericMode)];
+
+        if (snapshot) {
+            return Object.assign({ level: numericMode }, snapshot);
+        }
+
+        return null;
+    }
+
+    if (mode === "level1" || mode === "1") {
         if (baseStats.level1) {
             return baseStats.level1;
         }
@@ -6603,7 +6639,7 @@ function getCharacterStatSnapshot(baseStats, mode) {
         }
     }
 
-    if (mode === "max") {
+    if (mode === "max" || mode === "80") {
         if (baseStats.max) {
             return baseStats.max;
         }
@@ -6617,7 +6653,7 @@ function getCharacterStatSnapshot(baseStats, mode) {
 }
 
 function renderCharacterObservedStatSnapshot(baseStats) {
-    if (!baseStats) {
+    if (!baseStats || getCharacterStatLevels(baseStats).length > 0) {
         return "";
     }
 
@@ -6966,8 +7002,13 @@ function renderCharacterFullDetail(character) {
     const detailKey = `${character.id}:${activeVariant?.id || "base"}`;
     const activeDetailTab = window.characterDetailTab[detailKey] || "overview";
 
+    const availableStatLevels = getCharacterStatLevels(baseStats);
+
     if (!window.characterStatMode[detailKey]) {
-        if (baseStats && (baseStats.isMaxLevel === true || baseStats.snapshotType === "max")) {
+        if (availableStatLevels.length > 0) {
+            window.characterStatMode[detailKey] = String(availableStatLevels[0]);
+        }
+        else if (baseStats && (baseStats.isMaxLevel === true || baseStats.snapshotType === "max")) {
             window.characterStatMode[detailKey] = "max";
         }
         else {
@@ -7142,8 +7183,16 @@ function renderCharacterFullDetail(character) {
                         <h2>${t("baseStats")}</h2>
                     </div>
                     <div class="character-stat-level-switcher" role="tablist" aria-label="Character stat level">
-                        <button type="button" class="character-stat-level-button ${activeStatMode === "level1" ? "active" : ""}" data-character-stat-mode="level1">${t("levelOne")}</button>
-                        <button type="button" class="character-stat-level-button ${activeStatMode === "max" ? "active" : ""}" data-character-stat-mode="max">${t("levelMax")}</button>
+                        ${availableStatLevels.length > 0
+                            ? availableStatLevels.map(function (level) {
+                                const mode = String(level);
+                                return `<button type="button" class="character-stat-level-button ${activeStatMode === mode ? "active" : ""}" data-character-stat-mode="${mode}">Lv.${level}</button>`;
+                            }).join("")
+                            : `
+                                <button type="button" class="character-stat-level-button ${activeStatMode === "level1" ? "active" : ""}" data-character-stat-mode="level1">${t("levelOne")}</button>
+                                <button type="button" class="character-stat-level-button ${activeStatMode === "max" ? "active" : ""}" data-character-stat-mode="max">${t("levelMax")}</button>
+                            `
+                        }
                     </div>
                 </div>
 
@@ -7151,7 +7200,7 @@ function renderCharacterFullDetail(character) {
                 ${renderCharacterObservedStatSnapshot(baseStats)}
 
                 <div class="character-beta-data-note">
-                    ${activeStatMode === "max" && activeStatSnapshot ? t("levelMaxBetaNote") : t("betaStatNote")}
+                    ${(activeStatMode === "max" || activeStatMode === "80") && activeStatSnapshot ? t("levelMaxBetaNote") : t("betaStatNote")}
                 </div>
             </section>
 
