@@ -9,6 +9,87 @@ const tabContents =
     document.querySelectorAll(".tab-content");
 
 
+const databaseTabRenderState = {
+    characters: false,
+    weapons: false,
+    simulation: false,
+    epiphanies: false
+};
+
+
+function getActiveDatabaseTabId() {
+
+    const active =
+        document.querySelector(".tab-content.active");
+
+    return active ? active.id : "characters";
+}
+
+
+function ensureDatabaseTabRendered(tabId, force) {
+
+    const shouldForce = Boolean(force);
+
+    if (tabId === "characters") {
+        if (shouldForce || !databaseTabRenderState.characters) {
+            applyCharacterFilters();
+            databaseTabRenderState.characters = true;
+        }
+        return;
+    }
+
+    if (tabId === "weapons") {
+        if (shouldForce || !databaseTabRenderState.weapons) {
+            applyWeaponFilters();
+            databaseTabRenderState.weapons = true;
+        }
+        return;
+    }
+
+    if (tabId === "simulation") {
+        if (shouldForce || !databaseTabRenderState.simulation) {
+            applySimulationFilters();
+            databaseTabRenderState.simulation = true;
+        }
+        return;
+    }
+
+    if (tabId === "epiphanies") {
+        if (shouldForce || !databaseTabRenderState.epiphanies) {
+            applyEpiphanyFilters();
+            databaseTabRenderState.epiphanies = true;
+        }
+    }
+}
+
+
+function markHiddenDatabaseTabsDirty(activeTabId) {
+
+    Object.keys(databaseTabRenderState).forEach(function (key) {
+        if (key !== activeTabId) {
+            databaseTabRenderState[key] = false;
+        }
+    });
+}
+
+
+function debounceDatabaseInput(callback, delay) {
+
+    let timeoutId = null;
+
+    return function () {
+        const args = arguments;
+        const context = this;
+
+        window.clearTimeout(timeoutId);
+
+        timeoutId = window.setTimeout(function () {
+            callback.apply(context, args);
+        }, delay || 160);
+    };
+}
+
+
 tabButtons.forEach(function (button) {
 
     button.addEventListener(
@@ -39,6 +120,8 @@ tabButtons.forEach(function (button) {
             document
                 .getElementById(selectedTab)
                 .classList.add("active");
+
+            ensureDatabaseTabRendered(selectedTab);
 
         }
     );
@@ -727,59 +810,181 @@ if (closeNewsDetailButton) {
 
 
 /* =========================================================
-   CHARACTER RANKINGS - FRAMEWORK V1
-   Filters and score-ready sorting are live.
-   Numeric scores remain unpublished until verified.
+   PLAYER BUILD RANKING + PLAYER LOOKUP BUILD EVALUATION
+   v59.2
+   - Center panel ranks player builds for one selected character.
+   - Build evaluation opens from a player's showcased character.
+   - No demo / fabricated player data is generated.
 ========================================================= */
 
-const rankingRows =
-    document.getElementById("rankingRows");
+const buildRankingCharacterSelect =
+    document.getElementById("buildRankingCharacterSelect");
 
-const rankingTable =
-    document.querySelector(".ranking-table");
+const buildRankingRows =
+    document.getElementById("buildRankingRows");
 
-const rankingCategoryButtons =
-    document.querySelectorAll(".ranking-tab-button");
+const buildRankingAvatar =
+    document.getElementById("buildRankingAvatar");
 
-const rankingSearch =
-    document.getElementById("rankingSearch");
+const buildRankingCharacterName =
+    document.getElementById("buildRankingCharacterName");
 
-const rankingRoleFilter =
-    document.getElementById("rankingRoleFilter");
+const buildRankingCharacterMeta =
+    document.getElementById("buildRankingCharacterMeta");
 
-const rankingAttributeFilter =
-    document.getElementById("rankingAttributeFilter");
+const playerShowcaseGrid =
+    document.getElementById("playerShowcaseGrid");
 
-const rankingRarityFilter =
-    document.getElementById("rankingRarityFilter");
+const playerBuildModal =
+    document.getElementById("playerBuildModal");
 
-const rankingResultsCount =
-    document.getElementById("rankingResultsCount");
+const playerBuildBackdrop =
+    document.getElementById("playerBuildBackdrop");
 
-const rankingCategoryName =
-    document.getElementById("rankingCategoryName");
+const playerBuildClose =
+    document.getElementById("playerBuildClose");
 
-const rankingCategoryDescription =
-    document.getElementById("rankingCategoryDescription");
+const playerBuildOwner =
+    document.getElementById("playerBuildOwner");
 
-let activeRankingCategory = "overall";
+const playerBuildAvatar =
+    document.getElementById("playerBuildAvatar");
 
-let rankingFilters = {
-    search: "",
-    role: "all",
-    attribute: "all",
-    rarity: "all"
-};
+const playerBuildCharacterName =
+    document.getElementById("playerBuildCharacterName");
+
+const playerBuildCharacterMeta =
+    document.getElementById("playerBuildCharacterMeta");
+
+const playerBuildScore =
+    document.getElementById("playerBuildScore");
+
+const playerBuildGrade =
+    document.getElementById("playerBuildGrade");
+
+const playerBuildStatus =
+    document.getElementById("playerBuildStatus");
+
+const playerBuildRows =
+    document.getElementById("playerBuildRows");
+
+const playerBuildPriorityList =
+    document.getElementById("playerBuildPriorityList");
+
+const playerBuildReferenceLevel =
+    document.getElementById("playerBuildReferenceLevel");
+
+let activeBuildRankingProfileId = "";
+let activePlayerBuildContext = null;
 
 
-function getRankingInitials(name) {
+function getBuildAnalyzerProfiles() {
 
-    const parts =
-        String(name || "")
-            .replace(/[\"']/g, "")
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean);
+    const profiles = [];
+
+    charactersData.forEach(function (character) {
+
+        if (
+            Array.isArray(character.variants) &&
+            character.variants.length > 0
+        ) {
+            character.variants.forEach(function (variant) {
+                profiles.push({
+                    id: `${character.id}:${variant.id}`,
+                    character: character,
+                    profile: variant,
+                    displayName:
+                        variant.displayName
+                            ? `${getLocalizedText(character.name)} — ${getLocalizedText(variant.displayName)}`
+                            : getLocalizedText(character.name)
+                });
+            });
+            return;
+        }
+
+        profiles.push({
+            id: character.id,
+            character: character,
+            profile: character,
+            displayName: getLocalizedText(character.name)
+        });
+
+    });
+
+    return profiles;
+
+}
+
+
+function getBuildAnalyzerProfileById(profileId) {
+
+    return getBuildAnalyzerProfiles().find(function (entry) {
+        return entry.id === profileId;
+    }) || null;
+
+}
+
+
+function getBuildAnalyzerReference(baseStats) {
+
+    if (!baseStats) {
+        return {
+            level: null,
+            stats: null
+        };
+    }
+
+    if (
+        baseStats.levels &&
+        typeof baseStats.levels === "object"
+    ) {
+        const levels = Object.keys(baseStats.levels)
+            .map(Number)
+            .filter(Number.isFinite)
+            .sort(function (a, b) { return a - b; });
+
+        if (levels.length > 0) {
+            const level = levels[levels.length - 1];
+            return {
+                level: level,
+                stats: baseStats.levels[level] || baseStats.levels[String(level)] || null
+            };
+        }
+    }
+
+    if (baseStats.max && typeof baseStats.max === "object") {
+        return {
+            level: baseStats.max.level || null,
+            stats: baseStats.max
+        };
+    }
+
+    if (
+        Number.isFinite(Number(baseStats.hp)) ||
+        Number.isFinite(Number(baseStats.atk)) ||
+        Number.isFinite(Number(baseStats.def))
+    ) {
+        return {
+            level: baseStats.level || null,
+            stats: baseStats
+        };
+    }
+
+    return {
+        level: null,
+        stats: null
+    };
+
+}
+
+
+function getBuildAnalyzerInitials(name) {
+
+    const parts = String(name || "")
+        .replace(/["']/g, "")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
 
     if (parts.length === 0) {
         return "?";
@@ -795,471 +1000,555 @@ function getRankingInitials(name) {
 }
 
 
-function getRankingCharacterField(character, field) {
+function getBuildProfileSource(entry) {
+    return entry ? (entry.profile || entry.character) : null;
+}
 
-    if (character[field]) {
-        return character[field];
+
+function getBuildProfileImage(entry) {
+
+    if (!entry) {
+        return "";
     }
 
-    if (
-        Array.isArray(character.variants) &&
-        character.variants.length > 0
-    ) {
-        const preferred =
-            character.variants.find(function (variant) {
-                return variant.id === character.defaultVariant;
-            }) || character.variants[0];
+    const source = getBuildProfileSource(entry);
 
-        return preferred[field] || "";
-    }
-
-    return "";
+    return (
+        source && source.images && source.images.card
+            ? source.images.card
+            : (
+                entry.character && entry.character.images && entry.character.images.card
+                    ? entry.character.images.card
+                    : ""
+            )
+    );
 
 }
 
 
-function getRankingRecord(characterId, category) {
+function getBuildProfileMeta(entry) {
 
-    if (
-        typeof rankingSystemData === "undefined" ||
-        !rankingSystemData.scores ||
-        !rankingSystemData.scores[characterId]
-    ) {
-        return null;
+    if (!entry) {
+        return "-";
     }
 
-    const record =
-        rankingSystemData.scores[characterId][category];
+    const source = getBuildProfileSource(entry) || {};
+    const role = getLocalizedText(
+        source.combatStyle || entry.character.combatStyle || ""
+    );
+    const attribute = getLocalizedText(
+        source.reactorAttribute || entry.character.reactorAttribute || ""
+    );
 
-    if (record === null || record === undefined) {
-        return null;
-    }
-
-    if (typeof record === "number") {
-        return {
-            score: record,
-            tier: ""
-        };
-    }
-
-    return record;
+    return [
+        `${entry.character.rarity || "-"} ★`,
+        role,
+        attribute
+    ].filter(Boolean).join(" · ");
 
 }
 
 
-function getRankingCategoryCopy(category) {
+function renderBuildProfileAvatar(container, entry) {
 
-    const copy = {
-        overall: {
-            name: t("overall"),
-            description: t("rankingOverallDescription")
-        },
-        damage: {
-            name: t("damage"),
-            description: t("rankingDamageDescription")
-        },
-        break: {
-            name: t("break"),
-            description: t("rankingBreakDescription")
-        },
-        support: {
-            name: t("support"),
-            description: t("rankingSupportDescription")
-        },
-        survival: {
-            name: t("survival"),
-            description: t("rankingSurvivalDescription")
-        }
-    };
-
-    return copy[category] || copy.overall;
-
-}
-
-
-function getUniqueRankingValues(field) {
-
-    return Array.from(
-        new Set(
-            charactersData
-                .map(function (character) {
-                    return getRankingCharacterField(character, field);
-                })
-                .filter(Boolean)
-        )
-    ).sort(function (a, b) {
-        return String(a).localeCompare(String(b));
-    });
-
-}
-
-
-function setRankingSelectOptions(select, values, allLabel, selectedValue) {
-
-    if (!select) {
+    if (!container || !entry) {
         return;
     }
 
-    select.innerHTML = "";
+    const image = getBuildProfileImage(entry);
+    container.innerHTML = "";
 
-    const allOption = document.createElement("option");
-    allOption.value = "all";
-    allOption.textContent = allLabel;
-    select.appendChild(allOption);
+    if (!image) {
+        container.textContent = getBuildAnalyzerInitials(entry.displayName);
+        return;
+    }
 
-    values.forEach(function (value) {
+    const img = document.createElement("img");
+    img.src = image;
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.addEventListener("error", function () {
+        container.textContent = getBuildAnalyzerInitials(entry.displayName);
+    }, { once: true });
+    container.appendChild(img);
+
+}
+
+
+function renderBuildRankingCharacterSelect(profiles) {
+
+    if (!buildRankingCharacterSelect) {
+        return;
+    }
+
+    const previousValue =
+        activeBuildRankingProfileId ||
+        buildRankingCharacterSelect.value;
+
+    buildRankingCharacterSelect.innerHTML = "";
+
+    profiles.forEach(function (entry) {
         const option = document.createElement("option");
-        option.value = String(value);
-        option.textContent = String(value);
-        select.appendChild(option);
+        option.value = entry.id;
+        option.textContent = entry.displayName;
+        buildRankingCharacterSelect.appendChild(option);
     });
 
-    select.value =
-        Array.from(select.options).some(function (option) {
-            return option.value === String(selectedValue);
+    const hasPrevious = profiles.some(function (entry) {
+        return entry.id === previousValue;
+    });
+
+    activeBuildRankingProfileId =
+        hasPrevious
+            ? previousValue
+            : (profiles[0] ? profiles[0].id : "");
+
+    buildRankingCharacterSelect.value = activeBuildRankingProfileId;
+
+}
+
+
+function getPlayerBuildLeaderboardEntries(profileId) {
+
+    const source = Array.isArray(window.SILVER_PALACE_PLAYER_BUILD_RANKINGS)
+        ? window.SILVER_PALACE_PLAYER_BUILD_RANKINGS
+        : [];
+
+    return source
+        .filter(function (entry) {
+            return entry && entry.profileId === profileId;
         })
-            ? String(selectedValue)
-            : "all";
-
-}
-
-
-function renderRankingFilters() {
-
-    setRankingSelectOptions(
-        rankingRoleFilter,
-        getUniqueRankingValues("combatStyle"),
-        t("allCombatStyles"),
-        rankingFilters.role
-    );
-
-    setRankingSelectOptions(
-        rankingAttributeFilter,
-        getUniqueRankingValues("reactorAttribute"),
-        t("allAttributes"),
-        rankingFilters.attribute
-    );
-
-    setRankingSelectOptions(
-        rankingRarityFilter,
-        Array.from(new Set(charactersData.map(function (character) {
-            return character.rarity;
-        }))).sort(function (a, b) { return b - a; }),
-        t("allRarities"),
-        rankingFilters.rarity
-    );
-
-}
-
-
-function characterMatchesRankingFilters(character) {
-
-    const name =
-        getLocalizedText(character.name).toLowerCase();
-
-    const role =
-        String(getRankingCharacterField(character, "combatStyle") || "");
-
-    const attribute =
-        String(getRankingCharacterField(character, "reactorAttribute") || "");
-
-    const search =
-        rankingFilters.search.trim().toLowerCase();
-
-    if (search && !name.includes(search)) {
-        return false;
-    }
-
-    if (
-        rankingFilters.role !== "all" &&
-        role !== rankingFilters.role
-    ) {
-        return false;
-    }
-
-    if (
-        rankingFilters.attribute !== "all" &&
-        attribute !== rankingFilters.attribute
-    ) {
-        return false;
-    }
-
-    if (
-        rankingFilters.rarity !== "all" &&
-        String(character.rarity) !== String(rankingFilters.rarity)
-    ) {
-        return false;
-    }
-
-    return true;
-
-}
-
-
-function getFilteredRankingCharacters() {
-
-    return charactersData
-        .filter(characterMatchesRankingFilters)
-        .map(function (character, originalIndex) {
-            return {
-                character: character,
-                originalIndex: originalIndex,
-                record: getRankingRecord(
-                    character.id,
-                    activeRankingCategory
-                )
-            };
-        })
+        .slice()
         .sort(function (a, b) {
-
-            const aScore =
-                a.record && Number.isFinite(Number(a.record.score))
-                    ? Number(a.record.score)
-                    : null;
-
-            const bScore =
-                b.record && Number.isFinite(Number(b.record.score))
-                    ? Number(b.record.score)
-                    : null;
-
-            if (aScore !== null && bScore !== null) {
-                return bScore - aScore;
-            }
-
-            if (aScore !== null) {
-                return -1;
-            }
-
-            if (bScore !== null) {
-                return 1;
-            }
-
-            return a.originalIndex - b.originalIndex;
+            const scoreA = Number(a.score);
+            const scoreB = Number(b.score);
+            return (Number.isFinite(scoreB) ? scoreB : -1) -
+                (Number.isFinite(scoreA) ? scoreA : -1);
         });
 
 }
 
 
-function renderRankings() {
+function renderBuildRankingRows(profileId) {
 
-    if (!rankingRows) {
+    if (!buildRankingRows) {
         return;
     }
 
-    renderRankingFilters();
+    buildRankingRows.innerHTML = "";
 
-    const categoryCopy =
-        getRankingCategoryCopy(activeRankingCategory);
-
-    if (rankingCategoryName) {
-        rankingCategoryName.textContent = categoryCopy.name;
-    }
-
-    if (rankingCategoryDescription) {
-        rankingCategoryDescription.textContent =
-            categoryCopy.description;
-    }
-
-    rankingRows.innerHTML = "";
-
-    const entries =
-        getFilteredRankingCharacters();
-
-    if (rankingResultsCount) {
-        rankingResultsCount.textContent =
-            `${entries.length} ${entries.length === 1 ? t("character").toUpperCase() : t("characters").toUpperCase()}`;
-    }
+    const entries = getPlayerBuildLeaderboardEntries(profileId);
 
     if (entries.length === 0) {
-        rankingRows.innerHTML = `
-            <div class="ranking-empty-state">
-                <strong>${t("noRankingMatches")}</strong>
-                <span>${t("adjustRankingFilters")}</span>
-            </div>
-        `;
+        const empty = document.createElement("div");
+        empty.className = "build-ranking-empty";
+        empty.id = "buildRankingEmpty";
+        empty.textContent = t("buildRankingEmpty");
+        buildRankingRows.appendChild(empty);
         return;
     }
 
-    let publishedRank = 0;
+    entries.forEach(function (rankingEntry, index) {
+        const row = document.createElement("div");
+        row.className = "build-ranking-row";
 
-    const publishedScoreCount =
-        entries.filter(function (entry) {
-            return entry.record &&
-                Number.isFinite(Number(entry.record.score));
-        }).length;
+        const rank = document.createElement("strong");
+        rank.className = "build-ranking-rank";
+        rank.textContent = `#${index + 1}`;
 
-    entries.forEach(function (entry) {
+        const player = document.createElement("span");
+        player.className = "build-ranking-player";
+        player.textContent = rankingEntry.playerName || t("noPlayer");
 
-        const character = entry.character;
-        const record = entry.record;
+        const score = document.createElement("span");
+        score.className = "build-ranking-score";
+        score.textContent = Number.isFinite(Number(rankingEntry.score))
+            ? Number(rankingEntry.score).toFixed(1)
+            : "--";
 
-        const row =
-            document.createElement("div");
+        const grade = document.createElement("span");
+        grade.className = "build-ranking-grade";
+        grade.textContent = rankingEntry.grade || "--";
 
-        row.className = "ranking-row";
-        row.dataset.characterId = character.id;
+        const uid = document.createElement("span");
+        uid.className = "build-ranking-uid";
+        uid.textContent = rankingEntry.uid || "--";
 
-        const characterName =
-            getLocalizedText(character.name);
-
-        const role =
-            getRankingCharacterField(character, "combatStyle") || "--";
-
-        const attribute =
-            getRankingCharacterField(character, "reactorAttribute") || "--";
-
-        const hasScore =
-            record && Number.isFinite(Number(record.score));
-
-        if (hasScore) {
-            publishedRank += 1;
-        }
-
-        const scoreText =
-            hasScore
-                ? Number(record.score).toFixed(1).replace(/\.0$/, "")
-                : "--";
-
-        const tierText =
-            record && record.tier
-                ? String(record.tier)
-                : "--";
-
-        const explicitTopPercent =
-            record && Number.isFinite(Number(record.topPercent))
-                ? Number(record.topPercent)
-                : null;
-
-        const calculatedTopPercent =
-            hasScore && publishedScoreCount > 0
-                ? (publishedRank / publishedScoreCount) * 100
-                : null;
-
-        const topPercentValue =
-            explicitTopPercent !== null
-                ? explicitTopPercent
-                : calculatedTopPercent;
-
-        const topPercentText =
-            topPercentValue !== null
-                ? `Top ${topPercentValue < 10
-                    ? topPercentValue.toFixed(1).replace(/\.0$/, "")
-                    : Math.round(topPercentValue)}%`
-                : "--";
-
-        const image =
-            character.images && character.images.card
-                ? character.images.card
-                : "";
-
-        row.innerHTML = `
-            <span class="ranking-position">${hasScore ? publishedRank : "--"}</span>
-
-            <div class="ranking-character">
-                <span class="ranking-character-badge">
-                    ${image
-                        ? `<img src="${image}" alt="" onerror="this.remove(); this.parentElement.textContent='${getRankingInitials(characterName)}';">`
-                        : getRankingInitials(characterName)
-                    }
-                </span>
-
-                <div>
-                    <strong>${characterName}</strong>
-                    <small>${character.rarity} ★ · ${getLocalizedText(character.identity) || t("previewData")}</small>
-                </div>
-            </div>
-
-            <span class="ranking-role">${getLocalizedText(role)}</span>
-            <span class="ranking-attribute">${getLocalizedText(attribute)}</span>
-            <span class="ranking-score ${hasScore ? "has-value" : "is-pending"}">${scoreText}</span>
-            <span class="ranking-percentile ${hasScore ? "has-value" : "is-pending"}">${topPercentText}</span>
-            <span class="ranking-tier ${tierText !== "--" ? "has-value" : "is-pending"}">${tierText}</span>
-        `;
-
-        row.setAttribute("role", "button");
-        row.tabIndex = 0;
-
-        function openRankingCharacter() {
-            if (typeof openDatabaseDetail === "function") {
-                selectCharacter(character);
-                openDatabaseDetail("character", character);
-            }
-        }
-
-        row.addEventListener("click", openRankingCharacter);
-
-        row.addEventListener("keydown", function (event) {
-            if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                openRankingCharacter();
-            }
-        });
-
-        rankingRows.appendChild(row);
-
+        row.append(rank, player, score, grade, uid);
+        buildRankingRows.appendChild(row);
     });
 
-    if (rankingTable) {
-        rankingTable.scrollTop = 0;
+}
+
+
+function renderBuildRanking() {
+
+    if (!buildRankingCharacterSelect) {
+        return;
+    }
+
+    const profiles = getBuildAnalyzerProfiles();
+    renderBuildRankingCharacterSelect(profiles);
+
+    const entry = getBuildAnalyzerProfileById(activeBuildRankingProfileId);
+
+    if (!entry) {
+        return;
+    }
+
+    if (buildRankingCharacterName) {
+        buildRankingCharacterName.textContent = entry.displayName;
+    }
+
+    if (buildRankingCharacterMeta) {
+        buildRankingCharacterMeta.textContent = getBuildProfileMeta(entry);
+    }
+
+    renderBuildProfileAvatar(buildRankingAvatar, entry);
+    renderBuildRankingRows(entry.id);
+
+}
+
+
+function getBuildPriority(entry) {
+
+    if (!entry) {
+        return [];
+    }
+
+    if (
+        entry.profile &&
+        entry.profile.build &&
+        Array.isArray(entry.profile.build.statPriority)
+    ) {
+        return entry.profile.build.statPriority;
+    }
+
+    if (
+        entry.character &&
+        entry.character.build &&
+        Array.isArray(entry.character.build.statPriority)
+    ) {
+        return entry.character.build.statPriority;
+    }
+
+    return [];
+
+}
+
+
+function renderPlayerBuildPriority(entry) {
+
+    if (!playerBuildPriorityList) {
+        return;
+    }
+
+    playerBuildPriorityList.innerHTML = "";
+    const priorities = getBuildPriority(entry);
+
+    if (priorities.length === 0) {
+        const empty = document.createElement("span");
+        empty.className = "build-analyzer-priority-empty";
+        empty.textContent = t("buildAnalyzerPriorityEmpty");
+        playerBuildPriorityList.appendChild(empty);
+        return;
+    }
+
+    priorities.forEach(function (priority, index) {
+        const chip = document.createElement("span");
+        chip.className = "build-analyzer-priority-chip";
+
+        const number = document.createElement("small");
+        number.textContent = String(index + 1);
+
+        chip.appendChild(number);
+        chip.appendChild(document.createTextNode(getLocalizedText(priority)));
+        playerBuildPriorityList.appendChild(chip);
+    });
+
+}
+
+
+function renderPlayerBuildRows(entry, reference, buildData) {
+
+    if (!playerBuildRows) {
+        return;
+    }
+
+    playerBuildRows.innerHTML = "";
+
+    const stats = buildData && buildData.stats && typeof buildData.stats === "object"
+        ? buildData.stats
+        : {};
+
+    const targets = buildData && buildData.targets && typeof buildData.targets === "object"
+        ? buildData.targets
+        : {};
+
+    const evaluations = buildData && buildData.evaluations && typeof buildData.evaluations === "object"
+        ? buildData.evaluations
+        : {};
+
+    const statDefinitions = [
+        { key: "hp", label: "HP" },
+        { key: "atk", label: "ATK" },
+        { key: "def", label: "DEF" }
+    ];
+
+    let rendered = 0;
+
+    statDefinitions.forEach(function (stat) {
+
+        const referenceValue = reference.stats
+            ? reference.stats[stat.key]
+            : undefined;
+        const currentValue = stats[stat.key];
+
+        if (
+            !Number.isFinite(Number(referenceValue)) &&
+            !Number.isFinite(Number(currentValue))
+        ) {
+            return;
+        }
+
+        const row = document.createElement("div");
+        row.className = "build-analyzer-row";
+
+        const name = document.createElement("strong");
+        name.className = "build-analyzer-stat-name";
+        name.textContent = stat.label;
+
+        const current = document.createElement("span");
+        current.className = "build-analyzer-reference-value";
+        current.textContent = Number.isFinite(Number(currentValue))
+            ? Number(currentValue).toLocaleString()
+            : "--";
+
+        const base = document.createElement("span");
+        base.className = "build-analyzer-reference-value";
+        base.textContent = Number.isFinite(Number(referenceValue))
+            ? Number(referenceValue).toLocaleString()
+            : "--";
+
+        const target = document.createElement("span");
+        target.className = "build-analyzer-pending-value";
+        target.textContent = targets[stat.key] !== undefined
+            ? String(targets[stat.key])
+            : "--";
+
+        const evaluation = document.createElement("span");
+        evaluation.className = "build-analyzer-evaluation-pending";
+        evaluation.textContent = evaluations[stat.key] || t("buildAnalyzerNotScored");
+
+        row.append(name, current, base, target, evaluation);
+        playerBuildRows.appendChild(row);
+        rendered += 1;
+    });
+
+    if (rendered === 0) {
+        const empty = document.createElement("div");
+        empty.className = "build-analyzer-empty";
+        empty.textContent = t("playerBuildNoStats");
+        playerBuildRows.appendChild(empty);
     }
 
 }
 
 
-rankingCategoryButtons.forEach(function (button) {
+function closePlayerBuildEvaluation() {
 
-    button.addEventListener(
-        "click",
-        function () {
+    if (!playerBuildModal) {
+        return;
+    }
 
-            activeRankingCategory =
-                button.dataset.rankingCategory ||
-                "overall";
+    playerBuildModal.classList.remove("active");
+    playerBuildModal.hidden = true;
+    playerBuildModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("player-build-open");
+    activePlayerBuildContext = null;
 
-            rankingCategoryButtons.forEach(
-                function (item) {
-                    item.classList.toggle(
-                        "active",
-                        item === button
-                    );
-                }
-            );
+}
 
-            renderRankings();
 
+function openPlayerBuildEvaluation(showcaseEntry) {
+
+    if (!playerBuildModal || !showcaseEntry || !showcaseEntry.profileId) {
+        return;
+    }
+
+    const entry = getBuildAnalyzerProfileById(showcaseEntry.profileId);
+
+    if (!entry) {
+        return;
+    }
+
+    const buildData = showcaseEntry.build || {};
+    const source = getBuildProfileSource(entry) || {};
+    const baseStats = source.baseStats || entry.character.baseStats || null;
+    const reference = getBuildAnalyzerReference(baseStats);
+    const playerData = showcaseEntry.player || {};
+
+    activePlayerBuildContext = showcaseEntry;
+
+    if (playerBuildOwner) {
+        const ownerName = playerData.name || t("noPlayer");
+        const ownerUid = playerData.uid ? ` · UID ${playerData.uid}` : "";
+        playerBuildOwner.textContent = `${ownerName}${ownerUid}`;
+    }
+
+    if (playerBuildCharacterName) {
+        playerBuildCharacterName.textContent = entry.displayName;
+    }
+
+    if (playerBuildCharacterMeta) {
+        playerBuildCharacterMeta.textContent = getBuildProfileMeta(entry);
+    }
+
+    renderBuildProfileAvatar(playerBuildAvatar, entry);
+
+    if (playerBuildScore) {
+        playerBuildScore.textContent = Number.isFinite(Number(buildData.score))
+            ? Number(buildData.score).toFixed(1)
+            : "--";
+    }
+
+    if (playerBuildGrade) {
+        playerBuildGrade.textContent = buildData.grade || "--";
+    }
+
+    if (playerBuildStatus) {
+        playerBuildStatus.textContent = buildData.status || t("buildAnalyzerStatusWaiting");
+    }
+
+    if (playerBuildReferenceLevel) {
+        playerBuildReferenceLevel.textContent = reference.level
+            ? `${t("buildAnalyzerReferenceLevel")}: Lv.${reference.level}`
+            : t("buildAnalyzerReferenceUnavailable");
+    }
+
+    renderPlayerBuildRows(entry, reference, buildData);
+    renderPlayerBuildPriority(entry);
+
+    playerBuildModal.hidden = false;
+    playerBuildModal.setAttribute("aria-hidden", "false");
+    playerBuildModal.classList.add("active");
+    document.body.classList.add("player-build-open");
+
+    if (playerBuildClose) {
+        playerBuildClose.focus();
+    }
+
+}
+
+
+function renderPlayerShowcase(showcaseEntries, playerData) {
+
+    if (!playerShowcaseGrid) {
+        return;
+    }
+
+    playerShowcaseGrid.innerHTML = "";
+
+    const entries = Array.isArray(showcaseEntries)
+        ? showcaseEntries.filter(Boolean).slice(0, 4)
+        : [];
+
+    if (entries.length === 0) {
+        for (let index = 0; index < 4; index += 1) {
+            const placeholder = document.createElement("button");
+            placeholder.className = "showcase-character-card";
+            placeholder.type = "button";
+            placeholder.disabled = true;
+            placeholder.setAttribute("aria-disabled", "true");
+
+            const mark = document.createElement("span");
+            mark.textContent = "?";
+            placeholder.appendChild(mark);
+            playerShowcaseGrid.appendChild(placeholder);
         }
-    );
+        return;
+    }
 
+    entries.forEach(function (showcaseEntry) {
+
+        const profileEntry = getBuildAnalyzerProfileById(showcaseEntry.profileId);
+
+        if (!profileEntry) {
+            return;
+        }
+
+        const button = document.createElement("button");
+        button.className = "showcase-character-card showcase-character-card-ready";
+        button.type = "button";
+        button.title = `${profileEntry.displayName} — ${t("playerBuildOpen")}`;
+        button.setAttribute("aria-label", button.title);
+
+        const image = getBuildProfileImage(profileEntry);
+
+        if (image) {
+            const img = document.createElement("img");
+            img.src = image;
+            img.alt = "";
+            img.loading = "lazy";
+            img.decoding = "async";
+            img.addEventListener("error", function () {
+                button.textContent = getBuildAnalyzerInitials(profileEntry.displayName);
+            }, { once: true });
+            button.appendChild(img);
+        } else {
+            button.textContent = getBuildAnalyzerInitials(profileEntry.displayName);
+        }
+
+        button.addEventListener("click", function () {
+            openPlayerBuildEvaluation({
+                ...showcaseEntry,
+                player: showcaseEntry.player || playerData || {}
+            });
+        });
+
+        playerShowcaseGrid.appendChild(button);
+    });
+
+}
+
+
+if (buildRankingCharacterSelect) {
+    buildRankingCharacterSelect.addEventListener("change", function () {
+        activeBuildRankingProfileId = buildRankingCharacterSelect.value;
+        renderBuildRanking();
+    });
+}
+
+if (playerBuildBackdrop) {
+    playerBuildBackdrop.addEventListener("click", closePlayerBuildEvaluation);
+}
+
+if (playerBuildClose) {
+    playerBuildClose.addEventListener("click", closePlayerBuildEvaluation);
+}
+
+document.addEventListener("keydown", function (event) {
+    if (
+        event.key === "Escape" &&
+        playerBuildModal &&
+        !playerBuildModal.hidden
+    ) {
+        closePlayerBuildEvaluation();
+    }
 });
 
-
-if (rankingSearch) {
-    rankingSearch.addEventListener("input", function () {
-        rankingFilters.search = rankingSearch.value;
-        renderRankings();
-    });
-}
-
-if (rankingRoleFilter) {
-    rankingRoleFilter.addEventListener("change", function () {
-        rankingFilters.role = rankingRoleFilter.value;
-        renderRankings();
-    });
-}
-
-if (rankingAttributeFilter) {
-    rankingAttributeFilter.addEventListener("change", function () {
-        rankingFilters.attribute = rankingAttributeFilter.value;
-        renderRankings();
-    });
-}
-
-if (rankingRarityFilter) {
-    rankingRarityFilter.addEventListener("change", function () {
-        rankingFilters.rarity = rankingRarityFilter.value;
-        renderRankings();
-    });
-}
+/*
+ * Small integration API for a future real UID/player-data source.
+ * No player records are invented here. A provider can pass the player's
+ * showcased characters and their final build stats when that source exists.
+ */
+window.ArchivePlayerBuild = {
+    renderShowcase: renderPlayerShowcase,
+    open: openPlayerBuildEvaluation,
+    close: closePlayerBuildEvaluation,
+    refreshLeaderboard: renderBuildRanking
+};
 
 
 /* =========================
@@ -2464,6 +2753,9 @@ function renderCharacters(characters) {
 
     characterGrid.innerHTML = "";
 
+    const renderFragment =
+        document.createDocumentFragment();
+
     if (!characters.length) {
         const emptyState = document.createElement("div");
         emptyState.className = "character-empty-state";
@@ -2635,11 +2927,15 @@ function renderCharacters(characters) {
             }
         );
 
-        characterGrid.appendChild(
+        renderFragment.appendChild(
             card
         );
 
     });
+
+    characterGrid.appendChild(
+        renderFragment
+    );
 
 }
 
@@ -2647,6 +2943,9 @@ function renderCharacters(characters) {
 function renderWeapons(weapons) {
 
     weaponGrid.innerHTML = "";
+
+    const renderFragment =
+        document.createDocumentFragment();
 
     weapons.forEach(function (weapon) {
 
@@ -2779,11 +3078,15 @@ function renderWeapons(weapons) {
             }
         );
 
-        weaponGrid.appendChild(
+        renderFragment.appendChild(
             card
         );
 
     });
+
+    weaponGrid.appendChild(
+        renderFragment
+    );
 
 }
 
@@ -2852,6 +3155,9 @@ function renderSimulations(simulationSets) {
     }
 
     simulationGrid.innerHTML = "";
+
+    const renderFragment =
+        document.createDocumentFragment();
 
     simulationSets.forEach(function (simulationSet) {
 
@@ -2948,11 +3254,15 @@ function renderSimulations(simulationSets) {
             }
         );
 
-        simulationGrid.appendChild(
+        renderFragment.appendChild(
             card
         );
 
     });
+
+    simulationGrid.appendChild(
+        renderFragment
+    );
 
 }
 
@@ -2996,6 +3306,9 @@ function renderEpiphanies(epiphanies) {
     }
 
     epiphanyGrid.innerHTML = "";
+
+    const renderFragment =
+        document.createDocumentFragment();
 
     epiphanies.forEach(function (epiphany) {
 
@@ -3043,15 +3356,20 @@ function renderEpiphanies(epiphanies) {
             openDatabaseDetail("epiphany", epiphany);
         });
 
-        epiphanyGrid.appendChild(card);
+        renderFragment.appendChild(card);
     });
+
+    epiphanyGrid.appendChild(
+        renderFragment
+    );
 }
 
 
 /* Generate website content */
 
 renderNewsSystem();
-renderRankings();
+renderBuildRanking();
+renderPlayerShowcase([], null);
 
 populateCharacterStyleFilter();
 updateCharacterRarityFilterLabels();
@@ -3059,10 +3377,10 @@ updateCharacterSearchControls();
 renderCharacterAttributeFilters();
 renderWeaponTypeFilters();
 
-applyCharacterFilters();
-applyWeaponFilters();
-applySimulationFilters();
-applyEpiphanyFilters();
+ensureDatabaseTabRendered(
+    getActiveDatabaseTabId(),
+    true
+);
 
 
 /* =========================
@@ -3140,10 +3458,15 @@ function searchPlayer() {
    DATABASE SEARCH
 ========================= */
 
-characterSearch.addEventListener(
-    "input",
-    applyCharacterFilters
-);
+if (characterSearch) {
+    characterSearch.addEventListener(
+        "input",
+        debounceDatabaseInput(function () {
+            applyCharacterFilters();
+            databaseTabRenderState.characters = true;
+        }, 170)
+    );
+}
 
 if (characterSearchClear) {
     characterSearchClear.addEventListener(
@@ -3196,22 +3519,33 @@ if (characterFilterReset) {
     );
 }
 
-weaponSearch.addEventListener(
-    "input",
-    applyWeaponFilters
-);
+if (weaponSearch) {
+    weaponSearch.addEventListener(
+        "input",
+        debounceDatabaseInput(function () {
+            applyWeaponFilters();
+            databaseTabRenderState.weapons = true;
+        }, 170)
+    );
+}
 
 if (simulationSearch) {
     simulationSearch.addEventListener(
         "input",
-        applySimulationFilters
+        debounceDatabaseInput(function () {
+            applySimulationFilters();
+            databaseTabRenderState.simulation = true;
+        }, 170)
     );
 }
 
 if (epiphanySearch) {
     epiphanySearch.addEventListener(
         "input",
-        applyEpiphanyFilters
+        debounceDatabaseInput(function () {
+            applyEpiphanyFilters();
+            databaseTabRenderState.epiphanies = true;
+        }, 170)
     );
 }
 
@@ -3227,7 +3561,15 @@ window.refreshDynamicContent = function () {
     updateCharacterSearchControls();
 
     renderNewsSystem();
-    renderRankings();
+    renderBuildRanking();
+
+    if (
+        activePlayerBuildContext &&
+        playerBuildModal &&
+        !playerBuildModal.hidden
+    ) {
+        openPlayerBuildEvaluation(activePlayerBuildContext);
+    }
 
     if (
         window.currentNewsDetailId &&
@@ -3243,10 +3585,17 @@ window.refreshDynamicContent = function () {
     renderCharacterAttributeFilters();
     renderWeaponTypeFilters();
 
-    applyCharacterFilters();
-    applyWeaponFilters();
-    applySimulationFilters();
-    applyEpiphanyFilters();
+    const activeDatabaseTab =
+        getActiveDatabaseTabId();
+
+    markHiddenDatabaseTabsDirty(
+        activeDatabaseTab
+    );
+
+    ensureDatabaseTabRendered(
+        activeDatabaseTab,
+        true
+    );
 
     const selected =
         window.selectedDatabaseEntry;
@@ -7690,14 +8039,10 @@ renderSimulationFullDetail =
 
 
 /*
- * The original page renders Simulation cards before this enhancement
- * block is reached, so refresh that grid once after installing v45.
+ * v59: Simulation is lazy-rendered. The enhanced renderer is already
+ * installed before the user opens the tab, so no startup refresh is needed.
  */
-if (
-    typeof applySimulationFilters === "function"
-) {
-    applySimulationFilters();
-}
+databaseTabRenderState.simulation = false;
 
 
 /* =========================================================
@@ -7948,11 +8293,7 @@ renderWeaponFullDetail =
     };
 
 
-/* Refresh cards once because the original render ran before this block. */
-if (
-    typeof applyWeaponFilters === "function"
-) {
-    applyWeaponFilters();
-}
+/* v59: Motive cards are lazy-rendered after this enhanced renderer is installed. */
+databaseTabRenderState.weapons = false;
 
 

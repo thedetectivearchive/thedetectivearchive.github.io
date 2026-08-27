@@ -93,7 +93,7 @@
             <a href="#top">Home</a>
             <a href="news.html">News</a>
             <a href="#database">Database</a>
-            <a href="#rankings">Rankings</a>
+            <a href="#rankings">The Detective</a>
             <a href="#playerLookup">Player</a>
             <a href="help.html" id="helpNavLink">Help</a>
 <button
@@ -438,121 +438,69 @@
 
         <!-- =====================
              CENTER PANEL
-             CHARACTER RANKINGS
-             v16: classic layout + scrollable ranking + mobile responsive polish
+             PLAYER BUILD LEADERBOARD
+             v59.2: character-specific player build ranking
         ====================== -->
 
-        <section class="panel main-content ranking-panel" id="rankings">
+        <section class="panel main-content ranking-panel build-ranking-panel" id="rankings">
 
-            <div class="content-header ranking-header">
+            <div class="content-header ranking-header build-ranking-header">
 
                 <div>
-                    <p class="tag" id="rankingTag">RANKINGS</p>
-                    <h2 id="rankingTitle">Character Rankings</h2>
+                    <p class="tag" id="buildRankingTag">PLAYER BUILD RANKING</p>
+                    <h2 id="buildRankingTitle">The Detective</h2>
                 </div>
 
                 <div class="ranking-header-meta">
-                    <span class="ranking-scope" id="rankingScope">DICHOTOMY CBT2</span>
-                    <span class="ranking-status" id="rankingStatus">FRAMEWORK</span>
+                    <span class="ranking-scope" id="buildRankingScope">TOP PLAYER BUILDS</span>
+                    <span class="ranking-status" id="buildRankingStatus">COMING SOON</span>
                 </div>
 
             </div>
 
-            <p class="ranking-intro" id="rankingDescription">
-                Compare Silver Palace characters by combat performance. Rankings will use verified, role-aware scoring when comparable data is available.
+            <p class="ranking-intro build-ranking-intro" id="buildRankingDescription">
+                Select a character to view the strongest player builds recorded for that character. Rankings will activate only when reliable player data and verified build scoring are available.
             </p>
 
-            <div class="ranking-tabs" role="tablist" aria-label="Ranking categories">
-                <button class="ranking-tab-button active" type="button" data-ranking-category="overall">Overall</button>
-                <button class="ranking-tab-button" type="button" data-ranking-category="damage">Damage</button>
-                <button class="ranking-tab-button" type="button" data-ranking-category="break">Break</button>
-                <button class="ranking-tab-button" type="button" data-ranking-category="support">Support</button>
-                <button class="ranking-tab-button" type="button" data-ranking-category="survival">Survival</button>
-            </div>
+            <div class="build-ranking-toolbar">
+                <label class="ranking-filter build-ranking-character-field">
+                    <span id="buildRankingCharacterLabel">Character</span>
+                    <select id="buildRankingCharacterSelect" aria-label="Character"></select>
+                </label>
 
-            <div class="ranking-category-summary">
-                <div>
-                    <span id="rankingCategoryLabel">CURRENT CATEGORY</span>
-                    <strong id="rankingCategoryName">Overall</strong>
+                <div class="build-ranking-data-state">
+                    <span id="buildRankingDataLabel">LEADERBOARD DATA</span>
+                    <strong id="buildRankingDataValue">Awaiting reliable player data</strong>
                 </div>
-                <p id="rankingCategoryDescription">Role-aware overall combat value. Characters are evaluated in the context of their intended combat style.</p>
             </div>
 
-            <div class="ranking-toolbar">
-                <label class="ranking-filter ranking-filter-search">
-                    <span id="rankingSearchLabel">Find character</span>
-                    <input id="rankingSearch" type="search" placeholder="Search rankings..." autocomplete="off">
-                </label>
-
-                <label class="ranking-filter">
-                    <span id="rankingRoleLabel">Combat Style</span>
-                    <select id="rankingRoleFilter"></select>
-                </label>
-
-                <label class="ranking-filter">
-                    <span id="rankingAttributeLabel">Reactor Attribute</span>
-                    <select id="rankingAttributeFilter"></select>
-                </label>
-
-                <label class="ranking-filter ranking-filter-small">
-                    <span id="rankingRarityLabel">Rarity</span>
-                    <select id="rankingRarityFilter"></select>
-                </label>
+            <div class="build-ranking-character-card" id="buildRankingCharacterCard" aria-live="polite">
+                <div class="build-ranking-avatar" id="buildRankingAvatar">?</div>
+                <div class="build-ranking-character-copy">
+                    <span id="buildRankingSelectedLabel">RANKING CHARACTER</span>
+                    <strong id="buildRankingCharacterName">-</strong>
+                    <small id="buildRankingCharacterMeta">-</small>
+                </div>
             </div>
 
-            <div class="ranking-result-bar">
-                <span id="rankingResultsCount">14 CHARACTERS</span>
-                <span id="rankingPublicationState">Scores unpublished</span>
-            </div>
-
-            <div class="ranking-table" aria-live="polite">
-
-                <div class="ranking-table-head">
-                    <span id="rankingHeaderRank">#</span>
-                    <span id="rankingHeaderCharacter">Character</span>
-                    <span id="rankingHeaderRole">Combat Style</span>
-                    <span id="rankingHeaderAttribute">Attribute</span>
-                    <span id="rankingHeaderScore">Score</span>
-                    <span id="rankingHeaderTier">Tier</span>
+            <div class="build-ranking-table" aria-live="polite">
+                <div class="build-ranking-table-head">
+                    <span id="buildRankingHeaderRank">Rank</span>
+                    <span id="buildRankingHeaderPlayer">Player</span>
+                    <span id="buildRankingHeaderScore">Build Score</span>
+                    <span id="buildRankingHeaderGrade">Grade</span>
+                    <span id="buildRankingHeaderUid">UID</span>
                 </div>
 
-                <div class="ranking-rows" id="rankingRows">
-                    <!-- Generated by script.js -->
-                </div>
-
-            </div>
-
-            <div class="ranking-framework">
-                <div class="ranking-framework-heading">
-                    <div>
-                        <p class="tag" id="rankingFrameworkTag">SCORING FRAMEWORK</p>
-                        <h3 id="rankingFrameworkTitle">How rankings will be published</h3>
+                <div class="build-ranking-rows" id="buildRankingRows">
+                    <div class="build-ranking-empty" id="buildRankingEmpty">
+                        Leaderboard data will appear here after a reliable player-data source and verified scoring profiles are available.
                     </div>
-                    <span id="rankingFrameworkBadge">NO SCORES YET</span>
-                </div>
-
-                <div class="ranking-framework-grid">
-                    <article>
-                        <strong id="rankingRuleRoleTitle">Role-aware</strong>
-                        <p id="rankingRuleRoleText">DPS, Break, Support and Survival characters are not judged by one identical priority.</p>
-                    </article>
-                    <article>
-                        <strong id="rankingRuleBuildTitle">Reference build</strong>
-                        <p id="rankingRuleBuildText">Comparisons require a documented Motive, Simulation, Epiphany and stat baseline.</p>
-                    </article>
-                    <article>
-                        <strong id="rankingRuleContextTitle">Comparable context</strong>
-                        <p id="rankingRuleContextText">Damage and utility should be tested under consistent level, enemy and combat conditions.</p>
-                    </article>
-                    <article>
-                        <strong id="rankingRuleConfidenceTitle">Evidence first</strong>
-                        <p id="rankingRuleConfidenceText">A score stays unpublished when the available beta data is not strong enough to support it.</p>
-                    </article>
                 </div>
             </div>
 
-            <p class="ranking-note" id="rankingNote">
-                No ranking scores are published yet. The table and filters are ready; verified values will be added when reliable combat data becomes available.
+            <p class="ranking-note build-ranking-note" id="buildRankingNote">
+                This leaderboard ranks player builds for the selected character. It does not rank the strength of one character against another.
             </p>
 
         </section>
@@ -639,12 +587,85 @@
             <div class="showcase">
                 <p class="section-label">CHARACTER SHOWCASE</p>
 
-                <div class="showcase-grid">
-                    <div>?</div>
-                    <div>?</div>
-                    <div>?</div>
-                    <div>?</div>
+                <div class="showcase-grid" id="playerShowcaseGrid" aria-live="polite">
+                    <button class="showcase-character-card" type="button" disabled aria-disabled="true"><span>?</span></button>
+                    <button class="showcase-character-card" type="button" disabled aria-disabled="true"><span>?</span></button>
+                    <button class="showcase-character-card" type="button" disabled aria-disabled="true"><span>?</span></button>
+                    <button class="showcase-character-card" type="button" disabled aria-disabled="true"><span>?</span></button>
                 </div>
+
+                <p class="showcase-help" id="playerShowcaseHelp">
+                    Click a showcased character to open that player's build evaluation.
+                </p>
+            </div>
+
+
+            <div class="player-build-modal" id="playerBuildModal" hidden aria-hidden="true">
+                <button class="player-build-backdrop" id="playerBuildBackdrop" type="button" aria-label="Close build evaluation"></button>
+
+                <section class="player-build-dialog" role="dialog" aria-modal="true" aria-labelledby="playerBuildModalTitle">
+                    <div class="content-header player-build-dialog-header">
+                        <div>
+                            <p class="tag" id="playerBuildModalTag">BUILD EVALUATION</p>
+                            <h2 id="playerBuildModalTitle">Character Build</h2>
+                            <p class="player-build-owner" id="playerBuildOwner">No player selected</p>
+                        </div>
+
+                        <button class="player-build-close" id="playerBuildClose" type="button" aria-label="Close build evaluation">×</button>
+                    </div>
+
+                    <div class="build-analyzer-character-card player-build-character-card">
+                        <div class="build-analyzer-avatar" id="playerBuildAvatar">?</div>
+                        <div class="build-analyzer-character-copy">
+                            <span id="playerBuildSelectedLabel">SELECTED BUILD</span>
+                            <strong id="playerBuildCharacterName">-</strong>
+                            <small id="playerBuildCharacterMeta">-</small>
+                        </div>
+                    </div>
+
+                    <div class="build-analyzer-score-grid">
+                        <article class="build-analyzer-score-card build-analyzer-score-primary">
+                            <span id="playerBuildScoreLabel">BUILD SCORE</span>
+                            <div>
+                                <strong id="playerBuildScore">--</strong>
+                                <small>/100</small>
+                            </div>
+                        </article>
+
+                        <article class="build-analyzer-score-card">
+                            <span id="playerBuildGradeLabel">GRADE</span>
+                            <strong id="playerBuildGrade">--</strong>
+                        </article>
+
+                        <article class="build-analyzer-score-card">
+                            <span id="playerBuildStatusLabel">STATUS</span>
+                            <strong id="playerBuildStatus">Awaiting scoring profile</strong>
+                        </article>
+                    </div>
+
+                    <div class="build-analyzer-table" aria-live="polite">
+                        <div class="build-analyzer-table-head">
+                            <span id="playerBuildHeaderStat">Stat</span>
+                            <span id="playerBuildHeaderCurrent">Player Build</span>
+                            <span id="playerBuildHeaderReference">Base Reference</span>
+                            <span id="playerBuildHeaderTarget">Target</span>
+                            <span id="playerBuildHeaderEvaluation">Evaluation</span>
+                        </div>
+                        <div class="build-analyzer-rows" id="playerBuildRows"></div>
+                    </div>
+
+                    <div class="build-analyzer-priority">
+                        <div class="build-analyzer-priority-heading">
+                            <span id="playerBuildPriorityLabel">CURRENT GUIDE PRIORITY</span>
+                            <small id="playerBuildReferenceLevel">Base reference: Lv.--</small>
+                        </div>
+                        <div class="build-analyzer-priority-list" id="playerBuildPriorityList"></div>
+                    </div>
+
+                    <p class="ranking-note build-analyzer-note" id="playerBuildNote">
+                        Build evaluation belongs to the selected player's showcased character. Scores remain unavailable until a verified scoring profile exists.
+                    </p>
+                </section>
             </div>
 
         </aside>

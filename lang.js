@@ -1911,6 +1911,520 @@ Object.assign(translations.ru, {
 });
 
 /* =========================================================
+   BUILD ANALYZER UI — v59.1
+========================================================= */
+
+Object.assign(translations.en, {
+    buildAnalyzer: "Build Analyzer",
+    buildAnalyzerTitle: "Character Build Analyzer",
+    buildAnalyzerDescription: "Select a character and enter the final stats shown on your build. Scoring stays disabled until verified targets and weights are configured for that character.",
+    buildAnalyzerScope: "PLAYER BUILD",
+    buildAnalyzerFoundation: "FOUNDATION",
+    buildAnalyzerCharacter: "Character",
+    buildAnalyzerProfile: "SCORING PROFILE",
+    buildAnalyzerProfilePending: "Awaiting verified targets",
+    buildAnalyzerSelected: "SELECTED BUILD",
+    buildAnalyzerScore: "BUILD SCORE",
+    buildAnalyzerGrade: "GRADE",
+    buildAnalyzerStatusLabel: "STATUS",
+    buildAnalyzerStatusWaiting: "Awaiting scoring profile",
+    buildAnalyzerStat: "Stat",
+    buildAnalyzerCurrent: "Current Build",
+    buildAnalyzerReference: "Base Reference",
+    buildAnalyzerTarget: "Target",
+    buildAnalyzerEvaluation: "Evaluation",
+    buildAnalyzerNotScored: "Not scored",
+    buildAnalyzerPriority: "CURRENT GUIDE PRIORITY",
+    buildAnalyzerPriorityEmpty: "No verified stat priority yet.",
+    buildAnalyzerReferenceLevel: "Base reference",
+    buildAnalyzerReferenceUnavailable: "Base reference unavailable",
+    buildAnalyzerNoReference: "No verified base-stat reference is available for this character yet.",
+    buildAnalyzerNote: "This panel evaluates a player's finished build, not character strength. No score or grade is calculated until each character has a verified scoring profile."
+});
+
+Object.assign(translations.vi, {
+    buildAnalyzer: "Chấm Build",
+    buildAnalyzerTitle: "Đánh giá Build Nhân vật",
+    buildAnalyzerDescription: "Chọn nhân vật và nhập các chỉ số cuối cùng đang hiển thị trên build của bạn. Hệ thống chưa tính điểm cho đến khi mục tiêu và trọng số của nhân vật được xác minh.",
+    buildAnalyzerScope: "BUILD NGƯỜI CHƠI",
+    buildAnalyzerFoundation: "NỀN TẢNG",
+    buildAnalyzerCharacter: "Nhân vật",
+    buildAnalyzerProfile: "HỒ SƠ CHẤM ĐIỂM",
+    buildAnalyzerProfilePending: "Đang chờ mục tiêu đã xác minh",
+    buildAnalyzerSelected: "BUILD ĐANG CHỌN",
+    buildAnalyzerScore: "ĐIỂM BUILD",
+    buildAnalyzerGrade: "XẾP LOẠI",
+    buildAnalyzerStatusLabel: "TRẠNG THÁI",
+    buildAnalyzerStatusWaiting: "Đang chờ hồ sơ chấm điểm",
+    buildAnalyzerStat: "Chỉ số",
+    buildAnalyzerCurrent: "Build hiện tại",
+    buildAnalyzerReference: "Chỉ số gốc",
+    buildAnalyzerTarget: "Mục tiêu",
+    buildAnalyzerEvaluation: "Đánh giá",
+    buildAnalyzerNotScored: "Chưa chấm",
+    buildAnalyzerPriority: "ƯU TIÊN BUILD HIỆN TẠI",
+    buildAnalyzerPriorityEmpty: "Chưa có ưu tiên chỉ số đã xác minh.",
+    buildAnalyzerReferenceLevel: "Mốc chỉ số gốc",
+    buildAnalyzerReferenceUnavailable: "Chưa có mốc chỉ số gốc",
+    buildAnalyzerNoReference: "Nhân vật này chưa có dữ liệu chỉ số gốc đã xác minh.",
+    buildAnalyzerNote: "Bảng này dùng để đánh giá build hoàn thiện của người chơi, không phải xếp hạng sức mạnh nhân vật. Điểm và xếp loại chỉ được tính khi từng nhân vật có hồ sơ chấm điểm đã xác minh."
+});
+
+Object.assign(translations.th, {
+    buildAnalyzer: "วิเคราะห์บิลด์",
+    buildAnalyzerTitle: "วิเคราะห์บิลด์ตัวละคร",
+    buildAnalyzerDescription: "เลือกตัวละครและกรอกค่าสถานะสุดท้ายของบิลด์ ระบบจะยังไม่คำนวณคะแนนจนกว่าจะมีเป้าหมายและค่าน้ำหนักที่ตรวจสอบแล้วสำหรับตัวละครนั้น",
+    buildAnalyzerScope: "บิลด์ผู้เล่น",
+    buildAnalyzerFoundation: "โครงสร้าง",
+    buildAnalyzerCharacter: "ตัวละคร",
+    buildAnalyzerProfile: "โปรไฟล์การให้คะแนน",
+    buildAnalyzerProfilePending: "รอเป้าหมายที่ตรวจสอบแล้ว",
+    buildAnalyzerSelected: "บิลด์ที่เลือก",
+    buildAnalyzerScore: "คะแนนบิลด์",
+    buildAnalyzerGrade: "เกรด",
+    buildAnalyzerStatusLabel: "สถานะ",
+    buildAnalyzerStatusWaiting: "รอโปรไฟล์การให้คะแนน",
+    buildAnalyzerStat: "ค่าสถานะ",
+    buildAnalyzerCurrent: "บิลด์ปัจจุบัน",
+    buildAnalyzerReference: "ค่าพื้นฐานอ้างอิง",
+    buildAnalyzerTarget: "เป้าหมาย",
+    buildAnalyzerEvaluation: "การประเมิน",
+    buildAnalyzerNotScored: "ยังไม่ให้คะแนน",
+    buildAnalyzerPriority: "ลำดับค่าสถานะจากไกด์ปัจจุบัน",
+    buildAnalyzerPriorityEmpty: "ยังไม่มีลำดับค่าสถานะที่ตรวจสอบแล้ว",
+    buildAnalyzerReferenceLevel: "ค่าพื้นฐานอ้างอิง",
+    buildAnalyzerReferenceUnavailable: "ไม่มีค่าพื้นฐานอ้างอิง",
+    buildAnalyzerNoReference: "ยังไม่มีข้อมูลค่าสถานะพื้นฐานที่ตรวจสอบแล้วสำหรับตัวละครนี้",
+    buildAnalyzerNote: "ส่วนนี้ประเมินคุณภาพบิลด์ของผู้เล่น ไม่ใช่ความแข็งแกร่งของตัวละคร จะยังไม่มีคะแนนหรือเกรดจนกว่าจะมีโปรไฟล์การให้คะแนนที่ตรวจสอบแล้ว"
+});
+
+Object.assign(translations.ja, {
+    buildAnalyzer: "ビルド分析",
+    buildAnalyzerTitle: "キャラクタービルド分析",
+    buildAnalyzerDescription: "キャラクターを選び、完成したビルドに表示される最終ステータスを入力します。検証済みの目標値と重みが設定されるまでスコアは計算されません。",
+    buildAnalyzerScope: "プレイヤービルド",
+    buildAnalyzerFoundation: "基盤",
+    buildAnalyzerCharacter: "キャラクター",
+    buildAnalyzerProfile: "採点プロファイル",
+    buildAnalyzerProfilePending: "検証済み目標値を待機中",
+    buildAnalyzerSelected: "選択中のビルド",
+    buildAnalyzerScore: "ビルドスコア",
+    buildAnalyzerGrade: "評価",
+    buildAnalyzerStatusLabel: "状態",
+    buildAnalyzerStatusWaiting: "採点プロファイル待機中",
+    buildAnalyzerStat: "ステータス",
+    buildAnalyzerCurrent: "現在のビルド",
+    buildAnalyzerReference: "基礎値",
+    buildAnalyzerTarget: "目標",
+    buildAnalyzerEvaluation: "判定",
+    buildAnalyzerNotScored: "未採点",
+    buildAnalyzerPriority: "現在のガイド優先度",
+    buildAnalyzerPriorityEmpty: "検証済みのステータス優先度はまだありません。",
+    buildAnalyzerReferenceLevel: "基礎値参照",
+    buildAnalyzerReferenceUnavailable: "基礎値参照なし",
+    buildAnalyzerNoReference: "このキャラクターには検証済みの基礎ステータスがまだありません。",
+    buildAnalyzerNote: "このパネルはプレイヤーの完成ビルドを評価するもので、キャラクターの強さを順位付けするものではありません。検証済みの採点プロファイルが設定されるまでスコアや評価は計算されません。"
+});
+
+Object.assign(translations["zh-CN"], {
+    buildAnalyzer: "配装分析",
+    buildAnalyzerTitle: "角色配装分析",
+    buildAnalyzerDescription: "选择角色并输入当前成型配装显示的最终属性。在该角色的目标值和权重经过验证前，系统不会计算评分。",
+    buildAnalyzerScope: "玩家配装",
+    buildAnalyzerFoundation: "基础框架",
+    buildAnalyzerCharacter: "角色",
+    buildAnalyzerProfile: "评分配置",
+    buildAnalyzerProfilePending: "等待已验证目标",
+    buildAnalyzerSelected: "当前配装",
+    buildAnalyzerScore: "配装评分",
+    buildAnalyzerGrade: "评级",
+    buildAnalyzerStatusLabel: "状态",
+    buildAnalyzerStatusWaiting: "等待评分配置",
+    buildAnalyzerStat: "属性",
+    buildAnalyzerCurrent: "当前配装",
+    buildAnalyzerReference: "基础参考",
+    buildAnalyzerTarget: "目标",
+    buildAnalyzerEvaluation: "评价",
+    buildAnalyzerNotScored: "未评分",
+    buildAnalyzerPriority: "当前攻略属性优先级",
+    buildAnalyzerPriorityEmpty: "暂无已验证的属性优先级。",
+    buildAnalyzerReferenceLevel: "基础参考",
+    buildAnalyzerReferenceUnavailable: "暂无基础参考",
+    buildAnalyzerNoReference: "该角色暂无已验证的基础属性参考。",
+    buildAnalyzerNote: "此面板用于评价玩家已完成的配装，而不是角色强度排名。只有在每个角色拥有已验证的评分配置后，才会计算分数和评级。"
+});
+
+Object.assign(translations.ko, {
+    buildAnalyzer: "빌드 분석",
+    buildAnalyzerTitle: "캐릭터 빌드 분석",
+    buildAnalyzerDescription: "캐릭터를 선택하고 완성된 빌드에 표시되는 최종 스탯을 입력하세요. 검증된 목표값과 가중치가 설정되기 전까지 점수는 계산되지 않습니다.",
+    buildAnalyzerScope: "플레이어 빌드",
+    buildAnalyzerFoundation: "기반",
+    buildAnalyzerCharacter: "캐릭터",
+    buildAnalyzerProfile: "채점 프로필",
+    buildAnalyzerProfilePending: "검증된 목표값 대기 중",
+    buildAnalyzerSelected: "선택된 빌드",
+    buildAnalyzerScore: "빌드 점수",
+    buildAnalyzerGrade: "등급",
+    buildAnalyzerStatusLabel: "상태",
+    buildAnalyzerStatusWaiting: "채점 프로필 대기 중",
+    buildAnalyzerStat: "스탯",
+    buildAnalyzerCurrent: "현재 빌드",
+    buildAnalyzerReference: "기본 참고값",
+    buildAnalyzerTarget: "목표",
+    buildAnalyzerEvaluation: "평가",
+    buildAnalyzerNotScored: "미채점",
+    buildAnalyzerPriority: "현재 가이드 스탯 우선순위",
+    buildAnalyzerPriorityEmpty: "검증된 스탯 우선순위가 아직 없습니다.",
+    buildAnalyzerReferenceLevel: "기본 참고값",
+    buildAnalyzerReferenceUnavailable: "기본 참고값 없음",
+    buildAnalyzerNoReference: "이 캐릭터의 검증된 기본 스탯 참고값이 아직 없습니다.",
+    buildAnalyzerNote: "이 패널은 플레이어의 완성된 빌드를 평가하며 캐릭터 강함을 순위화하지 않습니다. 검증된 채점 프로필이 설정될 때까지 점수와 등급은 계산되지 않습니다."
+});
+
+Object.assign(translations.fr, {
+    buildAnalyzer: "Analyse de build",
+    buildAnalyzerTitle: "Analyse du build du personnage",
+    buildAnalyzerDescription: "Choisissez un personnage et saisissez les statistiques finales affichées sur votre build. Aucun score n'est calculé tant que les objectifs et pondérations vérifiés ne sont pas configurés.",
+    buildAnalyzerScope: "BUILD JOUEUR",
+    buildAnalyzerFoundation: "BASE",
+    buildAnalyzerCharacter: "Personnage",
+    buildAnalyzerProfile: "PROFIL DE SCORE",
+    buildAnalyzerProfilePending: "Objectifs vérifiés en attente",
+    buildAnalyzerSelected: "BUILD SÉLECTIONNÉ",
+    buildAnalyzerScore: "SCORE DU BUILD",
+    buildAnalyzerGrade: "NOTE",
+    buildAnalyzerStatusLabel: "STATUT",
+    buildAnalyzerStatusWaiting: "Profil de score en attente",
+    buildAnalyzerStat: "Stat",
+    buildAnalyzerCurrent: "Build actuel",
+    buildAnalyzerReference: "Référence de base",
+    buildAnalyzerTarget: "Objectif",
+    buildAnalyzerEvaluation: "Évaluation",
+    buildAnalyzerNotScored: "Non évalué",
+    buildAnalyzerPriority: "PRIORITÉ DU GUIDE ACTUEL",
+    buildAnalyzerPriorityEmpty: "Aucune priorité de statistique vérifiée pour le moment.",
+    buildAnalyzerReferenceLevel: "Référence de base",
+    buildAnalyzerReferenceUnavailable: "Référence de base indisponible",
+    buildAnalyzerNoReference: "Aucune statistique de base vérifiée n'est encore disponible pour ce personnage.",
+    buildAnalyzerNote: "Ce panneau évalue le build final d'un joueur, pas la puissance du personnage. Aucun score ni note n'est calculé avant la création d'un profil de score vérifié pour chaque personnage."
+});
+
+Object.assign(translations.es, {
+    buildAnalyzer: "Analizador de build",
+    buildAnalyzerTitle: "Analizador de build del personaje",
+    buildAnalyzerDescription: "Elige un personaje e introduce las estadísticas finales que muestra tu build. No se calculará una puntuación hasta que existan objetivos y pesos verificados para ese personaje.",
+    buildAnalyzerScope: "BUILD DEL JUGADOR",
+    buildAnalyzerFoundation: "BASE",
+    buildAnalyzerCharacter: "Personaje",
+    buildAnalyzerProfile: "PERFIL DE PUNTUACIÓN",
+    buildAnalyzerProfilePending: "Esperando objetivos verificados",
+    buildAnalyzerSelected: "BUILD SELECCIONADO",
+    buildAnalyzerScore: "PUNTUACIÓN DEL BUILD",
+    buildAnalyzerGrade: "CALIFICACIÓN",
+    buildAnalyzerStatusLabel: "ESTADO",
+    buildAnalyzerStatusWaiting: "Esperando perfil de puntuación",
+    buildAnalyzerStat: "Estadística",
+    buildAnalyzerCurrent: "Build actual",
+    buildAnalyzerReference: "Referencia base",
+    buildAnalyzerTarget: "Objetivo",
+    buildAnalyzerEvaluation: "Evaluación",
+    buildAnalyzerNotScored: "Sin puntuar",
+    buildAnalyzerPriority: "PRIORIDAD DE LA GUÍA ACTUAL",
+    buildAnalyzerPriorityEmpty: "Aún no hay una prioridad de estadísticas verificada.",
+    buildAnalyzerReferenceLevel: "Referencia base",
+    buildAnalyzerReferenceUnavailable: "Referencia base no disponible",
+    buildAnalyzerNoReference: "Este personaje aún no tiene estadísticas base verificadas disponibles.",
+    buildAnalyzerNote: "Este panel evalúa el build terminado del jugador, no la fuerza del personaje. No se calcula puntuación ni calificación hasta que cada personaje tenga un perfil de puntuación verificado."
+});
+
+Object.assign(translations.ru, {
+    buildAnalyzer: "Анализ билда",
+    buildAnalyzerTitle: "Анализ билда персонажа",
+    buildAnalyzerDescription: "Выберите персонажа и введите итоговые характеристики готового билда. Оценка не рассчитывается, пока для персонажа не настроены проверенные цели и веса.",
+    buildAnalyzerScope: "БИЛД ИГРОКА",
+    buildAnalyzerFoundation: "ОСНОВА",
+    buildAnalyzerCharacter: "Персонаж",
+    buildAnalyzerProfile: "ПРОФИЛЬ ОЦЕНКИ",
+    buildAnalyzerProfilePending: "Ожидание проверенных целей",
+    buildAnalyzerSelected: "ВЫБРАННЫЙ БИЛД",
+    buildAnalyzerScore: "ОЦЕНКА БИЛДА",
+    buildAnalyzerGrade: "КЛАСС",
+    buildAnalyzerStatusLabel: "СТАТУС",
+    buildAnalyzerStatusWaiting: "Ожидание профиля оценки",
+    buildAnalyzerStat: "Характеристика",
+    buildAnalyzerCurrent: "Текущий билд",
+    buildAnalyzerReference: "Базовый ориентир",
+    buildAnalyzerTarget: "Цель",
+    buildAnalyzerEvaluation: "Оценка",
+    buildAnalyzerNotScored: "Не оценено",
+    buildAnalyzerPriority: "ТЕКУЩИЙ ПРИОРИТЕТ ИЗ ГАЙДА",
+    buildAnalyzerPriorityEmpty: "Проверенный приоритет характеристик пока отсутствует.",
+    buildAnalyzerReferenceLevel: "Базовый ориентир",
+    buildAnalyzerReferenceUnavailable: "Базовый ориентир недоступен",
+    buildAnalyzerNoReference: "Для этого персонажа пока нет проверенных базовых характеристик.",
+    buildAnalyzerNote: "Эта панель оценивает готовый билд игрока, а не силу персонажа. Баллы и класс не рассчитываются, пока для каждого персонажа не появится проверенный профиль оценки."
+});
+
+
+/* =========================================================
+   PLAYER BUILD RANKING + LOOKUP BUILD EVALUATION — v59.2
+========================================================= */
+
+Object.assign(translations.en, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "PLAYER BUILD RANKING",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "Select a character to view the strongest player builds recorded for that character. Rankings will activate only when reliable player data and verified build scoring are available.",
+    buildRankingScope: "TOP PLAYER BUILDS",
+    buildRankingStatus: "COMING SOON",
+    buildRankingCharacter: "Character",
+    buildRankingData: "LEADERBOARD DATA",
+    buildRankingDataWaiting: "Awaiting reliable player data",
+    buildRankingSelected: "RANKING CHARACTER",
+    buildRankingRank: "Rank",
+    buildRankingPlayer: "Player",
+    buildRankingScore: "Build Score",
+    buildRankingGrade: "Grade",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "Leaderboard data will appear here after a reliable player-data source and verified scoring profiles are available.",
+    buildRankingNote: "This leaderboard ranks player builds for the selected character. It does not rank the strength of one character against another.",
+    playerBuildShowcaseHelp: "Click a showcased character to open that player's build evaluation.",
+    playerBuildEvaluation: "BUILD EVALUATION",
+    playerBuildTitle: "Character Build",
+    playerBuildNoPlayer: "No player selected",
+    playerBuildCurrent: "Player Build",
+    playerBuildNoStats: "No player build stats are available for this showcased character yet.",
+    playerBuildOpen: "Open build evaluation",
+    playerBuildNote: "Build evaluation belongs to the selected player's showcased character. Scores remain unavailable until a verified scoring profile exists."
+});
+
+Object.assign(translations.vi, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "XẾP HẠNG BUILD NGƯỜI CHƠI",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "Chọn một nhân vật để xem những người chơi có build mạnh nhất đã được ghi nhận cho nhân vật đó. Bảng xếp hạng chỉ hoạt động khi có nguồn dữ liệu người chơi đáng tin cậy và hệ thống chấm build đã được xác minh.",
+    buildRankingScope: "TOP BUILD NGƯỜI CHƠI",
+    buildRankingStatus: "SẮP CÓ",
+    buildRankingCharacter: "Nhân vật",
+    buildRankingData: "DỮ LIỆU XẾP HẠNG",
+    buildRankingDataWaiting: "Đang chờ dữ liệu người chơi đáng tin cậy",
+    buildRankingSelected: "NHÂN VẬT XẾP HẠNG",
+    buildRankingRank: "Hạng",
+    buildRankingPlayer: "Người chơi",
+    buildRankingScore: "Điểm Build",
+    buildRankingGrade: "Xếp loại",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "Bảng xếp hạng sẽ xuất hiện tại đây khi có nguồn dữ liệu người chơi đáng tin cậy và hồ sơ chấm build đã được xác minh.",
+    buildRankingNote: "Bảng này xếp hạng build của người chơi cho nhân vật đang chọn, không xếp hạng sức mạnh giữa các nhân vật.",
+    playerBuildShowcaseHelp: "Nhấp vào nhân vật được trưng bày để mở bảng đánh giá build của nhân vật đó.",
+    playerBuildEvaluation: "ĐÁNH GIÁ BUILD",
+    playerBuildTitle: "Build Nhân vật",
+    playerBuildNoPlayer: "Chưa chọn người chơi",
+    playerBuildCurrent: "Build người chơi",
+    playerBuildNoStats: "Chưa có dữ liệu chỉ số build của nhân vật được trưng bày này.",
+    playerBuildOpen: "Mở đánh giá build",
+    playerBuildNote: "Bảng đánh giá này thuộc nhân vật được trưng bày của người chơi đang chọn. Điểm sẽ chưa hiển thị cho đến khi có hồ sơ chấm build đã được xác minh."
+});
+
+Object.assign(translations.th, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "อันดับบิลด์ผู้เล่น",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "เลือกตัวละครเพื่อดูบิลด์ผู้เล่นที่แข็งแกร่งที่สุดที่บันทึกไว้สำหรับตัวละครนั้น อันดับจะเปิดใช้เมื่อมีข้อมูลผู้เล่นที่เชื่อถือได้และระบบให้คะแนนบิลด์ที่ตรวจสอบแล้ว",
+    buildRankingScope: "บิลด์ผู้เล่นอันดับสูงสุด",
+    buildRankingStatus: "เร็ว ๆ นี้",
+    buildRankingCharacter: "ตัวละคร",
+    buildRankingData: "ข้อมูลอันดับ",
+    buildRankingDataWaiting: "รอข้อมูลผู้เล่นที่เชื่อถือได้",
+    buildRankingSelected: "ตัวละครสำหรับจัดอันดับ",
+    buildRankingRank: "อันดับ",
+    buildRankingPlayer: "ผู้เล่น",
+    buildRankingScore: "คะแนนบิลด์",
+    buildRankingGrade: "เกรด",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "ข้อมูลอันดับจะแสดงที่นี่เมื่อมีแหล่งข้อมูลผู้เล่นที่เชื่อถือได้และโปรไฟล์การให้คะแนนที่ตรวจสอบแล้ว",
+    buildRankingNote: "ตารางนี้จัดอันดับบิลด์ผู้เล่นสำหรับตัวละครที่เลือก ไม่ได้จัดอันดับความแข็งแกร่งระหว่างตัวละคร",
+    playerBuildShowcaseHelp: "คลิกตัวละครที่จัดแสดงเพื่อเปิดการประเมินบิลด์ของผู้เล่นคนนั้น",
+    playerBuildEvaluation: "ประเมินบิลด์",
+    playerBuildTitle: "บิลด์ตัวละคร",
+    playerBuildNoPlayer: "ยังไม่ได้เลือกผู้เล่น",
+    playerBuildCurrent: "บิลด์ผู้เล่น",
+    playerBuildNoStats: "ยังไม่มีข้อมูลค่าสถานะบิลด์สำหรับตัวละครที่จัดแสดงนี้",
+    playerBuildOpen: "เปิดการประเมินบิลด์",
+    playerBuildNote: "การประเมินนี้เป็นของตัวละครที่ผู้เล่นเลือกจัดแสดง คะแนนจะยังไม่แสดงจนกว่าจะมีโปรไฟล์การให้คะแนนที่ตรวจสอบแล้ว"
+});
+
+Object.assign(translations.ja, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "プレイヤービルドランキング",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "キャラクターを選択すると、そのキャラクターで記録された上位プレイヤービルドを確認できます。信頼できるプレイヤーデータと検証済みのビルド採点方式が利用可能になった時点でランキングを有効化します。",
+    buildRankingScope: "トッププレイヤービルド",
+    buildRankingStatus: "近日公開",
+    buildRankingCharacter: "キャラクター",
+    buildRankingData: "ランキングデータ",
+    buildRankingDataWaiting: "信頼できるプレイヤーデータを待機中",
+    buildRankingSelected: "ランキング対象キャラクター",
+    buildRankingRank: "順位",
+    buildRankingPlayer: "プレイヤー",
+    buildRankingScore: "ビルドスコア",
+    buildRankingGrade: "評価",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "信頼できるプレイヤーデータと検証済みの採点プロファイルが利用可能になると、ここにランキングが表示されます。",
+    buildRankingNote: "このランキングは選択したキャラクターのプレイヤービルドを順位付けするもので、キャラクター同士の強さを比較するものではありません。",
+    playerBuildShowcaseHelp: "展示キャラクターをクリックすると、そのプレイヤーのビルド評価を開きます。",
+    playerBuildEvaluation: "ビルド評価",
+    playerBuildTitle: "キャラクタービルド",
+    playerBuildNoPlayer: "プレイヤー未選択",
+    playerBuildCurrent: "プレイヤービルド",
+    playerBuildNoStats: "この展示キャラクターにはプレイヤービルドのステータスデータがまだありません。",
+    playerBuildOpen: "ビルド評価を開く",
+    playerBuildNote: "この評価は選択したプレイヤーの展示キャラクターに対するものです。検証済みの採点プロファイルが用意されるまでスコアは表示されません。"
+});
+
+Object.assign(translations["zh-CN"], {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "玩家配装排行",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "选择角色以查看该角色已记录的最强玩家配装。只有在获得可靠的玩家数据和经过验证的配装评分体系后，排行榜才会启用。",
+    buildRankingScope: "顶尖玩家配装",
+    buildRankingStatus: "即将推出",
+    buildRankingCharacter: "角色",
+    buildRankingData: "排行榜数据",
+    buildRankingDataWaiting: "等待可靠的玩家数据",
+    buildRankingSelected: "排行角色",
+    buildRankingRank: "排名",
+    buildRankingPlayer: "玩家",
+    buildRankingScore: "配装评分",
+    buildRankingGrade: "评级",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "在获得可靠的玩家数据来源和经过验证的评分配置后，排行榜数据将显示在这里。",
+    buildRankingNote: "该排行榜只对所选角色的玩家配装进行排名，不用于比较不同角色之间的强弱。",
+    playerBuildShowcaseHelp: "点击展示角色即可打开该玩家角色的配装评价。",
+    playerBuildEvaluation: "配装评价",
+    playerBuildTitle: "角色配装",
+    playerBuildNoPlayer: "尚未选择玩家",
+    playerBuildCurrent: "玩家配装",
+    playerBuildNoStats: "该展示角色暂无玩家配装属性数据。",
+    playerBuildOpen: "打开配装评价",
+    playerBuildNote: "该评价属于当前玩家展示的角色。在拥有经过验证的评分配置前，不会显示评分。"
+});
+
+Object.assign(translations.ko, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "플레이어 빌드 랭킹",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "캐릭터를 선택해 해당 캐릭터로 기록된 가장 강한 플레이어 빌드를 확인합니다. 신뢰할 수 있는 플레이어 데이터와 검증된 빌드 채점 방식이 준비되면 랭킹이 활성화됩니다.",
+    buildRankingScope: "최상위 플레이어 빌드",
+    buildRankingStatus: "준비 중",
+    buildRankingCharacter: "캐릭터",
+    buildRankingData: "랭킹 데이터",
+    buildRankingDataWaiting: "신뢰할 수 있는 플레이어 데이터 대기 중",
+    buildRankingSelected: "랭킹 캐릭터",
+    buildRankingRank: "순위",
+    buildRankingPlayer: "플레이어",
+    buildRankingScore: "빌드 점수",
+    buildRankingGrade: "등급",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "신뢰할 수 있는 플레이어 데이터와 검증된 채점 프로필이 준비되면 이곳에 랭킹이 표시됩니다.",
+    buildRankingNote: "이 랭킹은 선택한 캐릭터의 플레이어 빌드를 순위화하며 캐릭터 간 강함을 비교하지 않습니다.",
+    playerBuildShowcaseHelp: "전시된 캐릭터를 클릭하면 해당 플레이어의 빌드 평가가 열립니다.",
+    playerBuildEvaluation: "빌드 평가",
+    playerBuildTitle: "캐릭터 빌드",
+    playerBuildNoPlayer: "선택된 플레이어 없음",
+    playerBuildCurrent: "플레이어 빌드",
+    playerBuildNoStats: "이 전시 캐릭터의 플레이어 빌드 스탯 데이터가 아직 없습니다.",
+    playerBuildOpen: "빌드 평가 열기",
+    playerBuildNote: "이 평가는 선택한 플레이어가 전시한 캐릭터의 빌드입니다. 검증된 채점 프로필이 준비되기 전까지 점수는 표시되지 않습니다."
+});
+
+Object.assign(translations.fr, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "CLASSEMENT DES BUILDS JOUEURS",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "Choisissez un personnage pour voir les meilleurs builds de joueurs enregistrés pour ce personnage. Le classement sera activé lorsqu'une source de données joueurs fiable et un système de score vérifié seront disponibles.",
+    buildRankingScope: "MEILLEURS BUILDS JOUEURS",
+    buildRankingStatus: "BIENTÔT",
+    buildRankingCharacter: "Personnage",
+    buildRankingData: "DONNÉES DU CLASSEMENT",
+    buildRankingDataWaiting: "Données joueurs fiables en attente",
+    buildRankingSelected: "PERSONNAGE CLASSÉ",
+    buildRankingRank: "Rang",
+    buildRankingPlayer: "Joueur",
+    buildRankingScore: "Score du build",
+    buildRankingGrade: "Note",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "Le classement apparaîtra ici lorsqu'une source de données joueurs fiable et des profils de score vérifiés seront disponibles.",
+    buildRankingNote: "Ce classement compare les builds de joueurs pour le personnage sélectionné, pas la puissance des personnages entre eux.",
+    playerBuildShowcaseHelp: "Cliquez sur un personnage exposé pour ouvrir l'évaluation de son build.",
+    playerBuildEvaluation: "ÉVALUATION DU BUILD",
+    playerBuildTitle: "Build du personnage",
+    playerBuildNoPlayer: "Aucun joueur sélectionné",
+    playerBuildCurrent: "Build du joueur",
+    playerBuildNoStats: "Aucune statistique de build joueur n'est encore disponible pour ce personnage exposé.",
+    playerBuildOpen: "Ouvrir l'évaluation du build",
+    playerBuildNote: "Cette évaluation concerne le personnage exposé du joueur sélectionné. Aucun score ne sera affiché avant la disponibilité d'un profil de score vérifié."
+});
+
+Object.assign(translations.es, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "RANKING DE BUILDS DE JUGADORES",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "Elige un personaje para ver los builds de jugadores más fuertes registrados para ese personaje. El ranking se activará cuando haya datos de jugadores fiables y un sistema de puntuación verificado.",
+    buildRankingScope: "MEJORES BUILDS DE JUGADORES",
+    buildRankingStatus: "PRÓXIMAMENTE",
+    buildRankingCharacter: "Personaje",
+    buildRankingData: "DATOS DEL RANKING",
+    buildRankingDataWaiting: "Esperando datos fiables de jugadores",
+    buildRankingSelected: "PERSONAJE DEL RANKING",
+    buildRankingRank: "Puesto",
+    buildRankingPlayer: "Jugador",
+    buildRankingScore: "Puntuación del build",
+    buildRankingGrade: "Calificación",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "El ranking aparecerá aquí cuando exista una fuente fiable de datos de jugadores y perfiles de puntuación verificados.",
+    buildRankingNote: "Este ranking ordena builds de jugadores para el personaje seleccionado; no compara la fuerza entre personajes.",
+    playerBuildShowcaseHelp: "Haz clic en un personaje mostrado para abrir la evaluación de su build.",
+    playerBuildEvaluation: "EVALUACIÓN DEL BUILD",
+    playerBuildTitle: "Build del personaje",
+    playerBuildNoPlayer: "Ningún jugador seleccionado",
+    playerBuildCurrent: "Build del jugador",
+    playerBuildNoStats: "Todavía no hay estadísticas del build del jugador para este personaje mostrado.",
+    playerBuildOpen: "Abrir evaluación del build",
+    playerBuildNote: "Esta evaluación pertenece al personaje mostrado del jugador seleccionado. La puntuación no aparecerá hasta que exista un perfil de puntuación verificado."
+});
+
+Object.assign(translations.ru, {
+    buildRankingNav: "The Detective",
+    buildRankingTag: "РЕЙТИНГ БИЛДОВ ИГРОКОВ",
+    buildRankingTitle: "The Detective",
+    buildRankingDescription: "Выберите персонажа, чтобы увидеть лучшие зарегистрированные билды игроков для него. Рейтинг будет включён после появления надёжных данных игроков и проверенной системы оценки билдов.",
+    buildRankingScope: "ЛУЧШИЕ БИЛДЫ ИГРОКОВ",
+    buildRankingStatus: "СКОРО",
+    buildRankingCharacter: "Персонаж",
+    buildRankingData: "ДАННЫЕ РЕЙТИНГА",
+    buildRankingDataWaiting: "Ожидание надёжных данных игроков",
+    buildRankingSelected: "ПЕРСОНАЖ РЕЙТИНГА",
+    buildRankingRank: "Место",
+    buildRankingPlayer: "Игрок",
+    buildRankingScore: "Оценка билда",
+    buildRankingGrade: "Класс",
+    buildRankingUid: "UID",
+    buildRankingEmpty: "Рейтинг появится здесь после подключения надёжного источника данных игроков и проверенных профилей оценки.",
+    buildRankingNote: "Этот рейтинг сравнивает билды игроков для выбранного персонажа, а не силу разных персонажей между собой.",
+    playerBuildShowcaseHelp: "Нажмите на выставленного персонажа, чтобы открыть оценку его билда.",
+    playerBuildEvaluation: "ОЦЕНКА БИЛДА",
+    playerBuildTitle: "Билд персонажа",
+    playerBuildNoPlayer: "Игрок не выбран",
+    playerBuildCurrent: "Билд игрока",
+    playerBuildNoStats: "Для этого выставленного персонажа пока нет данных характеристик билда игрока.",
+    playerBuildOpen: "Открыть оценку билда",
+    playerBuildNote: "Эта оценка относится к выставленному персонажу выбранного игрока. Баллы не отображаются до появления проверенного профиля оценки."
+});
+
+
+/* =========================================================
    GET TRANSLATION
 ========================================================= */
 
@@ -2017,7 +2531,7 @@ function translatePage() {
 
     setText(
         '.navigation a[href="#rankings"]',
-        "rankings"
+        "buildRankingNav"
     );
 
     setText(
@@ -2278,67 +2792,42 @@ function translatePage() {
     }
 
 
-    /* RANKINGS */
+    /* PLAYER BUILD RANKING */
 
-    setText("#rankingTag", "rankings");
-    setText("#rankingTitle", "characterRankings");
-    setText("#rankingDescription", "rankingDescription");
-    setText("#rankingStatus", "rankingFramework");
-    setText("#rankingScope", "rankingScope");
-    setText("#rankingCategoryLabel", "currentCategory");
-    setText("#rankingSearchLabel", "rankingSearchLabel");
-    const rankingSearchInput =
-        document.getElementById("rankingSearch");
+    setText("#buildRankingTag", "buildRankingTag");
+    setText("#buildRankingTitle", "buildRankingTitle");
+    setText("#buildRankingDescription", "buildRankingDescription");
+    setText("#buildRankingScope", "buildRankingScope");
+    setText("#buildRankingStatus", "buildRankingStatus");
+    setText("#buildRankingCharacterLabel", "buildRankingCharacter");
+    setText("#buildRankingDataLabel", "buildRankingData");
+    setText("#buildRankingDataValue", "buildRankingDataWaiting");
+    setText("#buildRankingSelectedLabel", "buildRankingSelected");
+    setText("#buildRankingHeaderRank", "buildRankingRank");
+    setText("#buildRankingHeaderPlayer", "buildRankingPlayer");
+    setText("#buildRankingHeaderScore", "buildRankingScore");
+    setText("#buildRankingHeaderGrade", "buildRankingGrade");
+    setText("#buildRankingHeaderUid", "buildRankingUid");
+    setText("#buildRankingEmpty", "buildRankingEmpty");
+    setText("#buildRankingNote", "buildRankingNote");
 
-    if (rankingSearchInput) {
-        rankingSearchInput.placeholder =
-            t("rankingSearchPlaceholder");
-    }
-    setText("#rankingRoleLabel", "combatStyle");
-    setText("#rankingAttributeLabel", "reactorAttribute");
-    setText("#rankingRarityLabel", "rarityFilter");
-    setText("#rankingPublicationState", "rankingResultsState");
-    setText("#rankingHeaderCharacter", "character");
-    setText("#rankingHeaderRole", "combatStyle");
-    setText("#rankingHeaderAttribute", "reactorAttribute");
-    setText("#rankingHeaderScore", "score");
-    setText("#rankingHeaderTopPercent", "topPercent");
-    setText("#rankingHeaderTier", "tier");
-    setText("#rankingFrameworkTag", "scoringFramework");
-    setText("#rankingFrameworkTitle", "scoringFrameworkTitle");
-    setText("#rankingFrameworkBadge", "noScoresYet");
-    setText("#rankingRuleRoleTitle", "ruleRoleTitle");
-    setText("#rankingRuleRoleText", "ruleRoleText");
-    setText("#rankingRuleBuildTitle", "ruleBuildTitle");
-    setText("#rankingRuleBuildText", "ruleBuildText");
-    setText("#rankingRuleContextTitle", "ruleContextTitle");
-    setText("#rankingRuleContextText", "ruleContextText");
-    setText("#rankingRuleConfidenceTitle", "ruleConfidenceTitle");
-    setText("#rankingRuleConfidenceText", "ruleConfidenceText");
-    setText("#rankingNote", "rankingWaiting");
 
-    const rankingLabels = {
-        overall: "overall",
-        damage: "damage",
-        break: "break",
-        support: "support",
-        survival: "survival"
-    };
+    /* PLAYER LOOKUP BUILD EVALUATION */
 
-    document
-        .querySelectorAll(".ranking-tab-button")
-        .forEach(function (button) {
-
-            const key =
-                rankingLabels[
-                    button.dataset.rankingCategory
-                ];
-
-            if (key) {
-                button.textContent = t(key);
-            }
-
-        });
+    setText("#playerShowcaseHelp", "playerBuildShowcaseHelp");
+    setText("#playerBuildModalTag", "playerBuildEvaluation");
+    setText("#playerBuildModalTitle", "playerBuildTitle");
+    setText("#playerBuildSelectedLabel", "buildAnalyzerSelected");
+    setText("#playerBuildScoreLabel", "buildAnalyzerScore");
+    setText("#playerBuildGradeLabel", "buildAnalyzerGrade");
+    setText("#playerBuildStatusLabel", "buildAnalyzerStatusLabel");
+    setText("#playerBuildHeaderStat", "buildAnalyzerStat");
+    setText("#playerBuildHeaderCurrent", "playerBuildCurrent");
+    setText("#playerBuildHeaderReference", "buildAnalyzerReference");
+    setText("#playerBuildHeaderTarget", "buildAnalyzerTarget");
+    setText("#playerBuildHeaderEvaluation", "buildAnalyzerEvaluation");
+    setText("#playerBuildPriorityLabel", "buildAnalyzerPriority");
+    setText("#playerBuildNote", "playerBuildNote");
 
 
     /* PLAYER */
