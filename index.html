@@ -439,7 +439,7 @@
         <!-- =====================
              CENTER PANEL
              PLAYER BUILD LEADERBOARD
-             v59.2: character-specific player build ranking
+             v59.4: leaderboard + build data foundation — verified player builds only
         ====================== -->
 
         <section class="panel main-content ranking-panel build-ranking-panel" id="rankings">
@@ -453,7 +453,7 @@
 
                 <div class="ranking-header-meta">
                     <span class="ranking-scope" id="buildRankingScope">TOP PLAYER BUILDS</span>
-                    <span class="ranking-status" id="buildRankingStatus">COMING SOON</span>
+                    <span class="ranking-status" id="buildRankingStatus">DATA PENDING</span>
                 </div>
 
             </div>
@@ -468,9 +468,23 @@
                     <select id="buildRankingCharacterSelect" aria-label="Character"></select>
                 </label>
 
+                <label class="ranking-filter build-ranking-search-field">
+                    <span id="buildRankingSearchLabel">Search player</span>
+                    <input id="buildRankingSearch" type="search" autocomplete="off" placeholder="Name or UID..." aria-label="Search player by name or UID">
+                </label>
+
+                <label class="ranking-filter build-ranking-limit-field">
+                    <span id="buildRankingLimitLabel">Show</span>
+                    <select id="buildRankingLimit" aria-label="Leaderboard row limit">
+                        <option value="10">Top 10</option>
+                        <option value="50">Top 50</option>
+                        <option value="100">Top 100</option>
+                    </select>
+                </label>
+
                 <div class="build-ranking-data-state">
                     <span id="buildRankingDataLabel">LEADERBOARD DATA</span>
-                    <strong id="buildRankingDataValue">Awaiting reliable player data</strong>
+                    <strong id="buildRankingDataValue">Awaiting verified player builds</strong>
                 </div>
             </div>
 
@@ -489,7 +503,9 @@
                     <span id="buildRankingHeaderPlayer">Player</span>
                     <span id="buildRankingHeaderScore">Build Score</span>
                     <span id="buildRankingHeaderGrade">Grade</span>
-                    <span id="buildRankingHeaderUid">UID</span>
+                    <span id="buildRankingHeaderEquipment">Equipment</span>
+                    <span id="buildRankingHeaderConfidence">Confidence</span>
+                    <span id="buildRankingHeaderUpdated">Updated</span>
                 </div>
 
                 <div class="build-ranking-rows" id="buildRankingRows">
@@ -962,6 +978,10 @@
     <!-- v41 modular content: edit files inside /content instead of touching UI code -->
     <script defer src="content/news.js"></script>
     <script defer src="content/rankings.js"></script>
+    <!-- v59.4: canonical build record/history/verification foundation. -->
+    <script defer src="content/player-build-foundation.js"></script>
+    <!-- v59.4: compatibility bridge consumed by the leaderboard UI. -->
+    <script defer src="content/player-build-leaderboard.js"></script>
     <script defer src="content/reactors.js"></script>
     <script defer src="content/characters.js"></script>
     <script defer src="content/motives.js"></script>
@@ -975,6 +995,7 @@
     <!-- Localization extensions load after content so future record overlays can apply safely. -->
     <script defer src="locales/archive-locales.js"></script>
     <script defer src="locales/archive-content-translations.js"></script>
+    <script defer src="locales/archive-content-translations-v59-7-1.js"></script>
 
     <script defer src="content-validator.js"></script>
     <script defer src="script.js"></script>
