@@ -17,6 +17,15 @@
             return;
         }
 
+        if (
+            character.baseStats.levels &&
+            typeof character.baseStats.levels === "object" &&
+            Object.keys(character.baseStats.levels).length > 0
+        ) {
+            character.baseStats.snapshotType = "progression";
+            return;
+        }
+
         if (character.baseStats.level === 1) {
             character.baseStats.snapshotType = "level1";
         }

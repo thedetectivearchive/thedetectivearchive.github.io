@@ -71,12 +71,18 @@ const charactersData = [
                 },
 
                 baseStats: {
-                    level: 1,
-                    hp: 720,
-                    atk: 72,
-                    def: 24,
-                    critRate: "5%",
-                    critDamage: "50%"
+                    levels: {
+                        1: { hp: 720, atk: 72, def: 24 },
+                        20: { hp: 1692, atk: 169, def: 121 },
+                        30: { hp: 2340, atk: 234, def: 195 },
+                        40: { hp: 2988, atk: 298, def: 270 },
+                        50: { hp: 3636, atk: 363, def: 344 },
+                        60: { hp: 4284, atk: 428, def: 418 },
+                        70: { hp: 4932, atk: 493, def: 493 },
+                        80: { hp: 5292, atk: 529, def: 529 }
+                    },
+                    verifiedOn: "2026-08-12",
+                    snapshotType: "progression"
                 },
 
                 /*
@@ -210,7 +216,20 @@ const charactersData = [
                 occupation: "Detective",
 
                 combatWeapon: { en: "Sword + Gun", vi: "Kiếm + Súng" },
-                baseStats: { level: 1, hp: 720, atk: 72, def: 24, critRate: "5%", critDamage: "50%" },
+                baseStats: {
+                    levels: {
+                        1: { hp: 720, atk: 72, def: 24 },
+                        20: { hp: 1692, atk: 169, def: 121 },
+                        30: { hp: 2340, atk: 234, def: 195 },
+                        40: { hp: 2988, atk: 298, def: 270 },
+                        50: { hp: 3636, atk: 363, def: 344 },
+                        60: { hp: 4284, atk: 428, def: 418 },
+                        70: { hp: 4932, atk: 493, def: 493 },
+                        80: { hp: 5292, atk: 529, def: 529 }
+                    },
+                    verifiedOn: "2026-08-12",
+                    snapshotType: "progression"
+                },
                 skills: [
                     { type: "basicAttack", name: "Double-Edged Sword: Truth & Deceit", description: { en: "A 5-hit Gravitas combo that builds Ammunition and can chain into Raven Slayer.", vi: "Chuỗi 5 đòn Gravitas tích Ammunition và có thể nối sang Raven Slayer." } },
                     { type: "skill", name: "Raven Slayer", description: { en: "Consumes Ammunition for consecutive Gravitas shots and builds Gravity Overdrive.", vi: "Tiêu hao Ammunition để bắn Gravitas liên tiếp và tích Gravity Overdrive." } },
@@ -243,7 +262,20 @@ const charactersData = [
         reactorAttribute: "Ignis", combatStyle: "Striker DPS", identity: "Outlaw",
         affiliation: "Fableborne", occupation: "Cinderella",
         combatWeapon: { en: "Flame Sword + Machine Gun", vi: "Kiếm lửa + Súng máy" },
-        baseStats: { level: 1, hp: 739, atk: 95, def: 22 },
+        baseStats: {
+            levels: {
+                1: { hp: 739, atk: 95, def: 22 },
+                20: { hp: 1737, atk: 223, def: 111 },
+                30: { hp: 2402, atk: 308, def: 179 },
+                40: { hp: 3067, atk: 394, def: 247 },
+                50: { hp: 3732, atk: 479, def: 315 },
+                60: { hp: 4398, atk: 565, def: 383 },
+                70: { hp: 5063, atk: 651, def: 452 },
+                80: { hp: 5433, atk: 698, def: 485 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -318,7 +350,20 @@ const charactersData = [
         reactorAttribute: "Glacies", combatStyle: "Combat Support", identity: "Witness",
         affiliation: "MISS", occupation: "Bartender",
         combatWeapon: { en: "Cane Gun", vi: "Gậy súng" },
-        baseStats: { level: 1, hp: 696, atk: 67, def: 27 },
+        baseStats: {
+            levels: {
+                1: { hp: 696, atk: 67, def: 27 },
+                20: { hp: 1635, atk: 157, def: 136 },
+                30: { hp: 2262, atk: 218, def: 220 },
+                40: { hp: 2888, atk: 278, def: 303 },
+                50: { hp: 3514, atk: 339, def: 387 },
+                60: { hp: 4141, atk: 399, def: 471 },
+                70: { hp: 4767, atk: 460, def: 554 },
+                80: { hp: 5115, atk: 493, def: 595 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -392,7 +437,20 @@ const charactersData = [
         reactorAttribute: "Ignis", combatStyle: "Break Suppressor", identity: "Hero",
         affiliation: "MISS", occupation: "Maid",
         combatWeapon: { en: "Shotgun / Flamethrower", vi: "Shotgun / Súng phun lửa" },
-        baseStats: { level: 1, hp: 648, atk: 74, def: 26 },
+        baseStats: {
+            levels: {
+                1: { hp: 648, atk: 74, def: 26 },
+                20: { hp: 1522, atk: 174, def: 131 },
+                30: { hp: 2106, atk: 241, def: 211 },
+                40: { hp: 2689, atk: 308, def: 292 },
+                50: { hp: 3272, atk: 375, def: 373 },
+                60: { hp: 3855, atk: 442, def: 453 },
+                70: { hp: 4438, atk: 509, def: 534 },
+                80: { hp: 4762, atk: 546, def: 573 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -466,7 +524,20 @@ const charactersData = [
         reactorAttribute: "Fulmen", combatStyle: "Break Suppressor", identity: "Guardian",
         affiliation: "River Constabulary", occupation: "Chief Inspector",
         combatWeapon: { en: "Electric Boxing Gloves", vi: "Găng boxing điện" },
-        baseStats: { level: 1, hp: 744, atk: 76, def: 21 },
+        baseStats: {
+            levels: {
+                1: { hp: 744, atk: 76, def: 21 },
+                20: { hp: 1748, atk: 180, def: 106 },
+                30: { hp: 2418, atk: 249, def: 171 },
+                40: { hp: 3087, atk: 318, def: 236 },
+                50: { hp: 3757, atk: 387, def: 301 },
+                60: { hp: 4426, atk: 456, def: 366 },
+                70: { hp: 5096, atk: 526, def: 431 },
+                80: { hp: 5468, atk: 564, def: 463 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -540,7 +611,20 @@ const charactersData = [
         reactorAttribute: "Radiatio", combatStyle: "Survival & Healing", identity: "Guardian",
         affiliation: "The Corner Clinic", occupation: "Doctor",
         combatWeapon: { en: "Saw Cleaver + Syringes", vi: "Cưa phẫu thuật + Ống tiêm" },
-        baseStats: { level: 6, hp: 1482, atk: 139, def: 43 },
+        baseStats: {
+            levels: {
+                1: { hp: 816, atk: 60, def: 25 },
+                20: { hp: 1917, atk: 141, def: 126 },
+                30: { hp: 2652, atk: 195, def: 203 },
+                40: { hp: 3386, atk: 249, def: 281 },
+                50: { hp: 4120, atk: 303, def: 358 },
+                60: { hp: 4855, atk: 357, def: 436 },
+                70: { hp: 5589, atk: 411, def: 513 },
+                80: { hp: 5997, atk: 441, def: 551 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -614,7 +698,20 @@ const charactersData = [
         reactorAttribute: "Ignis", combatStyle: "Combat Support", identity: "Witness",
         affiliation: "House Luna", occupation: "Luna's Scion",
         combatWeapon: { en: "Kitty Knights Boomerang Slingshot", vi: "Ná boomerang Kitty Knights" },
-        baseStats: { level: 1, hp: 844, atk: 71, def: 27 },
+        baseStats: {
+            levels: {
+                1: { hp: 844, atk: 71, def: 27 },
+                20: { hp: 1985, atk: 167, def: 138 },
+                30: { hp: 2745, atk: 231, def: 224 },
+                40: { hp: 3505, atk: 295, def: 309 },
+                50: { hp: 4266, atk: 359, def: 394 },
+                60: { hp: 5026, atk: 424, def: 479 },
+                70: { hp: 5786, atk: 488, def: 565 },
+                80: { hp: 6209, atk: 523, def: 606 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -688,7 +785,20 @@ const charactersData = [
         reactorAttribute: "Fulmen", combatStyle: "Resonance DPS", identity: "Hero",
         affiliation: "River Constabulary", occupation: "Superintendent",
         combatWeapon: { en: "Composite Club (Dual Truncheons)", vi: "Côn ghép (song truncheon)" },
-        baseStats: { level: 1, hp: 818, atk: 71, def: 28 },
+        baseStats: {
+            levels: {
+                1: { hp: 818, atk: 71, def: 28 },
+                20: { hp: 1923, atk: 167, def: 144 },
+                30: { hp: 2659, atk: 231, def: 233 },
+                40: { hp: 3396, atk: 295, def: 321 },
+                50: { hp: 4132, atk: 359, def: 410 },
+                60: { hp: 4869, atk: 424, def: 499 },
+                70: { hp: 5606, atk: 488, def: 587 },
+                80: { hp: 6015, atk: 523, def: 630 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -762,7 +872,20 @@ const charactersData = [
         reactorAttribute: "Ignis", combatStyle: "Combat Support", identity: "Saviour",
         affiliation: "Royalty and Aristocracy", occupation: "Dancer",
         combatWeapon: { en: "Vine-firing Gauntlet / Whip", vi: "Găng bắn dây leo / Roi" },
-        baseStats: { level: 1, hp: 924, atk: 79, def: 20 },
+        baseStats: {
+            levels: {
+                1: { hp: 924, atk: 79, def: 20 },
+                20: { hp: 2171, atk: 186, def: 105 },
+                30: { hp: 3003, atk: 257, def: 170 },
+                40: { hp: 3834, atk: 328, def: 235 },
+                50: { hp: 4666, atk: 399, def: 299 },
+                60: { hp: 5497, atk: 471, def: 364 },
+                70: { hp: 6329, atk: 542, def: 429 },
+                80: { hp: 6791, atk: 582, def: 460 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -837,7 +960,20 @@ const charactersData = [
         reactorAttribute: "Alba", combatStyle: "Combat Support", identity: "Saviour",
         affiliation: "Hunters' Guild", occupation: "Apprentice",
         combatWeapon: { en: "Lantern", vi: "Đèn lồng" },
-        baseStats: { level: 1, hp: 720, atk: 67, def: 26 },
+        baseStats: {
+            levels: {
+                1: { hp: 720, atk: 67, def: 26 },
+                20: { hp: 1692, atk: 157, def: 131 },
+                30: { hp: 2340, atk: 218, def: 211 },
+                40: { hp: 2988, atk: 278, def: 292 },
+                50: { hp: 3636, atk: 339, def: 373 },
+                60: { hp: 4284, atk: 399, def: 453 },
+                70: { hp: 4932, atk: 460, def: 534 },
+                80: { hp: 5292, atk: 493, def: 573 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -912,7 +1048,20 @@ const charactersData = [
         reactorAttribute: "Radiatio", combatStyle: "Break Suppressor", identity: "Saviour",
         affiliation: "United Mining Industry", occupation: "Technician",
         combatWeapon: { en: "Wrench", vi: "Cờ lê" },
-        baseStats: { level: 1, hp: 696, atk: 74, def: 24 },
+        baseStats: {
+            levels: {
+                1: { hp: 696, atk: 74, def: 24 },
+                20: { hp: 1635, atk: 174, def: 121 },
+                30: { hp: 2262, atk: 241, def: 195 },
+                40: { hp: 2888, atk: 308, def: 270 },
+                50: { hp: 3514, atk: 375, def: 344 },
+                60: { hp: 4141, atk: 442, def: 418 },
+                70: { hp: 4767, atk: 509, def: 493 },
+                80: { hp: 5115, atk: 546, def: 529 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -987,7 +1136,20 @@ const charactersData = [
         reactorAttribute: "Fulmen", combatStyle: "Combat Support", identity: "Witness",
         affiliation: "S.T.A.T.S.", occupation: "Journalist",
         combatWeapon: { en: "Camera + Gun", vi: "Máy ảnh + Súng" },
-        baseStats: { level: 80, hp: 14082, atk: 1298, def: 1057 },
+        baseStats: {
+            levels: {
+                1: { hp: 744, atk: 69, def: 24 },
+                20: { hp: 1748, atk: 163, def: 121 },
+                30: { hp: 2418, atk: 226, def: 195 },
+                40: { hp: 3087, atk: 288, def: 270 },
+                50: { hp: 3757, atk: 351, def: 344 },
+                60: { hp: 4426, atk: 414, def: 418 },
+                70: { hp: 5096, atk: 476, def: 493 },
+                80: { hp: 5468, atk: 511, def: 529 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -1061,7 +1223,20 @@ const charactersData = [
         reactorAttribute: "Glacies", combatStyle: "Resonance DPS", identity: "Outlaw",
         affiliation: "United Mining Industry", occupation: "Secretary",
         combatWeapon: { en: "Whip + Bladed Boots", vi: "Roi + Giày lưỡi dao" },
-        baseStats: { level: 28, hp: 2761, atk: 339, def: 191, critRate: "6.08%", critDamage: "51.80%" },
+        baseStats: {
+            levels: {
+                1: { hp: 624, atk: 79, def: 25 },
+                20: { hp: 1466, atk: 186, def: 126 },
+                30: { hp: 2028, atk: 257, def: 203 },
+                40: { hp: 2589, atk: 328, def: 281 },
+                50: { hp: 3151, atk: 399, def: 358 },
+                60: { hp: 3712, atk: 471, def: 436 },
+                70: { hp: 4274, atk: 542, def: 513 },
+                80: { hp: 4586, atk: 582, def: 551 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
@@ -1136,7 +1311,20 @@ const charactersData = [
         reactorAttribute: "Glacies", combatStyle: "Survival & Healing", identity: "Guardian",
         affiliation: "Royalty and Aristocracy", occupation: "Knight",
         combatWeapon: { en: "Sword + Shield", vi: "Kiếm + Khiên" },
-        baseStats: { level: 1, hp: 844, atk: 71, def: 27 },
+        baseStats: {
+            levels: {
+                1: { hp: 844, atk: 71, def: 27 },
+                20: { hp: 1985, atk: 167, def: 138 },
+                30: { hp: 2745, atk: 231, def: 224 },
+                40: { hp: 3505, atk: 295, def: 309 },
+                50: { hp: 4266, atk: 359, def: 394 },
+                60: { hp: 5026, atk: 424, def: 479 },
+                70: { hp: 5786, atk: 488, def: 565 },
+                80: { hp: 6209, atk: 523, def: 606 }
+            },
+            verifiedOn: "2026-08-12",
+            snapshotType: "progression"
+        },
         build: {
             confidence: {
                 en: "Beta guidance — stat direction follows the documented CBT2 role/kit, while exact BIS Motive, Simulation and Epiphany remain unverified.",
