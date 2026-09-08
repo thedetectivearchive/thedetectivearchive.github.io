@@ -811,9 +811,12 @@ if (closeNewsDetailButton) {
 
 /* =========================================================
    PLAYER BUILD RANKING + PLAYER LOOKUP BUILD EVALUATION
-   v59.2
-   - Center panel ranks player builds for one selected character.
-   - Build evaluation opens from a player's showcased character.
+   v59.4
+   - Center panel has production-ready leaderboard filtering/sorting infrastructure.
+   - Canonical build records/history/verification live in player-build-foundation.js.
+   - One active record per UID + character profile; newest record wins on duplicates.
+   - Only verified, confidence-qualified scored builds are eligible.
+   - Build evaluation opens from a player's showcased character or an eligible leaderboard row.
    - No demo / fabricated player data is generated.
 ========================================================= */
 
@@ -831,6 +834,18 @@ const buildRankingCharacterName =
 
 const buildRankingCharacterMeta =
     document.getElementById("buildRankingCharacterMeta");
+
+const buildRankingSearch =
+    document.getElementById("buildRankingSearch");
+
+const buildRankingLimit =
+    document.getElementById("buildRankingLimit");
+
+const buildRankingDataValue =
+    document.getElementById("buildRankingDataValue");
+
+const buildRankingStatus =
+    document.getElementById("buildRankingStatus");
 
 const playerShowcaseGrid =
     document.getElementById("playerShowcaseGrid");
@@ -1109,24 +1124,266 @@ function renderBuildRankingCharacterSelect(profiles) {
 }
 
 
+function getPlayerBuildLeaderboardStore() {
+
+    const foundationApi = window.TheDetectiveBuildData;
+
+    if (
+        foundationApi &&
+        typeof foundationApi.getStoreSnapshot === "function"
+    ) {
+        const snapshot = foundationApi.getStoreSnapshot();
+        return {
+            schemaVersion: snapshot.schemaVersion || "1.0",
+            scoreVersion: snapshot.currentScoreVersion || snapshot.scoreVersion || null,
+            minimumDataConfidence: Number.isFinite(Number(snapshot.minimumDataConfidence))
+                ? Number(snapshot.minimumDataConfidence)
+                : 90,
+            records: Array.isArray(snapshot.activeRecords) ? snapshot.activeRecords : [],
+            foundation: true
+        };
+    }
+
+    const modern = window.SILVER_PALACE_PLAYER_BUILD_LEADERBOARD;
+
+    if (modern && typeof modern === "object") {
+        return {
+            schemaVersion: modern.schemaVersion || "1.0",
+            scoreVersion: modern.scoreVersion || null,
+            minimumDataConfidence: Number.isFinite(Number(modern.minimumDataConfidence))
+                ? Number(modern.minimumDataConfidence)
+                : 90,
+            records: Array.isArray(modern.records) ? modern.records : [],
+            foundation: false
+        };
+    }
+
+    /* Backwards-compatible bridge for any early integration using the v59.2 array. */
+    return {
+        schemaVersion: "legacy",
+        scoreVersion: null,
+        minimumDataConfidence: 90,
+        records: Array.isArray(window.SILVER_PALACE_PLAYER_BUILD_RANKINGS)
+            ? window.SILVER_PALACE_PLAYER_BUILD_RANKINGS
+            : [],
+        foundation: false
+    };
+}
+
+
+function getLeaderboardRecordTimestamp(entry) {
+
+    const value = entry && (entry.updatedAt || entry.checkedAt || entry.scoredAt || "");
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+
+function normalizePlayerBuildLeaderboardRecords() {
+
+    const store = getPlayerBuildLeaderboardStore();
+    const latestByBuild = new Map();
+
+    store.records.forEach(function (rawEntry) {
+
+        if (!rawEntry || typeof rawEntry !== "object") {
+            return;
+        }
+
+        const uid = String(rawEntry.uid || "").trim();
+        const profileId = String(rawEntry.profileId || "").trim();
+
+        if (!uid || !profileId || rawEntry.isActive === false) {
+            return;
+        }
+
+        const entry = {
+            ...rawEntry,
+            uid: uid,
+            profileId: profileId,
+            playerName: String(rawEntry.playerName || rawEntry.name || "").trim(),
+            score: Number(rawEntry.score),
+            equipmentScore: Number(rawEntry.equipmentScore ?? rawEntry.relicScore),
+            dataConfidence: Number(rawEntry.dataConfidence),
+            _timestamp: getLeaderboardRecordTimestamp(rawEntry)
+        };
+
+        const key = `${uid}::${profileId}`;
+        const existing = latestByBuild.get(key);
+
+        if (!existing || entry._timestamp >= existing._timestamp) {
+            latestByBuild.set(key, entry);
+        }
+    });
+
+    return {
+        ...store,
+        records: Array.from(latestByBuild.values())
+    };
+}
+
+
+function isPlayerBuildLeaderboardEligible(entry, store) {
+
+    if (!entry || !store) {
+        return false;
+    }
+
+    const foundationApi = window.TheDetectiveBuildData;
+
+    if (
+        foundationApi &&
+        typeof foundationApi.evaluateEligibility === "function"
+    ) {
+        return foundationApi.evaluateEligibility(entry, {
+            currentScoreVersion: store.scoreVersion,
+            minimumDataConfidence: store.minimumDataConfidence
+        }).eligible;
+    }
+
+    const confidence = Number(entry.dataConfidence);
+    const minimumConfidence = Number(store.minimumDataConfidence);
+
+    return (
+        Number.isFinite(Number(entry.score)) &&
+        entry.scoringVerified === true &&
+        String(entry.scoreVersion || "").trim() !== "" &&
+        Number.isFinite(confidence) &&
+        confidence >= minimumConfidence
+    );
+}
+
+
+function comparePlayerBuildLeaderboardEntries(a, b) {
+
+    const scoreDifference = Number(b.score) - Number(a.score);
+    if (scoreDifference !== 0) {
+        return scoreDifference;
+    }
+
+    const confidenceDifference = Number(b.dataConfidence) - Number(a.dataConfidence);
+    if (confidenceDifference !== 0) {
+        return confidenceDifference;
+    }
+
+    const breakpointA = Number(a.breakpointScore);
+    const breakpointB = Number(b.breakpointScore);
+    if (Number.isFinite(breakpointB) || Number.isFinite(breakpointA)) {
+        const breakpointDifference =
+            (Number.isFinite(breakpointB) ? breakpointB : -1) -
+            (Number.isFinite(breakpointA) ? breakpointA : -1);
+        if (breakpointDifference !== 0) {
+            return breakpointDifference;
+        }
+    }
+
+    if (b._timestamp !== a._timestamp) {
+        return b._timestamp - a._timestamp;
+    }
+
+    return String(a.uid).localeCompare(String(b.uid));
+}
+
+
 function getPlayerBuildLeaderboardEntries(profileId) {
 
-    const source = Array.isArray(window.SILVER_PALACE_PLAYER_BUILD_RANKINGS)
-        ? window.SILVER_PALACE_PLAYER_BUILD_RANKINGS
-        : [];
+    const store = normalizePlayerBuildLeaderboardRecords();
+    const query = buildRankingSearch
+        ? buildRankingSearch.value.trim().toLocaleLowerCase()
+        : "";
+    const limit = buildRankingLimit
+        ? Math.max(1, Number(buildRankingLimit.value) || 10)
+        : 10;
 
-    return source
+    const allForProfile = store.records.filter(function (entry) {
+        return entry.profileId === profileId;
+    });
+
+    const eligible = allForProfile
         .filter(function (entry) {
-            return entry && entry.profileId === profileId;
+            return isPlayerBuildLeaderboardEligible(entry, store);
         })
-        .slice()
-        .sort(function (a, b) {
-            const scoreA = Number(a.score);
-            const scoreB = Number(b.score);
-            return (Number.isFinite(scoreB) ? scoreB : -1) -
-                (Number.isFinite(scoreA) ? scoreA : -1);
-        });
+        .sort(comparePlayerBuildLeaderboardEntries);
 
+    const searched = query
+        ? eligible.filter(function (entry) {
+            return (
+                String(entry.playerName || "").toLocaleLowerCase().includes(query) ||
+                String(entry.uid || "").toLocaleLowerCase().includes(query)
+            );
+        })
+        : eligible;
+
+    return {
+        store: store,
+        allForProfile: allForProfile,
+        eligible: eligible,
+        visible: searched.slice(0, limit),
+        query: query,
+        limit: limit
+    };
+}
+
+
+function formatLeaderboardUpdatedAt(entry) {
+
+    if (!entry || !entry._timestamp) {
+        return "--";
+    }
+
+    try {
+        return new Intl.DateTimeFormat(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "2-digit"
+        }).format(new Date(entry._timestamp));
+    } catch (error) {
+        return "--";
+    }
+}
+
+
+function updateBuildRankingDataState(result) {
+
+    if (!result) {
+        return;
+    }
+
+    if (buildRankingStatus) {
+        buildRankingStatus.textContent = result.eligible.length > 0
+            ? t("buildRankingStatusLive")
+            : t("buildRankingStatusPending");
+        buildRankingStatus.classList.toggle("is-live", result.eligible.length > 0);
+    }
+
+    if (!buildRankingDataValue) {
+        return;
+    }
+
+    if (result.allForProfile.length === 0) {
+        buildRankingDataValue.textContent = t("buildRankingDataWaiting");
+        return;
+    }
+
+    if (result.eligible.length === 0) {
+        buildRankingDataValue.textContent = t("buildRankingDataUnverified")
+            .replace("{count}", String(result.allForProfile.length));
+        return;
+    }
+
+    buildRankingDataValue.textContent = t("buildRankingDataReady")
+        .replace("{count}", String(result.eligible.length));
+}
+
+
+function createBuildRankingMetricCell(className, value, suffix) {
+
+    const cell = document.createElement("span");
+    cell.className = className;
+    cell.textContent = value === null || value === undefined || value === ""
+        ? "--"
+        : `${value}${suffix || ""}`;
+    return cell;
 }
 
 
@@ -1138,47 +1395,105 @@ function renderBuildRankingRows(profileId) {
 
     buildRankingRows.innerHTML = "";
 
-    const entries = getPlayerBuildLeaderboardEntries(profileId);
+    const result = getPlayerBuildLeaderboardEntries(profileId);
+    updateBuildRankingDataState(result);
 
-    if (entries.length === 0) {
+    if (result.visible.length === 0) {
         const empty = document.createElement("div");
         empty.className = "build-ranking-empty";
         empty.id = "buildRankingEmpty";
-        empty.textContent = t("buildRankingEmpty");
+        empty.textContent = result.query && result.eligible.length > 0
+            ? t("buildRankingNoSearchResults")
+            : t("buildRankingEmpty");
         buildRankingRows.appendChild(empty);
         return;
     }
 
-    entries.forEach(function (rankingEntry, index) {
+    result.visible.forEach(function (rankingEntry) {
+        const realRank = result.eligible.indexOf(rankingEntry) + 1;
         const row = document.createElement("div");
         row.className = "build-ranking-row";
+        row.dataset.uid = rankingEntry.uid;
+        row.dataset.profileId = rankingEntry.profileId;
 
         const rank = document.createElement("strong");
         rank.className = "build-ranking-rank";
-        rank.textContent = `#${index + 1}`;
+        rank.textContent = `#${realRank}`;
 
         const player = document.createElement("span");
         player.className = "build-ranking-player";
-        player.textContent = rankingEntry.playerName || t("noPlayer");
+        const playerName = document.createElement("strong");
+        playerName.textContent = rankingEntry.playerName || t("noPlayer");
+        const playerUid = document.createElement("small");
+        playerUid.textContent = `UID ${rankingEntry.uid}`;
+        player.append(playerName, playerUid);
 
-        const score = document.createElement("span");
-        score.className = "build-ranking-score";
-        score.textContent = Number.isFinite(Number(rankingEntry.score))
-            ? Number(rankingEntry.score).toFixed(1)
-            : "--";
+        const score = createBuildRankingMetricCell(
+            "build-ranking-score",
+            Number.isFinite(Number(rankingEntry.score))
+                ? Number(rankingEntry.score).toFixed(1)
+                : null,
+            ""
+        );
 
-        const grade = document.createElement("span");
-        grade.className = "build-ranking-grade";
-        grade.textContent = rankingEntry.grade || "--";
+        const grade = createBuildRankingMetricCell(
+            "build-ranking-grade",
+            rankingEntry.grade || null,
+            ""
+        );
 
-        const uid = document.createElement("span");
-        uid.className = "build-ranking-uid";
-        uid.textContent = rankingEntry.uid || "--";
+        const equipment = createBuildRankingMetricCell(
+            "build-ranking-equipment",
+            Number.isFinite(Number(rankingEntry.equipmentScore))
+                ? Number(rankingEntry.equipmentScore).toFixed(1)
+                : null,
+            ""
+        );
 
-        row.append(rank, player, score, grade, uid);
+        const confidence = createBuildRankingMetricCell(
+            "build-ranking-confidence",
+            Number.isFinite(Number(rankingEntry.dataConfidence))
+                ? Math.round(Number(rankingEntry.dataConfidence))
+                : null,
+            Number.isFinite(Number(rankingEntry.dataConfidence)) ? "%" : ""
+        );
+
+        const updated = createBuildRankingMetricCell(
+            "build-ranking-updated",
+            formatLeaderboardUpdatedAt(rankingEntry),
+            ""
+        );
+
+        row.append(rank, player, score, grade, equipment, confidence, updated);
+
+        if (rankingEntry.build && typeof rankingEntry.build === "object") {
+            row.classList.add("build-ranking-row-openable");
+            row.tabIndex = 0;
+            row.setAttribute("role", "button");
+            row.setAttribute("aria-label", `${rankingEntry.playerName || t("noPlayer")} — ${t("playerBuildOpen")}`);
+
+            const openFromLeaderboard = function () {
+                openPlayerBuildEvaluation({
+                    profileId: rankingEntry.profileId,
+                    player: {
+                        name: rankingEntry.playerName || "",
+                        uid: rankingEntry.uid
+                    },
+                    build: rankingEntry.build
+                });
+            };
+
+            row.addEventListener("click", openFromLeaderboard);
+            row.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openFromLeaderboard();
+                }
+            });
+        }
+
         buildRankingRows.appendChild(row);
     });
-
 }
 
 
@@ -1520,6 +1835,18 @@ if (buildRankingCharacterSelect) {
     });
 }
 
+if (buildRankingSearch) {
+    buildRankingSearch.addEventListener("input", function () {
+        renderBuildRankingRows(activeBuildRankingProfileId);
+    });
+}
+
+if (buildRankingLimit) {
+    buildRankingLimit.addEventListener("change", function () {
+        renderBuildRankingRows(activeBuildRankingProfileId);
+    });
+}
+
 if (playerBuildBackdrop) {
     playerBuildBackdrop.addEventListener("click", closePlayerBuildEvaluation);
 }
@@ -1547,7 +1874,11 @@ window.ArchivePlayerBuild = {
     renderShowcase: renderPlayerShowcase,
     open: openPlayerBuildEvaluation,
     close: closePlayerBuildEvaluation,
-    refreshLeaderboard: renderBuildRanking
+    refreshLeaderboard: renderBuildRanking,
+    getLeaderboardStore: getPlayerBuildLeaderboardStore,
+    getEligibleLeaderboard: function (profileId) {
+        return getPlayerBuildLeaderboardEntries(profileId || activeBuildRankingProfileId).eligible.slice();
+    }
 };
 
 

@@ -80,6 +80,67 @@ function getNewsCategoryLabel(entry) {
     return newsT("news");
 }
 
+
+function getFeaturedNewsEntry() {
+    const entries = getAllNewsEntries();
+
+    return (
+        entries.find(entry => entry.featured === true) ||
+        entries.find(entry => entry.image) ||
+        entries[0] ||
+        null
+    );
+}
+
+function renderFeaturedNews() {
+    const entry = getFeaturedNewsEntry();
+    const root = document.getElementById("newsFeatured");
+    const category = document.getElementById("newsFeaturedCategory");
+    const date = document.getElementById("newsFeaturedDate");
+    const title = document.getElementById("newsFeaturedTitle");
+    const description = document.getElementById("newsFeaturedDescription");
+    const media = document.getElementById("newsFeaturedMedia");
+    const image = document.getElementById("newsFeaturedImage");
+    const openButton = document.getElementById("newsFeaturedOpen");
+
+    if (!root || !entry) return;
+
+    root.dataset.featuredNewsId = entry.id;
+
+    if (category) category.textContent = getNewsCategoryLabel(entry);
+    if (date) {
+        date.textContent = entry.date || "";
+        date.setAttribute("datetime", entry.date || "");
+    }
+    if (title) title.textContent = localizeNewsValue(entry.title);
+    if (description) description.textContent = localizeNewsValue(entry.description);
+
+    if (media && image) {
+        if (entry.image) {
+            media.hidden = false;
+            image.src = entry.image;
+            image.alt = localizeNewsValue(entry.title);
+            image.onerror = function () {
+                media.classList.add("asset-missing");
+                image.hidden = true;
+            };
+        } else {
+            media.hidden = false;
+            media.classList.add("asset-missing");
+            image.hidden = true;
+            image.removeAttribute("src");
+            image.alt = "";
+        }
+    }
+
+    if (openButton) {
+        openButton.textContent = newsT("readMore");
+        openButton.onclick = function () {
+            openNewsPageArticle(entry.id);
+        };
+    }
+}
+
 async function copyNewsPageLink() {
     const button = document.getElementById("newsPageCopyLink");
     if (!button) return;
@@ -170,28 +231,40 @@ function renderNewsPage() {
     const empty = document.getElementById("newsPageEmpty");
     if (!grid) return;
 
-    const entries = getFilteredNewsEntries();
+    const featuredEntry = getFeaturedNewsEntry();
+    const entries = getFilteredNewsEntries().filter(
+        entry => !featuredEntry || entry.id !== featuredEntry.id
+    );
+
     if (count) count.textContent = String(entries.length);
     if (empty) empty.hidden = entries.length !== 0;
 
     grid.innerHTML = entries.map((entry, index) => {
         const title = localizeNewsValue(entry.title);
         const description = localizeNewsValue(entry.description);
-        const tags = Array.isArray(entry.tags) ? entry.tags.slice(0, 3) : [];
+        const tags = Array.isArray(entry.tags) ? entry.tags.slice(0, 2) : [];
 
         return `
-            <article class="news-page-card ${entry.stream} ${entry.image ? "has-image" : ""}" data-news-id="${entry.id}">
+            <article
+                class="news-page-card ${entry.stream} ${entry.image ? "has-image" : "no-image"}"
+                data-news-id="${entry.id}"
+                tabindex="0"
+                role="button"
+                aria-label="${title}"
+            >
                 <div class="news-page-card-index">${String(index + 1).padStart(2, "0")}</div>
 
                 ${entry.image ? `
                     <div class="news-page-card-media">
-                        <img src="${entry.image}" alt="${title}" loading="lazy" onerror="this.parentElement.hidden=true">
+                        <img src="${entry.image}" alt="${title}" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('asset-missing')">
                     </div>
-                ` : ""}
+                ` : `
+                    <div class="news-page-card-media asset-missing" aria-hidden="true"></div>
+                `}
 
                 <div class="news-page-card-meta">
-                    <span>${getNewsCategoryLabel(entry)}</span>
                     <time datetime="${entry.date}">${entry.date}</time>
+                    <span>${getNewsCategoryLabel(entry)}</span>
                 </div>
 
                 <h2>${title}</h2>
@@ -200,17 +273,19 @@ function renderNewsPage() {
                 <div class="news-page-card-tags">
                     ${tags.map(tag => `<span>${tag}</span>`).join("")}
                 </div>
-
-                <button type="button" class="news-page-card-button" data-open-news="${entry.id}">
-                    ${newsT("readMore")}
-                </button>
             </article>
         `;
     }).join("");
 
-    grid.querySelectorAll("[data-open-news]").forEach(button => {
-        button.addEventListener("click", () => {
-            openNewsPageArticle(button.dataset.openNews);
+    grid.querySelectorAll(".news-page-card[data-news-id]").forEach(card => {
+        const open = () => openNewsPageArticle(card.dataset.newsId);
+
+        card.addEventListener("click", open);
+        card.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                open();
+            }
         });
     });
 }
@@ -316,6 +391,7 @@ function applyNewsPageLanguage() {
     document.getElementById("newsEmptyTitle").textContent = newsT("emptyTitle");
     document.getElementById("newsEmptyText").textContent = newsT("emptyText");
 
+    renderFeaturedNews();
     renderNewsPage();
     ensureNewsPageCopyButton();
 
