@@ -3,26 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News & Archive Updates | The Detective Archive</title>
-    <meta name="description" content="Silver Palace beta news and The Detective Archive update log.">
-    <meta name="robots" content="index, follow">
+    <title>Silver Palace News & Archive Updates | The Detective Archive</title>
+    <meta name="description" content="Follow Silver Palace beta news, announcements, notices, and transparent update records for The Detective Archive.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="application-name" content="The Detective Archive">
     <meta name="theme-color" content="#100d12">
     <meta name="color-scheme" content="dark">
-    <meta property="og:title" content="News & Archive Updates | The Detective Archive">
-    <meta property="og:description" content="Silver Palace beta news and The Detective Archive update log.">
+    <meta property="og:title" content="Silver Palace News & Archive Updates | The Detective Archive">
+    <meta property="og:description" content="Follow Silver Palace beta news, announcements, notices, and transparent update records for The Detective Archive.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://thedetectivearchive.github.io/news.html">
     <meta property="og:site_name" content="The Detective Archive">
     <meta property="og:locale" content="en_US">
-    <meta property="og:image" content="https://thedetectivearchive.github.io/logo.png">
+    <meta property="og:image" content="https://thedetectivearchive.github.io/images/news/cinderella.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="News & Archive Updates | The Detective Archive">
-    <meta name="twitter:description" content="Silver Palace beta news and archive update records.">
-    <meta name="twitter:image" content="https://thedetectivearchive.github.io/logo.png">
+    <meta name="twitter:title" content="Silver Palace News & Archive Updates | The Detective Archive">
+    <meta name="twitter:description" content="Follow Silver Palace beta news, announcements, notices, and transparent update records for The Detective Archive.">
+    <meta name="twitter:image" content="https://thedetectivearchive.github.io/images/news/cinderella.jpg">
     <link rel="canonical" href="https://thedetectivearchive.github.io/news.html">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <!-- v60 SEO structured data -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "https://thedetectivearchive.github.io/news.html#webpage",
+  "url": "https://thedetectivearchive.github.io/news.html",
+  "name": "Silver Palace News & Archive Updates | The Detective Archive",
+  "description": "Follow Silver Palace beta news, announcements, notices, and transparent update records for The Detective Archive.",
+  "isPartOf": {
+    "@id": "https://thedetectivearchive.github.io/#website"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "Silver Palace"
+  },
+  "inLanguage": "en"
+}
+    </script>
 </head>
 
 <body class="news-page-body">
@@ -72,12 +92,32 @@
 
     <main class="news-page-shell">
 
-        <section class="news-page-hero">
-            <p class="tag" id="newsPageTag">INTELLIGENCE DESK</p>
-            <h1 id="newsPageTitle">News & Archive Updates</h1>
-            <p id="newsPageLead">
-                Silver Palace beta records and a transparent changelog for The Detective Archive.
-            </p>
+        <section class="news-page-hero news-paper-feature" id="newsFeatured">
+            <div class="news-feature-copy">
+                <p class="tag" id="newsPageTag">INTELLIGENCE DESK</p>
+                <h1 id="newsPageTitle">News & Archive Updates</h1>
+                <p class="news-feature-lead" id="newsPageLead">
+                    Silver Palace beta records and a transparent changelog for The Detective Archive.
+                </p>
+
+                <div class="news-feature-story">
+                    <div class="news-feature-story-meta">
+                        <span id="newsFeaturedCategory">FEATURED</span>
+                        <time id="newsFeaturedDate"></time>
+                    </div>
+
+                    <h2 id="newsFeaturedTitle">Featured archive report</h2>
+                    <p id="newsFeaturedDescription"></p>
+
+                    <button type="button" class="news-feature-open" id="newsFeaturedOpen">
+                        Read more
+                    </button>
+                </div>
+            </div>
+
+            <figure class="news-feature-media" id="newsFeaturedMedia" hidden>
+                <img id="newsFeaturedImage" src="" alt="" decoding="async">
+            </figure>
         </section>
 
 
@@ -154,7 +194,6 @@
     <script defer src="content/news.js"></script>
     <script defer src="content/archive-updates.js"></script>
     <script defer src="locales/archive-locales.js"></script>
-    <script defer src="locales/archive-content-translations.js"></script>
     <script defer src="content-validator.js"></script>
     <script defer src="news-page.js"></script>
     <script defer src="accessibility.js"></script>
